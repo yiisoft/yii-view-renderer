@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/yii-view",
     "type": "library",
-    "description": "_____",
+    "description": "Yii binding for view rendering",
     "keywords": [
         "yii",
         "view"

@@ -12,6 +12,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\Csrf\CsrfViewInjectionInterface;
 
 final class ViewRenderer implements ViewContextInterface
 {

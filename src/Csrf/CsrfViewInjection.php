@@ -6,7 +6,6 @@ use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Yii\View\ContentParamsInjectionInterface;
 use Yiisoft\Yii\View\LayoutParamsInjectionInterface;
 use Yiisoft\Yii\View\MetaTagsInjectionInterface;
-use Yiisoft\Yii\Web\Middleware\Csrf;
 
 class CsrfViewInjection implements
     ContentParamsInjectionInterface,
@@ -14,7 +13,7 @@ class CsrfViewInjection implements
     MetaTagsInjectionInterface,
     CsrfViewInjectionInterface
 {
-    public const DEFAULT_REQUEST_ATTRIBUTE = Csrf::REQUEST_NAME;
+    public const DEFAULT_REQUEST_ATTRIBUTE = 'csrf_token';
     public const DEFAULT_META_ATTRIBUTE = 'csrf';
     public const DEFAULT_PARAMETER = 'csrf';
 

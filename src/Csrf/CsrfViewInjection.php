@@ -31,7 +31,7 @@ class CsrfViewInjection implements
         $this->urlMatcher = $urlMatcher;
     }
 
-    public function withRequestAttribute(?string $requestAttribute = null): self
+    public function withRequestAttribute(?string $requestAttribute = null): CsrfViewInjectionInterface
     {
         $clone = clone $this;
         $clone->requestAttribute = $requestAttribute ?? self::DEFAULT_REQUEST_ATTRIBUTE;

@@ -195,7 +195,7 @@ final class ViewRenderer implements ViewContextInterface
     private function getContentParameters(array $parameters): array
     {
         foreach ($this->injections as $injection) {
-            if ($injection instanceof ContentParamsInjectionInterface) {
+            if ($injection instanceof ContentParametersInjectionInterface) {
                 $parameters = array_merge($parameters, $injection->getContentParameters());
             }
         }
@@ -205,7 +205,7 @@ final class ViewRenderer implements ViewContextInterface
     private function getLayoutParameters(array $parameters): array
     {
         foreach ($this->injections as $injection) {
-            if ($injection instanceof LayoutParamsInjectionInterface) {
+            if ($injection instanceof LayoutParametersInjectionInterface) {
                 $parameters = array_merge($parameters, $injection->getLayoutParameters());
             }
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
-interface ContentParamsInjectionInterface
+interface ContentParametersInjectionInterface
 {
 
     /**

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Csrf;
 
-use Yiisoft\Yii\View\ContentParamsInjectionInterface;
-use Yiisoft\Yii\View\LayoutParamsInjectionInterface;
+use Yiisoft\Yii\View\ContentParametersInjectionInterface;
+use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\MetaTagsInjectionInterface;
 
 final class CsrfViewInjection implements
-    ContentParamsInjectionInterface,
-    LayoutParamsInjectionInterface,
+    ContentParametersInjectionInterface,
+    LayoutParametersInjectionInterface,
     MetaTagsInjectionInterface
 {
     public const DEFAULT_META_ATTRIBUTE_NAME = 'csrf';

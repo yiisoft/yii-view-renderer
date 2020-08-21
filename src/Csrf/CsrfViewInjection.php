@@ -13,11 +13,11 @@ final class CsrfViewInjection implements
     LayoutParamsInjectionInterface,
     MetaTagsInjectionInterface
 {
-    public const DEFAULT_META_ATTRIBUTE = 'csrf';
-    public const DEFAULT_PARAMETER = 'csrf';
+    public const DEFAULT_META_ATTRIBUTE_NAME = 'csrf';
+    public const DEFAULT_PARAMETER_NAME = 'csrf';
 
-    private string $metaAttribute = self::DEFAULT_META_ATTRIBUTE;
-    private string $parameter = self::DEFAULT_PARAMETER;
+    private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
+    private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
     private CsrfTokenInterface $csrfToken;
 
@@ -26,28 +26,28 @@ final class CsrfViewInjection implements
         $this->csrfToken = $csrfToken;
     }
 
-    public function withParameter(string $parameter): self
+    public function withParameterName(string $parameterName): self
     {
         $clone = clone $this;
-        $clone->parameter = $parameter;
+        $clone->parameterName = $parameterName;
         return $clone;
     }
 
-    public function withMetaAttribute(string $metaAttribute): self
+    public function withMetaAttributeName(string $metaAttributeName): self
     {
         $clone = clone $this;
-        $clone->metaAttribute = $metaAttribute;
+        $clone->metaAttributeName = $metaAttributeName;
         return $clone;
     }
 
     public function getContentParameters(): array
     {
-        return [$this->parameter => $this->csrfToken->getToken()];
+        return [$this->parameterName => $this->csrfToken->getToken()];
     }
 
     public function getLayoutParameters(): array
     {
-        return [$this->parameter => $this->csrfToken->getToken()];
+        return [$this->parameterName => $this->csrfToken->getToken()];
     }
 
     public function getMetaTags(): array
@@ -55,7 +55,7 @@ final class CsrfViewInjection implements
         return [
             [
                 '__key' => 'csrf_meta_tags',
-                'name' => $this->metaAttribute,
+                'name' => $this->metaAttributeName,
                 'content' => $this->csrfToken->getToken(),
             ]
         ];

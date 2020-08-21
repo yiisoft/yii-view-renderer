@@ -22,5 +22,5 @@ interface LayoutParamsInjectionInterface
      *
      * @return array
      */
-    public function getLayoutParams(): array;
+    public function getLayoutParameters(): array;
 }

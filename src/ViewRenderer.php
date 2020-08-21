@@ -200,7 +200,7 @@ final class ViewRenderer implements ViewContextInterface
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof ContentParamsInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getContentParams());
+                $parameters = array_merge($parameters, $injection->getContentParameters());
             }
         }
         return $parameters;
@@ -210,7 +210,7 @@ final class ViewRenderer implements ViewContextInterface
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof LayoutParamsInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParams());
+                $parameters = array_merge($parameters, $injection->getLayoutParameters());
             }
         }
         return $parameters;

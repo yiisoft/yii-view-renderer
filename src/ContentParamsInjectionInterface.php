@@ -22,5 +22,5 @@ interface ContentParamsInjectionInterface
      *
      * @return array
      */
-    public function getContentParams(): array;
+    public function getContentParameters(): array;
 }

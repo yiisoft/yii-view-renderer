@@ -51,12 +51,12 @@ class CsrfViewInjection implements
         return $clone;
     }
 
-    public function getContentParams(): array
+    public function getContentParameters(): array
     {
         return [$this->parameter => $this->getCsrfToken()];
     }
 
-    public function getLayoutParams(): array
+    public function getLayoutParameters(): array
     {
         return [$this->parameter => $this->getCsrfToken()];
     }

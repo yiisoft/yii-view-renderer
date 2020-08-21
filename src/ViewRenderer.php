@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Csrf\CsrfViewInjectionInterface;
+use Yiisoft\Yii\View\Csrf\CsrfViewInjection;
 
 final class ViewRenderer implements ViewContextInterface
 {
@@ -20,7 +19,7 @@ final class ViewRenderer implements ViewContextInterface
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
-    private ?CsrfViewInjectionInterface $csrfViewInjection;
+    private CsrfViewInjection $csrfViewInjection;
 
     private ?string $viewBasePath;
     private string $layout;
@@ -33,7 +32,7 @@ final class ViewRenderer implements ViewContextInterface
         DataResponseFactoryInterface $responseFactory,
         Aliases $aliases,
         WebView $view,
-        ?CsrfViewInjectionInterface $csrfViewInjection,
+        CsrfViewInjection $csrfViewInjection,
         string $viewBasePath,
         string $layout,
         array $injections = []
@@ -142,12 +141,9 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
-    public function withCsrf(string $requestAttribute = null): self
+    public function withCsrf(): self
     {
-        if ($this->csrfViewInjection === null) {
-            throw new RuntimeException('No definition for CsrfViewInjectionInterface.');
-        }
-        return $this->withAddedInjection($this->csrfViewInjection->withRequestAttribute($requestAttribute));
+        return $this->withAddedInjection($this->csrfViewInjection);
     }
 
     private function renderProxy(string $view, array $parameters = []): string

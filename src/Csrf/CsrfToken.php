@@ -9,6 +9,6 @@ final class CsrfToken implements CsrfTokenInterface
 
     public function get(): string
     {
-        return \Yiisoft\Csrf\CsrfToken::getValue();
+        return (string)\Yiisoft\Csrf\CsrfToken::getValue();
     }
 }

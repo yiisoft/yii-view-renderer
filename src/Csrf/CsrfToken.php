@@ -7,8 +7,8 @@ namespace Yiisoft\Yii\View\Csrf;
 final class CsrfToken implements CsrfTokenInterface
 {
 
-    public function get(): string
+    public function get(): ?string
     {
-        return (string)\Yiisoft\Csrf\CsrfToken::getValue();
+        return \Yiisoft\Csrf\CsrfToken::getValue();
     }
 }

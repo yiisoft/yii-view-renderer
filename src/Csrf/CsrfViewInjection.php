@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Csrf;
 
+use LogicException;
 use Yiisoft\Yii\View\ContentParametersInjectionInterface;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\MetaTagsInjectionInterface;
@@ -42,12 +43,12 @@ final class CsrfViewInjection implements
 
     public function getContentParameters(): array
     {
-        return [$this->parameterName => $this->csrfToken->get()];
+        return [$this->parameterName => $this->getCsrfToken()];
     }
 
     public function getLayoutParameters(): array
     {
-        return [$this->parameterName => $this->csrfToken->get()];
+        return [$this->parameterName => $this->getCsrfToken()];
     }
 
     public function getMetaTags(): array
@@ -56,8 +57,21 @@ final class CsrfViewInjection implements
             [
                 '__key' => 'csrf_meta_tags',
                 'name' => $this->metaAttributeName,
-                'content' => $this->csrfToken->get(),
+                'content' => $this->getCsrfToken(),
             ]
         ];
+    }
+
+    /**
+     * @return string
+     * @throws LogicException
+     */
+    private function getCsrfToken(): string
+    {
+        $token = $this->csrfToken->get();
+        if (empty($token)) {
+            throw new LogicException('CSRF token is not defined.');
+        }
+        return $token;
     }
 }

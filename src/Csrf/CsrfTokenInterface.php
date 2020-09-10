@@ -7,5 +7,5 @@ namespace Yiisoft\Yii\View\Csrf;
 interface CsrfTokenInterface
 {
 
-    public function get(): string;
+    public function get(): ?string;
 }

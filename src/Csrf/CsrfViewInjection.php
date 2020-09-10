@@ -42,12 +42,12 @@ final class CsrfViewInjection implements
 
     public function getContentParameters(): array
     {
-        return [$this->parameterName => $this->csrfToken->getToken()];
+        return [$this->parameterName => $this->csrfToken->get()];
     }
 
     public function getLayoutParameters(): array
     {
-        return [$this->parameterName => $this->csrfToken->getToken()];
+        return [$this->parameterName => $this->csrfToken->get()];
     }
 
     public function getMetaTags(): array
@@ -56,7 +56,7 @@ final class CsrfViewInjection implements
             [
                 '__key' => 'csrf_meta_tags',
                 'name' => $this->metaAttributeName,
-                'content' => $this->csrfToken->getToken(),
+                'content' => $this->csrfToken->get(),
             ]
         ];
     }

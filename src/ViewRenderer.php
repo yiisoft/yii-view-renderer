@@ -21,7 +21,7 @@ final class ViewRenderer implements ViewContextInterface
     private WebView $view;
     private CsrfViewInjection $csrfViewInjection;
 
-    private ?string $viewBasePath;
+    private string $viewBasePath;
     private string $layout;
     private array $injections;
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -19,9 +18,9 @@ final class ViewRenderer implements ViewContextInterface
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
-    private ?CsrfViewInjectionInterface $csrfViewInjection;
+    private CsrfViewInjection $csrfViewInjection;
 
-    private ?string $viewBasePath;
+    private string $viewBasePath;
     private string $layout;
     private array $injections;
 
@@ -32,7 +31,7 @@ final class ViewRenderer implements ViewContextInterface
         DataResponseFactoryInterface $responseFactory,
         Aliases $aliases,
         WebView $view,
-        ?CsrfViewInjectionInterface $csrfViewInjection,
+        CsrfViewInjection $csrfViewInjection,
         string $viewBasePath,
         string $layout,
         array $injections = []
@@ -141,12 +140,9 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
-    public function withCsrf(string $requestAttribute = null): self
+    public function withCsrf(): self
     {
-        if ($this->csrfViewInjection === null) {
-            throw new RuntimeException('No definition for CsrfViewInjectionInterface.');
-        }
-        return $this->withAddedInjection($this->csrfViewInjection->withRequestAttribute($requestAttribute));
+        return $this->withAddedInjection($this->csrfViewInjection);
     }
 
     private function renderProxy(string $view, array $parameters = []): string
@@ -198,8 +194,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getContentParameters(array $parameters): array
     {
         foreach ($this->injections as $injection) {
-            if ($injection instanceof ContentParamsInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getContentParams());
+            if ($injection instanceof ContentParametersInjectionInterface) {
+                $parameters = array_merge($parameters, $injection->getContentParameters());
             }
         }
         return $parameters;
@@ -208,8 +204,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getLayoutParameters(array $parameters): array
     {
         foreach ($this->injections as $injection) {
-            if ($injection instanceof LayoutParamsInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParams());
+            if ($injection instanceof LayoutParametersInjectionInterface) {
+                $parameters = array_merge($parameters, $injection->getLayoutParameters());
             }
         }
         return $parameters;

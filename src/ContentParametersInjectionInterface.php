@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
-interface ContentParamsInjectionInterface
+interface ContentParametersInjectionInterface
 {
 
     /**
@@ -22,5 +22,5 @@ interface ContentParamsInjectionInterface
      *
      * @return array
      */
-    public function getContentParams(): array;
+    public function getContentParameters(): array;
 }

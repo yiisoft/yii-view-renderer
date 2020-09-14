@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
-interface LayoutParamsInjectionInterface
+interface LayoutParametersInjectionInterface
 {
 
     /**
@@ -22,5 +22,5 @@ interface LayoutParamsInjectionInterface
      *
      * @return array
      */
-    public function getLayoutParams(): array;
+    public function getLayoutParameters(): array;
 }

@@ -13,14 +13,7 @@ return [
         '__construct()' => [
             'viewBasePath' => $params['yiisoft/yii-view']['viewBasePath'],
             'layout' => $params['yiisoft/yii-view']['layout'],
-            'injections' => [
-                // Use for add Csrf parameter to all views
-                // Reference::to(CsrfViewInjection::class),
-                // or
-                // DynamicReference::to(function (ContainerInterface $container) {
-                //     return $container->get(CsrfViewInjection::class)->withParameter('mycsrf');
-                // }),
-            ],
+            'injections' => $params['yiisoft/yii-view']['injections'],
         ],
     ],
 ];

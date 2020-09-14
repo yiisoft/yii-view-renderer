@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Csrf;
+namespace Yiisoft\Yii\View;
 
 use LogicException;
-use Yiisoft\Yii\View\ContentParametersInjectionInterface;
-use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
-use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+use Yiisoft\Csrf\CsrfToken;
 
 final class CsrfViewInjection implements
     ContentParametersInjectionInterface,
@@ -20,9 +18,9 @@ final class CsrfViewInjection implements
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
-    private CsrfTokenInterface $csrfToken;
+    private CsrfToken $csrfToken;
 
-    public function __construct(CsrfTokenInterface $csrfToken)
+    public function __construct(CsrfToken $csrfToken)
     {
         $this->csrfToken = $csrfToken;
     }
@@ -41,37 +39,33 @@ final class CsrfViewInjection implements
         return $clone;
     }
 
+    /**
+     * @throws LogicException when CSRF token is not defined
+     */
     public function getContentParameters(): array
     {
-        return [$this->parameterName => $this->getCsrfToken()];
+        return [$this->parameterName => $this->csrfToken->getValue()];
     }
 
+    /**
+     * @throws LogicException when CSRF token is not defined
+     */
     public function getLayoutParameters(): array
     {
-        return [$this->parameterName => $this->getCsrfToken()];
+        return [$this->parameterName => $this->csrfToken->getValue()];
     }
 
+    /**
+     * @throws LogicException when CSRF token is not defined
+     */
     public function getMetaTags(): array
     {
         return [
             [
                 '__key' => 'csrf_meta_tags',
                 'name' => $this->metaAttributeName,
-                'content' => $this->getCsrfToken(),
+                'content' => $this->csrfToken->getValue(),
             ]
         ];
-    }
-
-    /**
-     * @return string
-     * @throws LogicException
-     */
-    private function getCsrfToken(): string
-    {
-        $token = $this->csrfToken->get();
-        if (empty($token)) {
-            throw new LogicException('CSRF token is not defined.');
-        }
-        return $token;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -14,7 +15,6 @@ use Yiisoft\View\WebView;
 
 final class ViewRenderer implements ViewContextInterface
 {
-
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
@@ -64,7 +64,8 @@ final class ViewRenderer implements ViewContextInterface
 
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
     {
-        $content = $this->view->render($view, $parameters, $this);
+        $newView = clone $this->view;
+        $content = $newView->render($view, $parameters, $this);
 
         return $this->responseFactory->createResponse($content);
     }
@@ -72,7 +73,7 @@ final class ViewRenderer implements ViewContextInterface
     public function withController(object $controller): self
     {
         $new = clone $this;
-        $new->name = $this->getName($controller);
+        $new->name = $this->extractControllerName($controller);
 
         return $new;
     }
@@ -116,7 +117,7 @@ final class ViewRenderer implements ViewContextInterface
     public function withAddedInjections(array $injections): self
     {
         $new = clone $this;
-        $new->injections = array_merge($this->injections, $injections);
+        $new->injections = \array_merge($this->injections, $injections);
         return $new;
     }
 
@@ -147,11 +148,13 @@ final class ViewRenderer implements ViewContextInterface
 
     private function renderProxy(string $view, array $parameters = []): string
     {
-        $this->injectMetaTags();
-        $this->injectLinkTags();
+        $newView = clone $this->view;
+
+        $this->injectMetaTags($newView);
+        $this->injectLinkTags($newView);
 
         $parameters = $this->getContentParameters($parameters);
-        $content = $this->view->render($view, $parameters, $this);
+        $content = $newView->render($view, $parameters, $this);
 
         $layout = $this->findLayoutFile($this->layout);
         if ($layout === null) {
@@ -160,32 +163,28 @@ final class ViewRenderer implements ViewContextInterface
 
         $layoutParameters = $this->getLayoutParameters(['content' => $content]);
 
-        return $this->view->renderFile(
-            $layout,
-            $layoutParameters,
-            $this,
-        );
+        return $newView->renderFile($layout, $layoutParameters, $this);
     }
 
-    private function injectMetaTags(): void
+    private function injectMetaTags(WebView $view): void
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof MetaTagsInjectionInterface) {
                 foreach ($injection->getMetaTags() as $options) {
                     $key = ArrayHelper::remove($options, '__key');
-                    $this->view->registerMetaTag($options, $key);
+                    $view->registerMetaTag($options, $key);
                 }
             }
         }
     }
 
-    private function injectLinkTags(): void
+    private function injectLinkTags(WebView $view): void
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof LinkTagsInjectionInterface) {
                 foreach ($injection->getLinkTags() as $options) {
                     $key = ArrayHelper::remove($options, '__key');
-                    $this->view->registerLinkTag($options, $key);
+                    $view->registerLinkTag($options, $key);
                 }
             }
         }
@@ -195,7 +194,7 @@ final class ViewRenderer implements ViewContextInterface
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof ContentParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getContentParameters());
+                $parameters = \array_merge($parameters, $injection->getContentParameters());
             }
         }
         return $parameters;
@@ -205,7 +204,7 @@ final class ViewRenderer implements ViewContextInterface
     {
         foreach ($this->injections as $injection) {
             if ($injection instanceof LayoutParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParameters());
+                $parameters = \array_merge($parameters, $injection->getLayoutParameters());
             }
         }
         return $parameters;
@@ -219,7 +218,7 @@ final class ViewRenderer implements ViewContextInterface
 
         $file = $this->aliases->get($file);
 
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
+        if (\pathinfo($file, PATHINFO_EXTENSION) !== '') {
             return $file;
         }
 
@@ -240,22 +239,22 @@ final class ViewRenderer implements ViewContextInterface
      * @example Path\To\File\BlogController -> blog
      * @see Inflector::pascalCaseToId()
      */
-    private function getName(object $controller): string
+    private function extractControllerName(object $controller): string
     {
         static $cache = [];
 
-        $class = get_class($controller);
-        if (array_key_exists($class, $cache)) {
+        $class = \get_class($controller);
+        if (\array_key_exists($class, $cache)) {
             return $cache[$class];
         }
 
         $regexp = '/((?<=controller\\\|s\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
-        if (!preg_match($regexp, $class, $m) || empty($m[1])) {
-            throw new \RuntimeException('Cannot detect controller name');
+        if (!\preg_match($regexp, $class, $m) || empty($m[1])) {
+            throw new RuntimeException('Cannot detect controller name.');
         }
 
         $inflector = new Inflector();
-        $name = str_replace('\\', '/', $m[1]);
+        $name = \str_replace('\\', '/', $m[1]);
         return $cache[$class] = $inflector->pascalCaseToId($name);
     }
 }

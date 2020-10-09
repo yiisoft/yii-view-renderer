@@ -125,7 +125,7 @@ final class ViewRenderer implements ViewContextInterface
      * @param object $injection
      * @return self
      */
-    public function withAddedInjection($injection): self
+    public function withAddedInjection(object $injection): self
     {
         return $this->withAddedInjections([$injection]);
     }

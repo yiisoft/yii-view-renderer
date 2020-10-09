@@ -27,16 +27,16 @@ final class CsrfViewInjection implements
 
     public function withParameterName(string $parameterName): self
     {
-        $clone = clone $this;
-        $clone->parameterName = $parameterName;
-        return $clone;
+        $new = clone $this;
+        $new->parameterName = $parameterName;
+        return $new;
     }
 
     public function withMetaAttributeName(string $metaAttributeName): self
     {
-        $clone = clone $this;
-        $clone->metaAttributeName = $metaAttributeName;
-        return $clone;
+        $new = clone $this;
+        $new->metaAttributeName = $metaAttributeName;
+        return $new;
     }
 
     /**

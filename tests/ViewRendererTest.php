@@ -28,7 +28,7 @@ final class ViewRendererTest extends TestCase
         $renderer = $this->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
-            ->withInjections([new TestInjection()]);
+            ->withInjections(new TestInjection());
 
         $response = $renderer->render('view', [
             'name' => 'donatello',
@@ -123,9 +123,8 @@ EOD;
         $this->assertNotSame($original, $original->withViewPath(''));
         $this->assertNotSame($original, $original->withViewBasePath(''));
         $this->assertNotSame($original, $original->withLayout(''));
-        $this->assertNotSame($original, $original->withAddedInjections([]));
-        $this->assertNotSame($original, $original->withAddedInjection($this->getCsrfViewInjection()));
-        $this->assertNotSame($original, $original->withInjections([]));
+        $this->assertNotSame($original, $original->withAddedInjections());
+        $this->assertNotSame($original, $original->withInjections());
         $this->assertNotSame($original, $original->withCsrf());
     }
 

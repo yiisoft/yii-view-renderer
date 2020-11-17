@@ -109,31 +109,14 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
-    /**
-     * @param object[] $injections
-     * @return self
-     */
-    public function withAddedInjections(array $injections): self
+    public function withAddedInjections(object ...$injections): self
     {
         $new = clone $this;
         $new->injections = array_merge($this->injections, $injections);
         return $new;
     }
 
-    /**
-     * @param object $injection
-     * @return self
-     */
-    public function withAddedInjection(object $injection): self
-    {
-        return $this->withAddedInjections([$injection]);
-    }
-
-    /**
-     * @param object[] $injections
-     * @return self
-     */
-    public function withInjections(array $injections): self
+    public function withInjections(object ...$injections): self
     {
         $new = clone $this;
         $new->injections = $injections;
@@ -142,7 +125,7 @@ final class ViewRenderer implements ViewContextInterface
 
     public function withCsrf(): self
     {
-        return $this->withAddedInjection($this->csrfViewInjection);
+        return $this->withAddedInjections($this->csrfViewInjection);
     }
 
     private function renderProxy(string $view, array $parameters = []): string

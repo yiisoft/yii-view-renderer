@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\View;
 
 interface ContentParametersInjectionInterface
 {
-
     /**
      * Returns parameters for added to content.
      *

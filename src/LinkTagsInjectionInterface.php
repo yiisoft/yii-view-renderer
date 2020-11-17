@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\View;
 
 interface LinkTagsInjectionInterface
 {
-
     /**
      * Returns array of link tags for register via {@see \Yiisoft\View\WebView::registerLinkTag()}.
      * Optionally, you may set the key that identifies the link tag via `__key`.

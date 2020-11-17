@@ -14,7 +14,6 @@ use Yiisoft\View\WebView;
 
 final class ViewRenderer implements ViewContextInterface
 {
-
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
@@ -73,7 +72,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->name = $this->extractControllerName($controller);
-
         return $new;
     }
 
@@ -81,7 +79,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->name = $name;
-
         return $new;
     }
 
@@ -89,7 +86,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->viewPath = $viewPath;
-
         return $new;
     }
 
@@ -97,7 +93,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->viewBasePath = $viewBasePath;
-
         return $new;
     }
 
@@ -105,7 +100,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->layout = $layout;
-
         return $new;
     }
 

@@ -21,7 +21,7 @@ final class ViewRenderer implements ViewContextInterface
     private CsrfViewInjection $csrfViewInjection;
 
     private string $viewBasePath;
-    private string $layout;
+    private ?string $layout;
     private array $injections;
 
     private ?string $name = null;
@@ -33,7 +33,7 @@ final class ViewRenderer implements ViewContextInterface
         WebView $view,
         CsrfViewInjection $csrfViewInjection,
         string $viewBasePath,
-        string $layout,
+        ?string $layout = null,
         array $injections = []
     ) {
         $this->responseFactory = $responseFactory;
@@ -101,7 +101,7 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
-    public function withLayout(string $layout): self
+    public function withLayout(?string $layout): self
     {
         $new = clone $this;
         $new->layout = $layout;

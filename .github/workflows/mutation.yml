@@ -9,20 +9,13 @@ name: mutation test
 jobs:
   mutation:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
-<<<<<<< HEAD
 
-=======
->>>>>>> master
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os:
           - ubuntu-latest
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         php:
           - "7.4"
 

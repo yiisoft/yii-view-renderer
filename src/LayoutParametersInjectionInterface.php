@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\View;
 
 interface LayoutParametersInjectionInterface
 {
-
     /**
      * Returns parameters for added to layout.
      *

@@ -14,14 +14,13 @@ use Yiisoft\View\WebView;
 
 final class ViewRenderer implements ViewContextInterface
 {
-
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
     private CsrfViewInjection $csrfViewInjection;
 
     private string $viewBasePath;
-    private string $layout;
+    private ?string $layout;
     private array $injections;
 
     private ?string $name = null;
@@ -33,7 +32,7 @@ final class ViewRenderer implements ViewContextInterface
         WebView $view,
         CsrfViewInjection $csrfViewInjection,
         string $viewBasePath,
-        string $layout,
+        ?string $layout = null,
         array $injections = []
     ) {
         $this->responseFactory = $responseFactory;
@@ -73,7 +72,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->name = $this->extractControllerName($controller);
-
         return $new;
     }
 
@@ -81,7 +79,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->name = $name;
-
         return $new;
     }
 
@@ -89,7 +86,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->viewPath = $viewPath;
-
         return $new;
     }
 
@@ -97,43 +93,24 @@ final class ViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->viewBasePath = $viewBasePath;
-
         return $new;
     }
 
-    public function withLayout(string $layout): self
+    public function withLayout(?string $layout): self
     {
         $new = clone $this;
         $new->layout = $layout;
-
         return $new;
     }
 
-    /**
-     * @param object[] $injections
-     * @return self
-     */
-    public function withAddedInjections(array $injections): self
+    public function withAddedInjections(object ...$injections): self
     {
         $new = clone $this;
         $new->injections = array_merge($this->injections, $injections);
         return $new;
     }
 
-    /**
-     * @param object $injection
-     * @return self
-     */
-    public function withAddedInjection(object $injection): self
-    {
-        return $this->withAddedInjections([$injection]);
-    }
-
-    /**
-     * @param object[] $injections
-     * @return self
-     */
-    public function withInjections(array $injections): self
+    public function withInjections(object ...$injections): self
     {
         $new = clone $this;
         $new->injections = $injections;
@@ -142,7 +119,7 @@ final class ViewRenderer implements ViewContextInterface
 
     public function withCsrf(): self
     {
-        return $this->withAddedInjection($this->csrfViewInjection);
+        return $this->withAddedInjections($this->csrfViewInjection);
     }
 
     private function renderProxy(string $view, array $parameters = []): string

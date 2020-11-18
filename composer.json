@@ -33,7 +33,8 @@
         "roave/infection-static-analysis-plugin": "^1.4",
         "vimeo/psalm": "^4.1",
         "yiisoft/di": "^3.0@dev",
-        "yiisoft/event-dispatcher": "^3.0@dev"
+        "yiisoft/event-dispatcher": "^3.0@dev",
+        "yiisoft/test-support": "3.0.x-dev"
     },
     "autoload": {
         "psr-4": {

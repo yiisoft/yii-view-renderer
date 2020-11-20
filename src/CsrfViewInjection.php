@@ -65,7 +65,7 @@ final class CsrfViewInjection implements
                 '__key' => 'csrf_meta_tags',
                 'name' => $this->metaAttributeName,
                 'content' => $this->csrfToken->getValue(),
-            ]
+            ],
         ];
     }
 }

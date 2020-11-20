@@ -163,6 +163,7 @@ EOD;
 
     /**
      * Asserting two strings equality ignoring line endings.
+     *
      * @param string $expected
      * @param string $actual
      * @param string $message

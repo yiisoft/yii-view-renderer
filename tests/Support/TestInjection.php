@@ -43,7 +43,7 @@ final class TestInjection implements
             [
                 '__key' => 'description',
                 'name' => 'description',
-                'content' => 'This website is about funny raccoons.'
+                'content' => 'This website is about funny raccoons.',
             ],
         ];
     }

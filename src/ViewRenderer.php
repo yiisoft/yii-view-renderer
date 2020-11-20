@@ -211,10 +211,13 @@ final class ViewRenderer implements ViewContextInterface
      * else returns all subnamespaces from `controller` (or `controllers`) to the end
      *
      * @param object $controller
+     *
      * @return string
+     *
      * @example App\Controller\FooBar\BazController -> foo-bar/baz
      * @example App\Controllers\FooBar\BazController -> foo-bar/baz
      * @example Path\To\File\BlogController -> blog
+     *
      * @see Inflector::pascalCaseToId()
      */
     private function extractControllerName(object $controller): string

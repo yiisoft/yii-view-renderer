@@ -51,7 +51,7 @@ final class ViewRenderer implements ViewContextInterface
             return $this->viewPath;
         }
 
-        return $this->aliases->get($this->viewBasePath) . '/' . $this->name;
+        return $this->aliases->get($this->viewBasePath) . ($this->name ? '/' . $this->name : '');
     }
 
     public function render(string $view, array $parameters = []): ResponseInterface

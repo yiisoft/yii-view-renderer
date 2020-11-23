@@ -23,7 +23,7 @@ interface MetaTagsInjectionInterface
      * ]
      * ```
      *
-     * @return array
+     * @return array[]
      */
     public function getMetaTags(): array;
 }

@@ -24,7 +24,7 @@ interface LinkTagsInjectionInterface
      * ]
      * ```
      *
-     * @return array
+     * @return array[]
      */
     public function getLinkTags(): array;
 }

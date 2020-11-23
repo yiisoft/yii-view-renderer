@@ -21,11 +21,24 @@ final class ViewRenderer implements ViewContextInterface
 
     private string $viewBasePath;
     private ?string $layout;
+
+    /**
+     * @var object[]
+     */
     private array $injections;
 
     private ?string $name = null;
     private ?string $viewPath = null;
 
+    /**
+     * @param DataResponseFactoryInterface $responseFactory
+     * @param Aliases $aliases
+     * @param WebView $view
+     * @param CsrfViewInjection $csrfViewInjection
+     * @param string $viewBasePath
+     * @param string|null $layout
+     * @param object[] $injections
+     */
     public function __construct(
         DataResponseFactoryInterface $responseFactory,
         Aliases $aliases,
@@ -51,12 +64,12 @@ final class ViewRenderer implements ViewContextInterface
             return $this->viewPath;
         }
 
-        return $this->aliases->get($this->viewBasePath) . '/' . $this->name;
+        return $this->aliases->get($this->viewBasePath) . ($this->name ? '/' . $this->name : '');
     }
 
     public function render(string $view, array $parameters = []): ResponseInterface
     {
-        $contentRenderer = fn () => $this->renderProxy($view, $parameters);
+        $contentRenderer = fn (): string => $this->renderProxy($view, $parameters);
 
         return $this->responseFactory->createResponse($contentRenderer);
     }
@@ -222,6 +235,7 @@ final class ViewRenderer implements ViewContextInterface
      */
     private function extractControllerName(object $controller): string
     {
+        /** @var string[] $cache */
         static $cache = [];
 
         $class = get_class($controller);

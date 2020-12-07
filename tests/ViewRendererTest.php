@@ -125,7 +125,6 @@ EOD;
         $this->assertNotSame($original, $original->withLayout(''));
         $this->assertNotSame($original, $original->withAddedInjections());
         $this->assertNotSame($original, $original->withInjections());
-        $this->assertNotSame($original, $original->withCsrf());
     }
 
     private function getRenderer(): ViewRenderer
@@ -141,18 +140,8 @@ EOD;
                 new SimpleEventDispatcher(),
                 new NullLogger()
             ),
-            $this->getCsrfViewInjection(),
             '@views',
             '@views/layout'
-        );
-    }
-
-    private function getCsrfViewInjection(): CsrfViewInjection
-    {
-        return new CsrfViewInjection(
-            new CsrfToken(
-                new FakeCsrfTokenStorage()
-            )
         );
     }
 

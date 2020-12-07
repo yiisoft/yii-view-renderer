@@ -17,7 +17,6 @@ final class ViewRenderer implements ViewContextInterface
     private DataResponseFactoryInterface $responseFactory;
     private Aliases $aliases;
     private WebView $view;
-    private CsrfViewInjection $csrfViewInjection;
 
     private string $viewBasePath;
     private ?string $layout;
@@ -34,7 +33,6 @@ final class ViewRenderer implements ViewContextInterface
      * @param DataResponseFactoryInterface $responseFactory
      * @param Aliases $aliases
      * @param WebView $view
-     * @param CsrfViewInjection $csrfViewInjection
      * @param string $viewBasePath
      * @param string|null $layout
      * @param object[] $injections
@@ -43,7 +41,6 @@ final class ViewRenderer implements ViewContextInterface
         DataResponseFactoryInterface $responseFactory,
         Aliases $aliases,
         WebView $view,
-        CsrfViewInjection $csrfViewInjection,
         string $viewBasePath,
         ?string $layout = null,
         array $injections = []
@@ -51,7 +48,6 @@ final class ViewRenderer implements ViewContextInterface
         $this->responseFactory = $responseFactory;
         $this->aliases = $aliases;
         $this->view = $view;
-        $this->csrfViewInjection = $csrfViewInjection;
 
         $this->viewBasePath = $viewBasePath;
         $this->layout = $layout;
@@ -128,11 +124,6 @@ final class ViewRenderer implements ViewContextInterface
         $new = clone $this;
         $new->injections = $injections;
         return $new;
-    }
-
-    public function withCsrf(): self
-    {
-        return $this->withAddedInjections($this->csrfViewInjection);
     }
 
     private function renderProxy(string $view, array $parameters = []): string

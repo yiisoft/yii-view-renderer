@@ -10,14 +10,11 @@ use Psr\Log\NullLogger;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Csrf\CsrfToken;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\Theme;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\CsrfViewInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
-use Yiisoft\Yii\View\Tests\Support\FakeCsrfTokenStorage;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\ViewRenderer;
 

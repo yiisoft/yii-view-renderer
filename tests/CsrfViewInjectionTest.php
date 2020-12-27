@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Tests;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Csrf\CsrfToken;
-use Yiisoft\Security\TokenMask;
 use Yiisoft\Yii\View\CsrfViewInjection;
-use Yiisoft\Yii\View\Tests\Support\FakeCsrfTokenStorage;
+use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
 
 final class CsrfViewInjectionTest extends TestCase
 {
@@ -21,13 +18,7 @@ final class CsrfViewInjectionTest extends TestCase
 
         $this->assertCount(1, $parameters);
         $this->assertSame('csrf', key($parameters));
-        $this->assertSame($token, TokenMask::remove(current($parameters)));
-    }
-
-    public function testGetContentParametersWhenNotDefinedCsrfToken(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->getInjection()->getContentParameters();
+        $this->assertSame($token, current($parameters));
     }
 
     public function testGetLayoutPatameters(): void
@@ -38,13 +29,7 @@ final class CsrfViewInjectionTest extends TestCase
 
         $this->assertCount(1, $parameters);
         $this->assertSame('csrf', key($parameters));
-        $this->assertSame($token, TokenMask::remove(current($parameters)));
-    }
-
-    public function testGetLayoutParametersWhenNotDefinedCsrfToken(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->getInjection()->getLayoutParameters();
+        $this->assertSame($token, current($parameters));
     }
 
     public function testGetMetaTags(): void
@@ -59,18 +44,10 @@ final class CsrfViewInjectionTest extends TestCase
 
         $this->assertArrayHasKey('content', $metaTag);
 
-        $metaTag['content'] = TokenMask::remove($metaTag['content']);
-
         $this->assertSame(
             ['__key' => 'csrf_meta_tags', 'name' => 'csrf', 'content' => $token],
             $metaTag
         );
-    }
-
-    public function testGetMetaTagsWhenNotDefinedCsrfToken(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->getInjection()->getMetaTags();
     }
 
     public function testWithParameterName(): void
@@ -102,13 +79,8 @@ final class CsrfViewInjectionTest extends TestCase
 
     private function getInjection(string $token = null): CsrfViewInjection
     {
-        $csrfTokenStorage = new FakeCsrfTokenStorage();
-        if ($token !== null) {
-            $csrfTokenStorage->set($token);
-        }
-
         return new CsrfViewInjection(
-            new CsrfToken($csrfTokenStorage)
+            new FakeCsrfToken($token)
         );
     }
 }

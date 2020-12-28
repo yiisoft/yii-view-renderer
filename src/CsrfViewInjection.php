@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use LogicException;
-use Yiisoft\Csrf\CsrfToken;
+use Yiisoft\Csrf\CsrfTokenInterface;
 
 final class CsrfViewInjection implements
     ContentParametersInjectionInterface,
@@ -18,9 +18,9 @@ final class CsrfViewInjection implements
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
-    private CsrfToken $csrfToken;
+    private CsrfTokenInterface $csrfToken;
 
-    public function __construct(CsrfToken $csrfToken)
+    public function __construct(CsrfTokenInterface $csrfToken)
     {
         $this->csrfToken = $csrfToken;
     }

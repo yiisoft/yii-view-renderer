@@ -112,6 +112,13 @@ EOD;
         $this->assertSame('/dir/', $renderer->getViewPath());
     }
 
+    public function testWithViewPathWithAlias(): void
+    {
+        $renderer = $this->getRenderer()->withViewPath('@views/dir');
+
+        $this->assertSame($this->getViewsDir() . '/dir', $renderer->getViewPath());
+    }
+
     public function testImmutability(): void
     {
         $original = $this->getRenderer();

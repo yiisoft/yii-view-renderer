@@ -57,7 +57,7 @@ final class ViewRenderer implements ViewContextInterface
     public function getViewPath(): string
     {
         if ($this->viewPath !== null) {
-            return $this->viewPath;
+            return $this->aliases->get($this->viewPath);
         }
 
         return $this->aliases->get($this->viewBasePath) . ($this->name ? '/' . $this->name : '');

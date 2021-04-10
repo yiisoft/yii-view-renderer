@@ -140,7 +140,6 @@ EOD;
             new Aliases(['@views' => $this->getViewsDir()]),
             new WebView(
                 '@views',
-                new Theme(),
                 new SimpleEventDispatcher(),
                 new NullLogger()
             ),

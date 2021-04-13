@@ -12,7 +12,6 @@ use stdClass;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
-use Yiisoft\View\Theme;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
@@ -140,7 +139,6 @@ EOD;
             new Aliases(['@views' => $this->getViewsDir()]),
             new WebView(
                 '@views',
-                new Theme(),
                 new SimpleEventDispatcher(),
                 new NullLogger()
             ),

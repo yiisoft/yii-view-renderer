@@ -126,7 +126,7 @@ final class ViewRenderer implements ViewContextInterface
 
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
     {
-        $content = $this->view->render($view, $parameters, $this);
+        $content = $this->view->withContext($this)->render($view, $parameters);
 
         return $this->responseFactory->createResponse($content);
     }
@@ -190,7 +190,7 @@ final class ViewRenderer implements ViewContextInterface
         $this->injectMetaTags($metaTags);
         $this->injectLinkTags($linkTags);
 
-        $content = $this->view->render($view, $contentParameters, $this);
+        $content = $this->view->withContext($this)->render($view, $contentParameters);
 
         $layout = $this->findLayoutFile($this->layout);
         if ($layout === null) {

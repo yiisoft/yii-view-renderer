@@ -190,7 +190,8 @@ final class ViewRenderer implements ViewContextInterface
         $this->injectMetaTags($metaTags);
         $this->injectLinkTags($linkTags);
 
-        $content = $this->view->withContext($this)->render($view, $contentParameters);
+        $viewObject = $this->view->withContext($this);
+        $content = $viewObject->render($view, $contentParameters);
 
         $layout = $this->findLayoutFile($this->layout);
         if ($layout === null) {
@@ -199,10 +200,9 @@ final class ViewRenderer implements ViewContextInterface
 
         $layoutParameters['content'] = $content;
 
-        return $this->view->renderFile(
+        return $viewObject->renderFile(
             $layout,
-            $layoutParameters,
-            $this,
+            $layoutParameters
         );
     }
 

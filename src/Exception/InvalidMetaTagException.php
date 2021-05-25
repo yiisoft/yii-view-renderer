@@ -38,7 +38,6 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
     public function getName(): string
     {
         return 'Invalid meta tag configuration in injection';
-
     }
 
     public function getSolution(): ?string

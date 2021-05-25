@@ -38,7 +38,6 @@ final class InvalidLinkTagException extends RuntimeException implements Friendly
     public function getName(): string
     {
         return 'Invalid link tag configuration in injection';
-
     }
 
     public function getSolution(): ?string

@@ -6,13 +6,24 @@ namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Link;
+use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Exception\InvalidLinkTagKeyException;
+use Yiisoft\Yii\View\Exception\InvalidLinkTagPositionException;
+use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\Exception\InvalidMetaTagKeyException;
 
+use function array_key_exists;
+use function get_class;
 use function is_array;
+use function is_int;
+use function is_string;
 
 /**
  * @psalm-import-type MetaTagsConfig from MetaTagsInjectionInterface
@@ -228,12 +239,26 @@ final class ViewRenderer implements ViewContextInterface
      */
     private function injectMetaTags(array $tags): void
     {
+        /** @var mixed $tag */
         foreach ($tags as $tag) {
             if (is_array($tag)) {
+                /** @var mixed */
                 $key = $tag['__key'] ?? null;
-                $tag = $tag[0];
+                if (!is_string($key) && $key !== null) {
+                    throw new InvalidMetaTagKeyException($key, $tag);
+                }
+
+                if (isset($tag[0]) && $tag[0] instanceof Meta) {
+                    $tag = $tag[0];
+                } else {
+                    unset($tag['__key']);
+                    $tag = Html::meta($tag);
+                }
             } else {
                 $key = null;
+                if (!($tag instanceof Meta)) {
+                    throw new InvalidMetaTagException($tag);
+                }
             }
 
             $this->view->registerMetaTag($tag, $key);
@@ -245,14 +270,33 @@ final class ViewRenderer implements ViewContextInterface
      */
     private function injectLinkTags(array $tags): void
     {
+        /** @var mixed $tag */
         foreach ($tags as $tag) {
             if (is_array($tag)) {
+                /** @var mixed */
                 $key = $tag['__key'] ?? null;
+                if (!is_string($key) && $key !== null) {
+                    throw new InvalidLinkTagKeyException($key, $tag);
+                }
+
+                /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;
-                $tag = $tag[0];
+                if (!is_int($position)) {
+                    throw new InvalidLinkTagPositionException($position, $tag);
+                }
+
+                if (isset($tag[0]) && $tag[0] instanceof Link) {
+                    $tag = $tag[0];
+                } else {
+                    unset($tag['__key'], $tag['__position']);
+                    $tag = Html::link()->attributes($tag);
+                }
             } else {
                 $key = null;
                 $position = WebView::POSITION_HEAD;
+                if (!($tag instanceof Link)) {
+                    throw new InvalidLinkTagException($tag);
+                }
             }
 
             $this->view->registerLinkTag($tag, $position, $key);

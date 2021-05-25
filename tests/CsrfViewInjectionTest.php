@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Yii\View\CsrfViewInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
 
@@ -42,12 +43,12 @@ final class CsrfViewInjectionTest extends TestCase
 
         $metaTag = reset($metaTags);
 
-        $this->assertArrayHasKey('content', $metaTag);
+        $this->assertArrayHasKey('__key', $metaTag);
+        $this->assertArrayHasKey(0, $metaTag);
+        $this->assertInstanceOf(Meta::class, $metaTag[0]);
 
-        $this->assertSame(
-            ['__key' => 'csrf_meta_tags', 'name' => 'csrf', 'content' => $token],
-            $metaTag
-        );
+        $this->assertSame('csrf_meta_tags', $metaTag['__key']);
+        $this->assertSame('<meta name="csrf" content="123">', $metaTag[0]->render());
     }
 
     public function testWithParameterName(): void
@@ -67,7 +68,7 @@ final class CsrfViewInjectionTest extends TestCase
             ->withMetaAttributeName('kitty')
             ->getMetaTags();
 
-        $this->assertSame('kitty', $metaTags[0]['name']);
+        $this->assertSame('<meta name="kitty" content="123">', $metaTags[0][0]->render());
     }
 
     public function testImmutability(): void

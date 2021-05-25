@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Tests\Support;
 
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\View\ContentParametersInjectionInterface;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\LinkTagsInjectionInterface;
@@ -30,9 +31,10 @@ final class TestInjection implements
         return [
             [
                 '__key' => 'favicon',
-                'rel' => 'icon',
-                'type' => 'image/png',
-                'href' => '/icon.png',
+                Html::link('/icon.png', [
+                    'rel' => 'icon',
+                    'type' => 'image/png',
+                ]),
             ],
         ];
     }
@@ -42,8 +44,10 @@ final class TestInjection implements
         return [
             [
                 '__key' => 'description',
-                'name' => 'description',
-                'content' => 'This website is about funny raccoons.',
+                Html::meta([
+                    'name' => 'description',
+                    'content' => 'This website is about funny raccoons.',
+                ]),
             ],
         ];
     }

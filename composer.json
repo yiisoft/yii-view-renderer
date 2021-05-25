@@ -24,6 +24,7 @@
         "yiisoft/arrays": "^1.0",
         "yiisoft/csrf": "^1.0",
         "yiisoft/data-response": "^3.0@dev",
+        "yiisoft/html": "^1.2",
         "yiisoft/strings": "^2.0",
         "yiisoft/view": "^3.0@dev"
     },

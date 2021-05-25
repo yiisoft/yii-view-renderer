@@ -12,6 +12,12 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 
+use function is_array;
+
+/**
+ * @psalm-import-type MetaTagsConfig from MetaTagsInjectionInterface
+ * @psalm-import-type LinkTagsConfig from LinkTagsInjectionInterface
+ */
 final class ViewRenderer implements ViewContextInterface
 {
     private DataResponseFactoryInterface $responseFactory;
@@ -102,6 +108,9 @@ final class ViewRenderer implements ViewContextInterface
         return $parameters;
     }
 
+    /**
+     * @psalm-return MetaTagsConfig
+     */
     private function getMetaTags(): array
     {
         $tags = [];
@@ -113,6 +122,9 @@ final class ViewRenderer implements ViewContextInterface
         return $tags;
     }
 
+    /**
+     * @psalm-return LinkTagsConfig
+     */
     private function getLinkTags(): array
     {
         $tags = [];
@@ -181,6 +193,10 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * @psalm-param MetaTagsConfig $metaTags
+     * @psalm-param LinkTagsConfig $linkTags
+     */
     private function renderProxy(
         string $view,
         array $contentParameters,
@@ -207,19 +223,39 @@ final class ViewRenderer implements ViewContextInterface
         );
     }
 
+    /**
+     * @psalm-param MetaTagsConfig $tags
+     */
     private function injectMetaTags(array $tags): void
     {
         foreach ($tags as $tag) {
-            $key = ArrayHelper::remove($tag, '__key');
+            if (is_array($tag)) {
+                $key = $tag['__key'] ?? null;
+                $tag = $tag[0];
+            } else {
+                $key = null;
+            }
+
             $this->view->registerMetaTag($tag, $key);
         }
     }
 
+    /**
+     * @psalm-param LinkTagsConfig $tags
+     */
     private function injectLinkTags(array $tags): void
     {
         foreach ($tags as $tag) {
-            $key = ArrayHelper::remove($tag, '__key');
-            $this->view->registerLinkTag($tag, $key);
+            if (is_array($tag)) {
+                $key = $tag['__key'] ?? null;
+                $position = $tag['__position'] ?? WebView::POSITION_HEAD;
+                $tag = $tag[0];
+            } else {
+                $key = null;
+                $position = WebView::POSITION_HEAD;
+            }
+
+            $this->view->registerLinkTag($tag, $position, $key);
         }
     }
 

@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\View;
 
 use LogicException;
 use Yiisoft\Csrf\CsrfTokenInterface;
+use Yiisoft\Html\Html;
 
 final class CsrfViewInjection implements
     ContentParametersInjectionInterface,
@@ -63,8 +64,10 @@ final class CsrfViewInjection implements
         return [
             [
                 '__key' => 'csrf_meta_tags',
-                'name' => $this->metaAttributeName,
-                'content' => $this->csrfToken->getValue(),
+                Html::meta([
+                    'name' => $this->metaAttributeName,
+                    'content' => $this->csrfToken->getValue(),
+                ]),
             ],
         ];
     }

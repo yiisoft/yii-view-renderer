@@ -35,8 +35,7 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
         $solution .= <<<SOLUTION
 
 
-In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defined meta tags
-in the method `getMetaTags()`.
+In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defined meta tags in the method `getMetaTags()`.
 
 The meta tag can be define in the following ways:
 

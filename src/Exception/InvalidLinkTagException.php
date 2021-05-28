@@ -35,8 +35,7 @@ final class InvalidLinkTagException extends RuntimeException implements Friendly
         $solution .= <<<SOLUTION
 
 
-In injection that implements `Yiisoft\Yii\View\LinkTagsInjectionInterface` defined link tags
-in the method `getLinkTags()`.
+In injection that implements `Yiisoft\Yii\View\LinkTagsInjectionInterface` defined link tags in the method `getLinkTags()`.
 
 The link tag can be define in the following ways:
 

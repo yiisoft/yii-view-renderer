@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\View;
 
 use LogicException;
 use Yiisoft\Csrf\CsrfTokenInterface;
-use Yiisoft\Html\Html;
 
 final class CsrfViewInjection implements
     ContentParametersInjectionInterface,

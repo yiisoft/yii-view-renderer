@@ -6,11 +6,6 @@ namespace Yiisoft\Yii\View\Exception;
 
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
-use Yiisoft\Html\Tag\Meta;
-
-use function get_class;
-use function gettype;
-use function is_object;
 
 final class InvalidMetaTagException extends RuntimeException implements FriendlyExceptionInterface
 {
@@ -22,17 +17,11 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
     /**
      * @param mixed $tag
      */
-    public function __construct($tag)
+    public function __construct(string $message, $tag)
     {
         $this->tag = $tag;
 
-        parent::__construct(
-            sprintf(
-                'Meta tag in injection should be instance of %s or an array. Got %s.',
-                Meta::class,
-                is_object($tag) ? get_class($tag) : gettype($tag)
-            )
-        );
+        parent::__construct($message);
     }
 
     public function getName(): string
@@ -42,6 +31,35 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
 
     public function getSolution(): ?string
     {
-        return 'Got meta tag:' . "\n" . var_export($this->tag, true);
+        $solution = 'Got meta tag:' . "\n" . var_export($this->tag, true);
+        $solution .= <<<SOLUTION
+
+
+In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defined meta tags
+in the method `getMetaTags()`.
+
+The meta tag can be define in the following ways:
+
+- as array of attributes: `['name' => 'keywords', 'content' => 'yii,framework']`,
+- as instance of `Yiisoft\Html\Tag\Meta`: `Html::meta()->name('keywords')->content('yii,framework')`.
+
+Optionally, you may use string keys of array as identifies the meta tag.
+
+Example:
+
+```php
+public function getMetaTags(): array
+{
+    return [
+        'seo-keywords' => [
+            'name' => 'keywords',
+            'content' => 'yii,framework',
+        ],
+        Html::meta()->name('description')->content('Yii is a fast, secure, and efficient PHP framework.'),
+    ];
+}
+```
+SOLUTION;
+        return $solution;
     }
 }

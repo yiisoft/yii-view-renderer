@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Html\Html;
@@ -19,8 +20,10 @@ use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
 use function array_key_exists;
 use function get_class;
+use function gettype;
 use function is_array;
 use function is_int;
+use function is_object;
 use function is_string;
 
 /**
@@ -247,7 +250,14 @@ final class ViewRenderer implements ViewContextInterface
             }
 
             if (!($tag instanceof Meta)) {
-                throw new InvalidMetaTagException($tag);
+                throw new InvalidMetaTagException(
+                    sprintf(
+                        'Meta tag in injection should be instance of %s or an array. Got %s.',
+                        Meta::class,
+                        is_object($tag) ? get_class($tag) : gettype($tag)
+                    ),
+                    $tag
+                );
             }
             $this->view->registerMetaTag($tag, $key);
         }
@@ -328,7 +338,7 @@ final class ViewRenderer implements ViewContextInterface
 
         $regexp = '/((?<=controller\\\|s\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
         if (!preg_match($regexp, $class, $m) || empty($m[1])) {
-            throw new \RuntimeException('Cannot detect controller name');
+            throw new RuntimeException('Cannot detect controller name');
         }
 
         $inflector = new Inflector();

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Yii\View\CsrfViewInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
 

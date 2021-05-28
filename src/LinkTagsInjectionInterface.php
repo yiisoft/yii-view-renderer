@@ -19,7 +19,7 @@ interface LinkTagsInjectionInterface
      * Returns array of link tags for register via {@see \Yiisoft\View\WebView::registerLinkTag()}.
      * Optionally:
      *  - use array format and set the position in a page via `__position`.
-     *  - use string keys of array as identifies the meta tag.
+     *  - use string keys of array as identifies the link tag.
      *
      * For example:
      *

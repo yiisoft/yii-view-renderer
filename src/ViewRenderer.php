@@ -15,7 +15,6 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
-use Yiisoft\Yii\View\Exception\InvalidLinkTagPositionException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
 use function array_key_exists;
@@ -254,7 +253,7 @@ final class ViewRenderer implements ViewContextInterface
                     sprintf(
                         'Meta tag in injection should be instance of %s or an array. Got %s.',
                         Meta::class,
-                        is_object($tag) ? get_class($tag) : gettype($tag)
+                        $this->getType($tag),
                     ),
                     $tag
                 );
@@ -274,7 +273,13 @@ final class ViewRenderer implements ViewContextInterface
                 /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;
                 if (!is_int($position)) {
-                    throw new InvalidLinkTagPositionException($position, $tag);
+                    throw new InvalidLinkTagException(
+                        sprintf(
+                            'Link tag position in injection should be integer. Got %s.',
+                            $this->getType($position),
+                        ),
+                        $tag
+                    );
                 }
 
                 if (isset($tag[0]) && $tag[0] instanceof Link) {
@@ -286,7 +291,14 @@ final class ViewRenderer implements ViewContextInterface
             } else {
                 $position = WebView::POSITION_HEAD;
                 if (!($tag instanceof Link)) {
-                    throw new InvalidLinkTagException($tag);
+                    throw new InvalidLinkTagException(
+                        sprintf(
+                            'Link tag in injection should be instance of %s or an array. Got %s.',
+                            Link::class,
+                            $this->getType($tag),
+                        ),
+                        $tag
+                    );
                 }
             }
 
@@ -344,5 +356,13 @@ final class ViewRenderer implements ViewContextInterface
         $inflector = new Inflector();
         $name = str_replace('\\', '/', $m[1]);
         return $cache[$class] = $inflector->pascalCaseToId($name);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function getType($value): string
+    {
+        return is_object($value) ? get_class($value) : gettype($value);
     }
 }

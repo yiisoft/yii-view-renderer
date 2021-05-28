@@ -29,13 +29,10 @@ final class TestInjection implements
     public function getLinkTags(): array
     {
         return [
-            [
-                '__key' => 'favicon',
-                Html::link('/icon.png', [
-                    'rel' => 'icon',
-                    'type' => 'image/png',
-                ]),
-            ],
+            'favicon' => Html::link('/icon.png', [
+                'rel' => 'icon',
+                'type' => 'image/png',
+            ]),
         ];
     }
 

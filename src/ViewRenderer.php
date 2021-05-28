@@ -14,7 +14,6 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
-use Yiisoft\Yii\View\Exception\InvalidLinkTagKeyException;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagPositionException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
@@ -260,14 +259,8 @@ final class ViewRenderer implements ViewContextInterface
     private function injectLinkTags(array $tags): void
     {
         /** @var mixed $tag */
-        foreach ($tags as $tag) {
+        foreach ($tags as $key => $tag) {
             if (is_array($tag)) {
-                /** @var mixed */
-                $key = $tag['__key'] ?? null;
-                if (!is_string($key) && $key !== null) {
-                    throw new InvalidLinkTagKeyException($key, $tag);
-                }
-
                 /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;
                 if (!is_int($position)) {
@@ -277,18 +270,17 @@ final class ViewRenderer implements ViewContextInterface
                 if (isset($tag[0]) && $tag[0] instanceof Link) {
                     $tag = $tag[0];
                 } else {
-                    unset($tag['__key'], $tag['__position']);
+                    unset($tag['__position']);
                     $tag = Html::link()->attributes($tag);
                 }
             } else {
-                $key = null;
                 $position = WebView::POSITION_HEAD;
                 if (!($tag instanceof Link)) {
                     throw new InvalidLinkTagException($tag);
                 }
             }
 
-            $this->view->registerLinkTag($tag, $position, $key);
+            $this->view->registerLinkTag($tag, $position, is_string($key) ? $key : null);
         }
     }
 

@@ -5,13 +5,30 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Link;
+use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
+use function array_key_exists;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
+
+/**
+ * @psalm-import-type MetaTagsConfig from MetaTagsInjectionInterface
+ * @psalm-import-type LinkTagsConfig from LinkTagsInjectionInterface
+ */
 final class ViewRenderer implements ViewContextInterface
 {
     private DataResponseFactoryInterface $responseFactory;
@@ -102,6 +119,9 @@ final class ViewRenderer implements ViewContextInterface
         return $parameters;
     }
 
+    /**
+     * @psalm-return MetaTagsConfig
+     */
     private function getMetaTags(): array
     {
         $tags = [];
@@ -113,6 +133,9 @@ final class ViewRenderer implements ViewContextInterface
         return $tags;
     }
 
+    /**
+     * @psalm-return LinkTagsConfig
+     */
     private function getLinkTags(): array
     {
         $tags = [];
@@ -181,6 +204,10 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * @psalm-param MetaTagsConfig $metaTags
+     * @psalm-param LinkTagsConfig $linkTags
+     */
     private function renderProxy(
         string $view,
         array $contentParameters,
@@ -207,19 +234,75 @@ final class ViewRenderer implements ViewContextInterface
         );
     }
 
+    /**
+     * @psalm-param MetaTagsConfig $tags
+     */
     private function injectMetaTags(array $tags): void
     {
-        foreach ($tags as $tag) {
-            $key = ArrayHelper::remove($tag, '__key');
+        /** @var mixed $tag */
+        foreach ($tags as $key => $tag) {
+            $key = is_string($key) ? $key : null;
+
+            if (is_array($tag)) {
+                $this->view->registerMeta($tag, $key);
+                continue;
+            }
+
+            if (!($tag instanceof Meta)) {
+                throw new InvalidMetaTagException(
+                    sprintf(
+                        'Meta tag in injection should be instance of %s or an array. Got %s.',
+                        Meta::class,
+                        $this->getType($tag),
+                    ),
+                    $tag
+                );
+            }
             $this->view->registerMetaTag($tag, $key);
         }
     }
 
+    /**
+     * @psalm-param LinkTagsConfig $tags
+     */
     private function injectLinkTags(array $tags): void
     {
-        foreach ($tags as $tag) {
-            $key = ArrayHelper::remove($tag, '__key');
-            $this->view->registerLinkTag($tag, $key);
+        /** @var mixed $tag */
+        foreach ($tags as $key => $tag) {
+            if (is_array($tag)) {
+                /** @var mixed */
+                $position = $tag['__position'] ?? WebView::POSITION_HEAD;
+                if (!is_int($position)) {
+                    throw new InvalidLinkTagException(
+                        sprintf(
+                            'Link tag position in injection should be integer. Got %s.',
+                            $this->getType($position),
+                        ),
+                        $tag
+                    );
+                }
+
+                if (isset($tag[0]) && $tag[0] instanceof Link) {
+                    $tag = $tag[0];
+                } else {
+                    unset($tag['__position']);
+                    $tag = Html::link()->attributes($tag);
+                }
+            } else {
+                $position = WebView::POSITION_HEAD;
+                if (!($tag instanceof Link)) {
+                    throw new InvalidLinkTagException(
+                        sprintf(
+                            'Link tag in injection should be instance of %s or an array. Got %s.',
+                            Link::class,
+                            $this->getType($tag),
+                        ),
+                        $tag
+                    );
+                }
+            }
+
+            $this->view->registerLinkTag($tag, $position, is_string($key) ? $key : null);
         }
     }
 
@@ -267,11 +350,19 @@ final class ViewRenderer implements ViewContextInterface
 
         $regexp = '/((?<=controller\\\|s\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
         if (!preg_match($regexp, $class, $m) || empty($m[1])) {
-            throw new \RuntimeException('Cannot detect controller name');
+            throw new RuntimeException('Cannot detect controller name');
         }
 
         $inflector = new Inflector();
         $name = str_replace('\\', '/', $m[1]);
         return $cache[$class] = $inflector->pascalCaseToId($name);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function getType($value): string
+    {
+        return is_object($value) ? get_class($value) : gettype($value);
     }
 }

@@ -42,13 +42,10 @@ final class TestInjection implements
     public function getMetaTags(): array
     {
         return [
-            [
-                '__key' => 'description',
-                Html::meta([
-                    'name' => 'description',
-                    'content' => 'This website is about funny raccoons.',
-                ]),
-            ],
+            'description' => Html::meta([
+                'name' => 'description',
+                'content' => 'This website is about funny raccoons.',
+            ]),
         ];
     }
 }

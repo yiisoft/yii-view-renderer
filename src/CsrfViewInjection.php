@@ -15,6 +15,7 @@ final class CsrfViewInjection implements
 {
     public const DEFAULT_META_ATTRIBUTE_NAME = 'csrf';
     public const DEFAULT_PARAMETER_NAME = 'csrf';
+    public const META_TAG_KEY = 'csrf';
 
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
@@ -62,12 +63,9 @@ final class CsrfViewInjection implements
     public function getMetaTags(): array
     {
         return [
-            [
-                '__key' => 'csrf_meta_tags',
-                Html::meta([
-                    'name' => $this->metaAttributeName,
-                    'content' => $this->csrfToken->getValue(),
-                ]),
+            self::META_TAG_KEY => [
+                'name' => $this->metaAttributeName,
+                'content' => $this->csrfToken->getValue(),
             ],
         ];
     }

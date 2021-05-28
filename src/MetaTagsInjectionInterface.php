@@ -5,34 +5,25 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 /**
- * @psalm-type MetaTagAsArray = array{
- *   __key?:string,
- * }&array<string,mixed>
- * @psalm-type MetaTagsConfig = array<int, \Yiisoft\Html\Tag\Meta|MetaTagAsArray|array{
- *   __key?:string,
- *   0:\Yiisoft\Html\Tag\Meta
- * }>
+ * @psalm-type MetaTagsConfig = array<array-key, \Yiisoft\Html\Tag\Meta|array<string,mixed>>
  */
 interface MetaTagsInjectionInterface
 {
     /**
      * Returns array of meta tags for register via {@see \Yiisoft\View\WebView::registerMetaTag()}.
-     * Optionally, you may use array format and set the key that identifies the meta tag via `__key`.
+     * Optionally, you may use string keys of array as identifies the meta tag.
      *
      * For example:
      *
      * ```php
      * [
      *     Html::meta()->name('keywords')->content('yii,framework'),
+     *     'noindex' => Html::meta()->name('robots')->content('noindex'),
      *     [
-     *         '__key' => 'description',
-     *         Html::meta([
-     *             'name' => 'description',
-     *             'content' => 'This website is about funny raccoons.',
-     *         ]),
+     *         'name' => 'description',
+     *         'content' => 'This website is about funny raccoons.',
      *     ],
-     *     [
-     *         '__key' => 'keywords',
+     *     'keywords' => [
      *         'name' => 'keywords',
      *         'content' => 'yii,framework',
      *     ],

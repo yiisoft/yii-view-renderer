@@ -35,20 +35,17 @@ final class CsrfViewInjectionTest extends TestCase
 
     public function testGetMetaTags(): void
     {
-        $token = '123';
+        $metaTags = $this->getInjection('123')->getMetaTags();
 
-        $metaTags = $this->getInjection($token)->getMetaTags();
-
-        $this->assertCount(1, $metaTags);
-
-        $metaTag = reset($metaTags);
-
-        $this->assertArrayHasKey('__key', $metaTag);
-        $this->assertArrayHasKey(0, $metaTag);
-        $this->assertInstanceOf(Meta::class, $metaTag[0]);
-
-        $this->assertSame('csrf_meta_tags', $metaTag['__key']);
-        $this->assertSame('<meta name="csrf" content="123">', $metaTag[0]->render());
+        $this->assertSame(
+            [
+                CsrfViewInjection::META_TAG_KEY => [
+                    'name' => CsrfViewInjection::DEFAULT_META_ATTRIBUTE_NAME,
+                    'content' => '123',
+                ],
+            ],
+            $metaTags
+        );
     }
 
     public function testWithParameterName(): void
@@ -68,7 +65,15 @@ final class CsrfViewInjectionTest extends TestCase
             ->withMetaAttributeName('kitty')
             ->getMetaTags();
 
-        $this->assertSame('<meta name="kitty" content="123">', $metaTags[0][0]->render());
+        $this->assertSame(
+            [
+                CsrfViewInjection::META_TAG_KEY => [
+                    'name' => 'kitty',
+                    'content' => '123',
+                ],
+            ],
+            $metaTags
+        );
     }
 
     public function testImmutability(): void

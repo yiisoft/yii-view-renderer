@@ -17,7 +17,6 @@ use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagKeyException;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagPositionException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
-use Yiisoft\Yii\View\Exception\InvalidMetaTagKeyException;
 
 use function array_key_exists;
 use function get_class;
@@ -240,27 +239,17 @@ final class ViewRenderer implements ViewContextInterface
     private function injectMetaTags(array $tags): void
     {
         /** @var mixed $tag */
-        foreach ($tags as $tag) {
-            if (is_array($tag)) {
-                /** @var mixed */
-                $key = $tag['__key'] ?? null;
-                if (!is_string($key) && $key !== null) {
-                    throw new InvalidMetaTagKeyException($key, $tag);
-                }
+        foreach ($tags as $key => $tag) {
+            $key = is_string($key) ? $key : null;
 
-                if (isset($tag[0]) && $tag[0] instanceof Meta) {
-                    $tag = $tag[0];
-                } else {
-                    unset($tag['__key']);
-                    $tag = Html::meta($tag);
-                }
-            } else {
-                $key = null;
-                if (!($tag instanceof Meta)) {
-                    throw new InvalidMetaTagException($tag);
-                }
+            if (is_array($tag)) {
+                $this->view->registerMeta($tag, $key);
+                continue;
             }
 
+            if (!($tag instanceof Meta)) {
+                throw new InvalidMetaTagException($tag);
+            }
             $this->view->registerMetaTag($tag, $key);
         }
     }

@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\View\Tests;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Aliases\Aliases;
@@ -15,10 +14,13 @@ use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
+use Yiisoft\Yii\View\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ViewRendererTest extends TestCase
 {
+    use TestTrait;
+
     public function testRender(): void
     {
         $renderer = $this->getRenderer()
@@ -41,7 +43,7 @@ final class ViewRendererTest extends TestCase
 </html>
 EOD;
 
-        $this->assertSameWithoutLE($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
     }
 
     public function testRenderWithFullPathLayout(): void
@@ -139,8 +141,7 @@ EOD;
             new Aliases(['@views' => $this->getViewsDir()]),
             new WebView(
                 '@views',
-                new SimpleEventDispatcher(),
-                new NullLogger()
+                new SimpleEventDispatcher()
             ),
             '@views',
             '@views/layout'
@@ -150,19 +151,5 @@ EOD;
     private function getViewsDir(): string
     {
         return __DIR__ . '/views';
-    }
-
-    /**
-     * Asserting two strings equality ignoring line endings.
-     *
-     * @param string $expected
-     * @param string $actual
-     * @param string $message
-     */
-    public function assertSameWithoutLE(string $expected, string $actual, string $message = ''): void
-    {
-        $expected = str_replace("\r\n", "\n", $expected);
-        $actual = str_replace("\r\n", "\n", $actual);
-        $this->assertSame($expected, $actual, $message);
     }
 }

@@ -39,9 +39,9 @@ final class TestInjection implements
             ),
             [
                 'rel' => 'preload',
-                'href' => "myFont.woff2",
+                'href' => 'myFont.woff2',
                 'as' => 'font',
-                'type' => 'font/woff2'
+                'type' => 'font/woff2',
             ],
             [
                 Html::link('fancy.css', ['rel' => 'alternate stylesheet']),

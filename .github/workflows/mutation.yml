@@ -16,6 +16,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+
         php:
           - "7.4"
 

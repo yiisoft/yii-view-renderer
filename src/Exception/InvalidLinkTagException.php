@@ -31,8 +31,7 @@ final class InvalidLinkTagException extends RuntimeException implements Friendly
 
     public function getSolution(): ?string
     {
-        $solution = 'Got link tag:' . "\n" . var_export($this->tag, true);
-        $solution .= <<<SOLUTION
+        return 'Got link tag:' . "\n" . var_export($this->tag, true) . <<<SOLUTION
 
 
 In injection that implements `Yiisoft\Yii\View\LinkTagsInjectionInterface` defined link tags in the method `getLinkTags()`.
@@ -69,6 +68,5 @@ public function getLinkTags(): array
 }
 ```
 SOLUTION;
-        return $solution;
     }
 }

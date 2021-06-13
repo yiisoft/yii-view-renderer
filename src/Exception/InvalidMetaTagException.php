@@ -31,8 +31,7 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
 
     public function getSolution(): ?string
     {
-        $solution = 'Got meta tag:' . "\n" . var_export($this->tag, true);
-        $solution .= <<<SOLUTION
+        return 'Got meta tag:' . "\n" . var_export($this->tag, true) . <<<SOLUTION
 
 
 In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defined meta tags in the method `getMetaTags()`.
@@ -59,6 +58,5 @@ public function getMetaTags(): array
 }
 ```
 SOLUTION;
-        return $solution;
     }
 }

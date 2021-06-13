@@ -12,7 +12,12 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
+use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
+use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
+use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\ViewRenderer;
@@ -34,12 +39,14 @@ final class ViewRendererTest extends TestCase
 
         $expected = <<<'EOD'
 <html>
-<head><meta name="description" content="This website is about funny raccoons.">
-<link type="image/png" href="/icon.png" rel="icon"></head>
+<head><meta charset="utf-8">
+<meta name="description" content="This website is about funny raccoons.">
+<link type="image/png" href="/icon.png" rel="icon">
+<link type="font/woff2" href="myFont.woff2" rel="preload" as="font"></head>
 <body>
     <p><b>donatello</b></p>
     <div>copyright</div>
-    </body>
+    <link href="fancy.css" rel="alternate stylesheet"></body>
 </html>
 EOD;
 
@@ -118,6 +125,48 @@ EOD;
         $renderer = $this->getRenderer()->withViewPath('@views/dir');
 
         $this->assertSame($this->getViewsDir() . '/dir', $renderer->getViewPath());
+    }
+
+    public function testInvalidMetaTag(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withInjections(new InvalidMetaTagInjection());
+
+        $response = $renderer->render('empty');
+
+        $this->expectException(InvalidMetaTagException::class);
+        $this->expectExceptionMessage(
+            'Meta tag in injection should be instance of Yiisoft\Html\Tag\Meta or an array. Got string.'
+        );
+        $response->getBody();
+    }
+
+    public function testInvalidLinkTag(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withInjections(new InvalidLinkTagInjection());
+
+        $response = $renderer->render('empty');
+
+        $this->expectException(InvalidLinkTagException::class);
+        $this->expectExceptionMessage(
+            'Link tag in injection should be instance of Yiisoft\Html\Tag\Link or an array. Got string.'
+        );
+        $response->getBody();
+    }
+
+    public function testInvalidPositionInLinkTag(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withInjections(new InvalidPositionInLinkTagInjection());
+
+        $response = $renderer->render('empty');
+
+        $this->expectException(InvalidLinkTagException::class);
+        $this->expectExceptionMessage(
+            'Link tag position in injection should be integer. Got string.'
+        );
+        $response->getBody();
     }
 
     public function testImmutability(): void

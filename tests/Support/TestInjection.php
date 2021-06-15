@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Tests\Support;
 
 use Yiisoft\Html\Html;
+use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\ContentParametersInjectionInterface;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\LinkTagsInjectionInterface;
@@ -29,16 +30,30 @@ final class TestInjection implements
     public function getLinkTags(): array
     {
         return [
-            'favicon' => Html::link('/icon.png', [
-                'rel' => 'icon',
-                'type' => 'image/png',
-            ]),
+            'favicon' => Html::link(
+                '/icon.png',
+                [
+                    'rel' => 'icon',
+                    'type' => 'image/png',
+                ]
+            ),
+            [
+                'rel' => 'preload',
+                'href' => 'myFont.woff2',
+                'as' => 'font',
+                'type' => 'font/woff2',
+            ],
+            [
+                Html::link('fancy.css', ['rel' => 'alternate stylesheet']),
+                '__position' => WebView::POSITION_END,
+            ],
         ];
     }
 
     public function getMetaTags(): array
     {
         return [
+            ['charset' => 'utf-8'],
             'description' => Html::meta([
                 'name' => 'description',
                 'content' => 'This website is about funny raccoons.',

@@ -19,7 +19,7 @@ final class InvalidMetaTagExceptionTest extends TestCase
         $this->assertSame('Invalid meta tag configuration in injection', $exception->getName());
         $this->assertStringStartsWithIgnoringLineEndings(
             "Got meta tag:\narray (\n)\n\nIn injection that implements",
-            $exception->getSolution()
+            $exception->getSolution(),
         );
     }
 }

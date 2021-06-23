@@ -19,7 +19,7 @@ final class InvalidLinkTagExceptionTest extends TestCase
         $this->assertSame('Invalid link tag configuration in injection', $exception->getName());
         $this->assertStringStartsWithIgnoringLineEndings(
             "Got link tag:\narray (\n)\n\nIn injection that implements",
-            $exception->getSolution()
+            $exception->getSolution(),
         );
     }
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Tests;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
+use HttpSoft\Message\ResponseFactory;
+use HttpSoft\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -61,10 +62,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame(
-            '<html><body><b>donatello</b></body></html>',
-            (string)$response->getBody()
-        );
+        $this->assertSame('<html><body><b>donatello</b></body></html>', (string) $response->getBody());
     }
 
     public function testRenderWithoutLayout(): void
@@ -75,10 +73,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame(
-            '<b>donatello</b>',
-            (string)$response->getBody()
-        );
+        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
     }
 
     public function testRenderPartial(): void
@@ -89,10 +84,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame(
-            '<b>donatello</b>',
-            (string)$response->getBody()
-        );
+        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
     }
 
     public function testWithController(): void
@@ -136,7 +128,7 @@ EOD;
 
         $this->expectException(InvalidMetaTagException::class);
         $this->expectExceptionMessage(
-            'Meta tag in injection should be instance of Yiisoft\Html\Tag\Meta or an array. Got string.'
+            'Meta tag in injection should be instance of Yiisoft\Html\Tag\Meta or an array. Got string.',
         );
         $response->getBody();
     }
@@ -150,7 +142,7 @@ EOD;
 
         $this->expectException(InvalidLinkTagException::class);
         $this->expectExceptionMessage(
-            'Link tag in injection should be instance of Yiisoft\Html\Tag\Link or an array. Got string.'
+            'Link tag in injection should be instance of Yiisoft\Html\Tag\Link or an array. Got string.',
         );
         $response->getBody();
     }
@@ -164,7 +156,7 @@ EOD;
 
         $this->expectException(InvalidLinkTagException::class);
         $this->expectExceptionMessage(
-            'Link tag position in injection should be integer. Got string.'
+            'Link tag position in injection should be integer. Got string.',
         );
         $response->getBody();
     }
@@ -184,14 +176,9 @@ EOD;
     private function getRenderer(): ViewRenderer
     {
         return new ViewRenderer(
-            new DataResponseFactory(
-                new Psr17Factory()
-            ),
+            new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
             new Aliases(['@views' => $this->getViewsDir()]),
-            new WebView(
-                '@views',
-                new SimpleEventDispatcher()
-            ),
+            new WebView('@views', new SimpleEventDispatcher()),
             '@views',
             '@views/layout'
         );

@@ -26,6 +26,8 @@ use function is_object;
 use function is_string;
 
 /**
+ * ViewRenderer renders the view and places it in the response instance {@see \Psr\Http\Message\ResponseInterface}.
+ *
  * @psalm-import-type MetaTagsConfig from MetaTagsInjectionInterface
  * @psalm-import-type LinkTagsConfig from LinkTagsInjectionInterface
  */
@@ -96,55 +98,6 @@ final class ViewRenderer implements ViewContextInterface
         );
 
         return $this->responseFactory->createResponse($contentRenderer);
-    }
-
-    private function getContentParameters(array $parameters): array
-    {
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof ContentParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getContentParameters());
-            }
-        }
-        return $parameters;
-    }
-
-    private function getLayoutParameters(): array
-    {
-        $parameters = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LayoutParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParameters());
-            }
-        }
-        return $parameters;
-    }
-
-    /**
-     * @psalm-return MetaTagsConfig
-     */
-    private function getMetaTags(): array
-    {
-        $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof MetaTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getMetaTags());
-            }
-        }
-        return $tags;
-    }
-
-    /**
-     * @psalm-return LinkTagsConfig
-     */
-    private function getLinkTags(): array
-    {
-        $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LinkTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getLinkTags());
-            }
-        }
-        return $tags;
     }
 
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
@@ -220,18 +173,63 @@ final class ViewRenderer implements ViewContextInterface
 
         $this->view = $this->view->withContext($this);
         $content = $this->view->render($view, $contentParameters);
-
         $layout = $this->findLayoutFile($this->layout);
+
         if ($layout === null) {
             return $content;
         }
 
         $layoutParameters['content'] = $content;
+        return $this->view->renderFile($layout, $layoutParameters);
+    }
 
-        return $this->view->renderFile(
-            $layout,
-            $layoutParameters
-        );
+    private function getContentParameters(array $parameters): array
+    {
+        foreach ($this->injections as $injection) {
+            if ($injection instanceof ContentParametersInjectionInterface) {
+                $parameters = array_merge($parameters, $injection->getContentParameters());
+            }
+        }
+        return $parameters;
+    }
+
+    private function getLayoutParameters(): array
+    {
+        $parameters = [];
+        foreach ($this->injections as $injection) {
+            if ($injection instanceof LayoutParametersInjectionInterface) {
+                $parameters = array_merge($parameters, $injection->getLayoutParameters());
+            }
+        }
+        return $parameters;
+    }
+
+    /**
+     * @psalm-return MetaTagsConfig
+     */
+    private function getMetaTags(): array
+    {
+        $tags = [];
+        foreach ($this->injections as $injection) {
+            if ($injection instanceof MetaTagsInjectionInterface) {
+                $tags = array_merge($tags, $injection->getMetaTags());
+            }
+        }
+        return $tags;
+    }
+
+    /**
+     * @psalm-return LinkTagsConfig
+     */
+    private function getLinkTags(): array
+    {
+        $tags = [];
+        foreach ($this->injections as $injection) {
+            if ($injection instanceof LinkTagsInjectionInterface) {
+                $tags = array_merge($tags, $injection->getLinkTags());
+            }
+        }
+        return $tags;
     }
 
     /**
@@ -350,7 +348,7 @@ final class ViewRenderer implements ViewContextInterface
 
         $regexp = '/((?<=controller\\\|s\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
         if (!preg_match($regexp, $class, $m) || empty($m[1])) {
-            throw new RuntimeException('Cannot detect controller name');
+            throw new RuntimeException('Cannot detect controller name.');
         }
 
         $inflector = new Inflector();

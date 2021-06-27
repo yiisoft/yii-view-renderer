@@ -183,14 +183,15 @@ final class ViewRenderer implements ViewContextInterface
         return $this->view->renderFile($layout, $layoutParameters);
     }
 
-    private function getContentParameters(array $parameters): array
+    private function getContentParameters(array $renderParameters): array
     {
+        $parameters = [];
         foreach ($this->injections as $injection) {
             if ($injection instanceof ContentParametersInjectionInterface) {
                 $parameters = array_merge($parameters, $injection->getContentParameters());
             }
         }
-        return $parameters;
+        return array_merge($parameters, $renderParameters);
     }
 
     private function getLayoutParameters(): array

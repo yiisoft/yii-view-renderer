@@ -101,7 +101,7 @@ EOD;
     public function testWithIncorrectController(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Cannot detect controller name');
+        $this->expectExceptionMessage('Cannot detect controller name.');
         $this->getRenderer()->withController(new stdClass());
     }
 

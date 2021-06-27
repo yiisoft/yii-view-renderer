@@ -19,7 +19,7 @@ final class TestInjection implements
 {
     public function getContentParameters(): array
     {
-        return ['user' => 'leonardo'];
+        return ['name' => 'leonardo'];
     }
 
     public function getLayoutParameters(): array

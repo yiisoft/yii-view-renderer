@@ -37,22 +37,20 @@ final class ViewRenderer implements ViewContextInterface
     private Aliases $aliases;
     private WebView $view;
 
-    private string $viewBasePath;
+    private string $viewPath;
     private ?string $layout;
+    private ?string $name = null;
 
     /**
      * @var object[]
      */
     private array $injections;
 
-    private ?string $name = null;
-    private ?string $viewPath = null;
-
     /**
      * @param DataResponseFactoryInterface $responseFactory
      * @param Aliases $aliases
      * @param WebView $view
-     * @param string $viewBasePath
+     * @param string $viewPath
      * @param string|null $layout
      * @param object[] $injections
      */
@@ -60,26 +58,21 @@ final class ViewRenderer implements ViewContextInterface
         DataResponseFactoryInterface $responseFactory,
         Aliases $aliases,
         WebView $view,
-        string $viewBasePath,
+        string $viewPath,
         ?string $layout = null,
         array $injections = []
     ) {
         $this->responseFactory = $responseFactory;
         $this->aliases = $aliases;
         $this->view = $view;
-
-        $this->viewBasePath = $viewBasePath;
+        $this->viewPath = rtrim($viewPath, '/');
         $this->layout = $layout;
         $this->injections = $injections;
     }
 
     public function getViewPath(): string
     {
-        if ($this->viewPath !== null) {
-            return $this->aliases->get($this->viewPath);
-        }
-
-        return $this->aliases->get($this->viewBasePath) . ($this->name ? '/' . $this->name : '');
+        return $this->aliases->get($this->viewPath) . ($this->name ? '/' . $this->name : '');
     }
 
     public function render(string $view, array $parameters = []): ResponseInterface
@@ -126,14 +119,7 @@ final class ViewRenderer implements ViewContextInterface
     public function withViewPath(string $viewPath): self
     {
         $new = clone $this;
-        $new->viewPath = $viewPath;
-        return $new;
-    }
-
-    public function withViewBasePath(string $viewBasePath): self
-    {
-        $new = clone $this;
-        $new->viewBasePath = $viewBasePath;
+        $new->viewPath = rtrim($viewPath, '/');
         return $new;
     }
 

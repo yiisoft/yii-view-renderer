@@ -119,7 +119,7 @@ EOD;
     {
         $renderer = $this->getRenderer()->withViewPath('/dir/');
 
-        $this->assertSame('/dir/', $renderer->getViewPath());
+        $this->assertSame('/dir', $renderer->getViewPath());
     }
 
     public function testWithViewPathWithAlias(): void
@@ -127,6 +127,13 @@ EOD;
         $renderer = $this->getRenderer()->withViewPath('@views/dir');
 
         $this->assertSame($this->getViewsDir() . '/dir', $renderer->getViewPath());
+    }
+
+    public function testWithViewPathWithController(): void
+    {
+        $renderer = $this->getRenderer()->withViewPath('/dir//')->withController(new FakeController());
+
+        $this->assertSame('/dir/support/fake', $renderer->getViewPath());
     }
 
     public function testInvalidMetaTag(): void
@@ -177,7 +184,6 @@ EOD;
         $this->assertNotSame($original, $original->withController(new FakeController()));
         $this->assertNotSame($original, $original->withControllerName('test'));
         $this->assertNotSame($original, $original->withViewPath(''));
-        $this->assertNotSame($original, $original->withViewBasePath(''));
         $this->assertNotSame($original, $original->withLayout(''));
         $this->assertNotSame($original, $original->withAddedInjections());
         $this->assertNotSame($original, $original->withInjections());

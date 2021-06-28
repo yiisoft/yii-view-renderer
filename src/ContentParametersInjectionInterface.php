@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
+/**
+ * ContentParametersInjectionInterface is an interface that must be implemented by classes to inject content parameters.
+ */
 interface ContentParametersInjectionInterface
 {
     /**

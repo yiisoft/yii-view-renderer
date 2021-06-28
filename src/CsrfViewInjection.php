@@ -7,6 +7,9 @@ namespace Yiisoft\Yii\View;
 use LogicException;
 use Yiisoft\Csrf\CsrfTokenInterface;
 
+/**
+ * CsrfViewInjection injects the necessary data into the view to protect against a CSRF attack.
+ */
 final class CsrfViewInjection implements
     ContentParametersInjectionInterface,
     LayoutParametersInjectionInterface,
@@ -26,6 +29,13 @@ final class CsrfViewInjection implements
         $this->csrfToken = $csrfToken;
     }
 
+    /**
+     * Returns a new instance with the specified parameter name.
+     *
+     * @param string $parameterName The parameter name.
+     *
+     * @return self
+     */
     public function withParameterName(string $parameterName): self
     {
         $new = clone $this;
@@ -33,6 +43,13 @@ final class CsrfViewInjection implements
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified meta attribute name.
+     *
+     * @param string $metaAttributeName The meta attribute name.
+     *
+     * @return self
+     */
     public function withMetaAttributeName(string $metaAttributeName): self
     {
         $new = clone $this;

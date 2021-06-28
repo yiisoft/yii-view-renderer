@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
+/**
+ * LayoutParametersInjectionInterface is an interface that must be implemented by classes to inject layout parameters.
+ */
 interface LayoutParametersInjectionInterface
 {
     /**

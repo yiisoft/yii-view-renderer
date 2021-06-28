@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 /**
+ * LinkTagsInjectionInterface is an interface that must be implemented by classes to inject link tags.
+ *
  * @psalm-type LinkTagAsArray = array{
  *   __position?:int,
  * }&array<string,mixed>

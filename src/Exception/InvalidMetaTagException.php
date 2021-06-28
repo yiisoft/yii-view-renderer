@@ -7,6 +7,9 @@ namespace Yiisoft\Yii\View\Exception;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
+/**
+ * InvalidMetaTagException is thrown if the meta tag is incorrectly configured during the injection.
+ */
 final class InvalidMetaTagException extends RuntimeException implements FriendlyExceptionInterface
 {
     /**

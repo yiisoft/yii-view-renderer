@@ -18,12 +18,18 @@ use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
 use function array_key_exists;
+use function array_merge;
 use function get_class;
 use function gettype;
 use function is_array;
 use function is_int;
 use function is_object;
 use function is_string;
+use function pathinfo;
+use function preg_match;
+use function rtrim;
+use function sprintf;
+use function str_replace;
 
 /**
  * ViewRenderer renders the view and places it in the response instance {@see \Psr\Http\Message\ResponseInterface}.
@@ -47,12 +53,13 @@ final class ViewRenderer implements ViewContextInterface
     private array $injections;
 
     /**
-     * @param DataResponseFactoryInterface $responseFactory
-     * @param Aliases $aliases
-     * @param WebView $view
-     * @param string $viewPath
-     * @param string|null $layout
-     * @param object[] $injections
+     * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
+     * @param Aliases $aliases The aliases instance.
+     * @param WebView $view The web view instance.
+     * @param string $viewPath The full path to the directory of views.
+     * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
+     * If null, the layout will not be applied.
+     * @param object[] $injections The injection instances.
      */
     public function __construct(
         DataResponseFactoryInterface $responseFactory,
@@ -70,11 +77,27 @@ final class ViewRenderer implements ViewContextInterface
         $this->injections = $injections;
     }
 
+    /**
+     * Returns a path to the directory of views that is a prefix to the relative view name.
+     *
+     * If a controller name has been set {@see withController(), withControllerName()}, it will be appended to the path.
+     *
+     * @return string The path to the directory of views that is a prefix to the relative view name.
+     */
     public function getViewPath(): string
     {
         return $this->aliases->get($this->viewPath) . ($this->name ? '/' . $this->name : '');
     }
 
+    /**
+     * Renders a view and places it in the response instance.
+     *
+     * @param string $view The view name.
+     * @param array $parameters The parameters (name-value pairs) that will be extracted
+     * and made available in the view file.
+     *
+     * @return ResponseInterface The response instance.
+     */
     public function render(string $view, array $parameters = []): ResponseInterface
     {
         $contentParameters = $this->getContentParameters($parameters);
@@ -93,6 +116,15 @@ final class ViewRenderer implements ViewContextInterface
         return $this->responseFactory->createResponse($contentRenderer);
     }
 
+    /**
+     * Renders a view without applying a layout and places it in the response instance.
+     *
+     * @param string $view The view name.
+     * @param array $parameters The parameters (name-value pairs) that will be extracted
+     * and made available in the view file.
+     *
+     * @return ResponseInterface The response instance.
+     */
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
     {
         if ($this->layout === null) {
@@ -102,6 +134,13 @@ final class ViewRenderer implements ViewContextInterface
         return $this->withLayout(null)->render($view, $parameters);
     }
 
+    /**
+     * Extracts the controller name and returns a new instance with the controller name.
+     *
+     * @param object $controller The controller instance.
+     *
+     * @return self
+     */
     public function withController(object $controller): self
     {
         $new = clone $this;
@@ -109,6 +148,13 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified controller name.
+     *
+     * @param string $name The controller name.
+     *
+     * @return self
+     */
     public function withControllerName(string $name): self
     {
         $new = clone $this;
@@ -116,6 +162,13 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified view path.
+     *
+     * @param string $viewPath The full path to the directory of views.
+     *
+     * @return self
+     */
     public function withViewPath(string $viewPath): self
     {
         $new = clone $this;
@@ -123,6 +176,14 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified layout.
+     *
+     * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
+     * If null, the layout will not be applied.
+     *
+     * @return self
+     */
     public function withLayout(?string $layout): self
     {
         $new = clone $this;
@@ -130,6 +191,13 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * Return a new instance with the appended specified injections.
+     *
+     * @param object ...$injections The injection instances.
+     *
+     * @return self
+     */
     public function withAddedInjections(object ...$injections): self
     {
         $new = clone $this;
@@ -137,6 +205,13 @@ final class ViewRenderer implements ViewContextInterface
         return $new;
     }
 
+    /**
+     * Returns a new instance with the specified injections.
+     *
+     * @param object ...$injections The injection instances.
+     *
+     * @return self
+     */
     public function withInjections(object ...$injections): self
     {
         $new = clone $this;

@@ -102,10 +102,11 @@ final class ViewRenderer implements ViewContextInterface
 
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
     {
-        $this->view = $this->view->withContext($this);
-        $content = $this->view->render($view, $parameters);
+        if ($this->layout === null) {
+            return $this->render($view, $parameters);
+        }
 
-        return $this->responseFactory->createResponse($content);
+        return $this->withLayout(null)->render($view, $parameters);
     }
 
     public function withController(object $controller): self

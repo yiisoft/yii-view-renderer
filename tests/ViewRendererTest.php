@@ -51,7 +51,7 @@ final class ViewRendererTest extends TestCase
 </html>
 EOD;
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testRenderWithFullPathLayout(): void
@@ -67,7 +67,11 @@ EOD;
 
     public function testRenderWithoutLayout(): void
     {
-        $renderer = $this->getRenderer()->withLayout(null);
+        $renderer = $this->getRenderer()->withLayout(null)->withInjections(new TestInjection());
+
+        $response = $renderer->render('simple');
+
+        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
 
         $response = $renderer->render('simple', [
             'name' => 'donatello',
@@ -78,7 +82,13 @@ EOD;
 
     public function testRenderPartial(): void
     {
-        $renderer = $this->getRenderer();
+        $renderer = $this->getRenderer()->withInjections(new TestInjection());
+
+        $response = $renderer->renderPartial('simple');
+
+        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
+
+        $renderer = $renderer->withLayout(null);
 
         $response = $renderer->renderPartial('simple', [
             'name' => 'donatello',

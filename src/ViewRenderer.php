@@ -56,7 +56,7 @@ final class ViewRenderer implements ViewContextInterface
      * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
-     * @param string $viewPath The full path to the directory of views.
+     * @param string $viewPath The full path to the directory of views or an alias of it.
      * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
      * If null, the layout will not be applied.
      * @param object[] $injections The injection instances.
@@ -165,7 +165,7 @@ final class ViewRenderer implements ViewContextInterface
     /**
      * Returns a new instance with the specified view path.
      *
-     * @param string $viewPath The full path to the directory of views.
+     * @param string $viewPath The full path to the directory of views or an alias of it.
      *
      * @return self
      */

@@ -19,7 +19,7 @@ interface MetaTagsInjectionInterface
      *
      * ```php
      * [
-     *     Html::meta()->name('keywords')->content('yii,framework'),
+     *     Html::meta()->name('http-equiv')->content('public'),
      *     'noindex' => Html::meta()->name('robots')->content('noindex'),
      *     [
      *         'name' => 'description',

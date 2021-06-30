@@ -15,7 +15,9 @@
 [![static analysis](https://github.com/yiisoft/yii-view/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-view/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/yii-view/coverage.svg)](https://shepherd.dev/github/yiisoft/yii-view)
 
-The package provides bindings for [Yii View Rendering Library](https://github.com/yiisoft/view/).
+The package is an extension of the [Yii View Rendering Library](https://github.com/yiisoft/view/).
+This package adds additional functionality for the WEB environment and compatibility of use with
+[PSR-7](https://www.php-fig.org/psr/psr-7/) interfaces.
 
 ## Requirements
 
@@ -30,6 +32,190 @@ composer require yiisoft/yii-view --prefer-dist
 ```
 
 ## General usage
+
+The view renderer renders the view and places it in the `Psr\Http\Message\ResponseInterface` instance:
+
+```php
+/**
+ * @var \Yiisoft\Aliases\Aliases $aliases
+ * @var \Yiisoft\DataResponse\DataResponseFactoryInterface $dataResponseFactory
+ * @var \Yiisoft\View\WebView $webView
+ */
+
+$viewRenderer = new \Yiisoft\Yii\View\ViewRenderer(
+    $dataResponseFactory,
+    $aliases,
+    $webView,
+    '/path/to/views', // The full path to the directory of views.
+    'layouts/main', // Default is null, which means not to use the layout.
+);
+
+// Rendering the view with the layout.
+$response = $viewRenderer->render('site/page', [
+    'parameter-name' => 'parameter-value',
+]);
+```
+
+If the layout was installed, but you need to render the view without the layout,
+you can use the immutable setter `withLayout()`:
+
+```php
+$viewRenderer = $viewRenderer->withLayout(null);
+
+// Rendering the view without the layout.
+$response = $viewRenderer->render('site/page', [
+    'parameter-name' => 'parameter-value',
+]);
+```
+
+Or use the `renderPartial()` method, which will call `withLayout(null)`inside:
+
+```php
+// Rendering the view without the layout.
+$response = $viewRenderer->renderPartial('site/page', [
+    'parameter-name' => 'parameter-value',
+]);
+```
+
+You can change the path to the directory of views in runtime as follows:
+
+```php
+$viewRenderer = $viewRenderer->withViewPath('/new/path/to/views');
+```
+
+### Use in the controller
+
+If the view render is used in the controller, and the folder name matches the controller name, you can specify
+the name or instance of the controller once. With this approach, you do not need to specify the directory name
+when rendering the view in methods (actions), since it will be added automatically.
+
+```php
+use Psr\Http\Message\ResponseInterface;
+use Yiisoft\Yii\View\ViewRenderer;
+
+class SiteController
+{
+    private ViewRenderer $viewRenderer;
+
+    public function __construct(ViewRenderer $viewRenderer)
+    {
+        // Specify the name of the controller:
+        $this->viewRenderer = $viewRenderer->withControllerName('site');
+        // or specify an instance of the controller:
+        //$this->viewRenderer = $viewRenderer->withController($this);
+    }
+
+    public function index(): ResponseInterface
+    {
+        return $this->viewRenderer->render('index');
+    }
+    
+    public function contact(): ResponseInterface
+    {
+        // Some actions.
+        return $this->viewRenderer->render('contact', [
+            'parameter-name' => 'parameter-value',
+        ]);
+    }
+}
+```
+
+This is very convenient if there are many methods (actions) in the controller.
+
+### Injection of additional data to the views
+
+In addition to the parameters passed directly when rendering the view, you can pass general content and layout
+parameters that will be available in all views. Parameters should be wrapped by interface implementations
+for their intended purpose, it can be separate classes or one general class.
+
+```php
+use Yiisoft\Yii\View\ContentParametersInjectionInterface;
+use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
+
+final class MyParametersInjection implements
+    ContentParametersInjectionInterface,
+    LayoutParametersInjectionInterface
+{
+    public function getContentParameters(): array
+    {
+        return [
+            'content-parameter-name' => 'content-parameter-value',
+        ];
+    }
+    
+    public function getLayoutParameters(): array
+    {
+        return [
+            'layout-parameter-name' => 'layout-parameter-value',
+        ];
+    }
+}
+```
+
+Link tags and meta tags should be organized in the same way.
+
+```php
+use Yiisoft\Html\Html;
+use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\LinkTagsInjectionInterface;
+use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+
+final class MyTagsInjection implements
+    LinkTagsInjectionInterface,
+    MetaTagsInjectionInterface
+{
+    public function getLinkTags(): array
+    {
+        return [
+            Html::link()->toCssFile('/main.css'),
+            'favicon' => Html::link('/myicon.png', [
+                'rel' => 'icon',
+                'type' => 'image/png',
+            ]),
+            'themeCss' => [
+                '__position' => WebView::POSITION_END,
+                Html::link()->toCssFile('/theme.css'),
+            ],
+            'userCss' => [
+                '__position' => WebView::POSITION_BEGIN,
+                'rel' => 'stylesheet',
+                'href' => '/user.css',
+            ],
+        ];
+    }
+    
+    public function getMetaTags(): array
+    {
+        return [
+            Html::meta()->name('http-equiv')->content('public'),
+            'noindex' => Html::meta()->name('robots')->content('noindex'),
+            [
+                'name' => 'description',
+                'content' => 'This website is about funny raccoons.',
+            ],
+            'keywords' => [
+                'name' => 'keywords',
+                'content' => 'yii,framework',
+            ],
+        ];
+    }
+}
+```
+
+You can pass instances of these classes as the sixth optional parameter to the constructor when
+creating the view renderer, or use the `withInjections()` and `withAddedInjections` methods.
+
+```php
+$parameters = new MyParametersInjection();
+$tags = new MyTagsInjection();
+
+$viewRenderer = $viewRenderer->withInjections($parameters, $tags);
+// Or add it to the already set ones:
+$viewRenderer = $viewRenderer->withAddedInjections($parameters, $tags);
+```
+
+The parameters passed during rendering of the view are considered in priority
+and will overwrite the injected content parameters if their keys match.
 
 ## Testing
 

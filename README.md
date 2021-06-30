@@ -46,7 +46,7 @@ $viewRenderer = new \Yiisoft\Yii\View\ViewRenderer(
     $dataResponseFactory,
     $aliases,
     $webView,
-    '/path/to/views', // The full path to the directory of views.
+    '/path/to/views', // The full path to the directory of views or its alias.
     'layouts/main', // Default is null, which means not to use the layout.
 );
 
@@ -82,6 +82,9 @@ You can change the path to the directory of views in runtime as follows:
 ```php
 $viewRenderer = $viewRenderer->withViewPath('/new/path/to/views');
 ```
+
+You can specify the full path to the views directory or its alias. For more information about path aliases,
+see the description of the [yiisoft/aliases](https://github.com/yiisoft/aliases) package.
 
 ### Use in the controller
 

@@ -82,7 +82,7 @@ final class ViewRenderer implements ViewContextInterface
      *
      * If a controller name has been set {@see withController(), withControllerName()}, it will be appended to the path.
      *
-     * @return string View templates base directory
+     * @return string View templates base directory.
      */
     public function getViewPath(): string
     {

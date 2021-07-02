@@ -78,11 +78,11 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a path to the directory of views that is a prefix to the relative view name.
+     * Returns a path to a base directory of view templates that is prefixed to the relative view name.
      *
      * If a controller name has been set {@see withController(), withControllerName()}, it will be appended to the path.
      *
-     * @return string The path to the directory of views that is a prefix to the relative view name.
+     * @return string View templates base directory
      */
     public function getViewPath(): string
     {
@@ -90,7 +90,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view and places it in the response instance.
+     * Renders a view returns a response instance.
      *
      * @param string $view The view name.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
@@ -117,7 +117,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view without applying a layout and places it in the response instance.
+     * Renders a view without applying a layout and returns a response instance.
      *
      * @param string $view The view name.
      * @param array $parameters The parameters (name-value pairs) that will be extracted

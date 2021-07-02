@@ -15,9 +15,8 @@
 [![static analysis](https://github.com/yiisoft/yii-view/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-view/actions?query=workflow%3A%22static+analysis%22)
 [![type-coverage](https://shepherd.dev/github/yiisoft/yii-view/coverage.svg)](https://shepherd.dev/github/yiisoft/yii-view)
 
-The package is an extension of the [Yii View Rendering Library](https://github.com/yiisoft/view/).
-This package adds additional functionality for the WEB environment and compatibility of use with
-[PSR-7](https://www.php-fig.org/psr/psr-7/) interfaces.
+The package is an extension of the [Yii View Rendering Library](https://github.com/yiisoft/view/). It adds
+WEB-specific functionality and compatibility with [PSR-7](https://www.php-fig.org/psr/psr-7/) interfaces.
 
 ## Requirements
 
@@ -46,51 +45,50 @@ $viewRenderer = new \Yiisoft\Yii\View\ViewRenderer(
     $dataResponseFactory,
     $aliases,
     $webView,
-    '/path/to/views', // The full path to the directory of views or its alias.
-    'layouts/main', // Default is null, which means not to use the layout.
+    '/path/to/views', // Full path to the directory of view templates or its alias.
+    'layouts/main', // Default is null, which means not to use a layout.
 );
 
-// Rendering the view with the layout.
+// Rendering a view with a layout.
 $response = $viewRenderer->render('site/page', [
     'parameter-name' => 'parameter-value',
 ]);
 ```
 
-If the layout was installed, but you need to render the view without the layout,
-you can use the immutable setter `withLayout()`:
+If a layout is set, but you need to render a view without the layout, you can use an immutable setter `withLayout()`:
 
 ```php
 $viewRenderer = $viewRenderer->withLayout(null);
 
-// Rendering the view without the layout.
+// Rendering a view without a layout.
 $response = $viewRenderer->render('site/page', [
     'parameter-name' => 'parameter-value',
 ]);
 ```
 
-Or use the `renderPartial()` method, which will call `withLayout(null)`inside:
+Or use `renderPartial()` method, which will call `withLayout(null)`:
 
 ```php
-// Rendering the view without the layout.
+// Rendering a view without a layout.
 $response = $viewRenderer->renderPartial('site/page', [
     'parameter-name' => 'parameter-value',
 ]);
 ```
 
-You can change the path to the directory of views in runtime as follows:
+You can change view templates path in runtime as follows:
 
 ```php
 $viewRenderer = $viewRenderer->withViewPath('/new/path/to/views');
 ```
 
-You can specify the full path to the views directory or its alias. For more information about path aliases,
-see the description of the [yiisoft/aliases](https://github.com/yiisoft/aliases) package.
+You can specify full path to the views directory or its alias. For more information about path aliases,
+see description of the [yiisoft/aliases](https://github.com/yiisoft/aliases) package.
 
 ### Use in the controller
 
-If the view render is used in the controller, and the folder name matches the controller name, you can specify
-the name or instance of the controller once. With this approach, you do not need to specify the directory name
-when rendering the view in methods (actions), since it will be added automatically.
+If the view renderer is used in a controller, you can either specify controller name explicitly using
+`withControllerName()` or determine name automatically by passing a controller instance to `withController()`.
+With this approach, you do not need to specify the directory name each time when rendering a view template:
 
 ```php
 use Psr\Http\Message\ResponseInterface;
@@ -127,9 +125,8 @@ This is very convenient if there are many methods (actions) in the controller.
 
 ### Injection of additional data to the views
 
-In addition to the parameters passed directly when rendering the view, you can pass general content and layout
-parameters that will be available in all views. Parameters should be wrapped by interface implementations
-for their intended purpose, it can be separate classes or one general class.
+In addition to parameters passed directly when rendering the view template, you can set extra parameters that will be
+available in all views. In order to do it you need a class implementing at least one of the injection interfaces:
 
 ```php
 use Yiisoft\Yii\View\ContentParametersInjectionInterface;
@@ -206,19 +203,19 @@ final class MyTagsInjection implements
 ```
 
 You can pass instances of these classes as the sixth optional parameter to the constructor when
-creating the view renderer, or use the `withInjections()` and `withAddedInjections` methods.
+creating a view renderer, or use the `withInjections()` and `withAddedInjections` methods.
 
 ```php
 $parameters = new MyParametersInjection();
 $tags = new MyTagsInjection();
 
 $viewRenderer = $viewRenderer->withInjections($parameters, $tags);
-// Or add it to the already set ones:
+// Or append it:
 $viewRenderer = $viewRenderer->withAddedInjections($parameters, $tags);
 ```
 
-The parameters passed during rendering of the view are considered in priority
-and will overwrite the injected content parameters if their keys match.
+The parameters passed to `render()` method have more priority
+and will overwrite the injected content parameters if their names match.
 
 ## Testing
 

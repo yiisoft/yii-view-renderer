@@ -7,6 +7,9 @@ namespace Yiisoft\Yii\View\Exception;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
+/**
+ * InvalidLinkTagException is thrown if the link tag is incorrectly configured during the injection.
+ */
 final class InvalidLinkTagException extends RuntimeException implements FriendlyExceptionInterface
 {
     /**

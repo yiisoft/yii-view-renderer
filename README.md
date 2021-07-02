@@ -32,7 +32,7 @@ composer require yiisoft/yii-view --prefer-dist
 
 ## General usage
 
-The view renderer renders the view and places it in the `Psr\Http\Message\ResponseInterface` instance:
+The view renderer renders the view template and returns result as a `Psr\Http\Message\ResponseInterface` instance:
 
 ```php
 /**

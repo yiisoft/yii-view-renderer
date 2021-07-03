@@ -255,10 +255,10 @@ final class ViewRenderer implements ViewContextInterface
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
-     * @return string The rendering result.
-     *
      * @throws Throwable If the view cannot be resolved.
      * @throws ViewNotFoundException If the view file does not exist.
+     *
+     * @return string The rendering result.
      */
     private function renderProxy(string $view, array $parameters): string
     {

@@ -37,7 +37,7 @@ There are two ways to render a view:
 - Return an instance of the `Yiisoft\DataResponse\DataResponse` class with deferred rendering.
 - Render immediately and return the rendered result as a string.
 
-The `Yiisoft\DataResponse\DataResponse` class is an implementation of the `Psr\Http\Message\ResponseInterface`, for
+The `Yiisoft\DataResponse\DataResponse` class is an implementation of the `Psr\Http\Message\ResponseInterface`. For
 more information about this class, see the [yiisoft/data-response](https://github.com/yiisoft/data-response) package.
 You can get an instance of a response with deferred rendering as follows:
 

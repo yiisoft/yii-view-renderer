@@ -96,7 +96,6 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a response instance {@see DataResponse} with deferred rendering {@see renderAsString()}.
      * Returns a response instance {@see DataResponse} that supports deferred rendering {@see renderAsString()}.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
@@ -436,7 +435,6 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns the controller name. Name should be converted to "id" case without `controller` on the ending.
      * Returns a controller name based on controller instance.
      *
      * Name should be converted to "id" case without `controller` on the ending.

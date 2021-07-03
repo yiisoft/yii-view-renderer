@@ -32,7 +32,14 @@ composer require yiisoft/yii-view --prefer-dist
 
 ## General usage
 
-The view renderer renders the view template and returns result as a `Psr\Http\Message\ResponseInterface` instance:
+There are two ways to render a view:
+
+- Return an instance of the `Yiisoft\DataResponse\DataResponse` class with deferred rendering.
+- Render immediately and return the rendered result as a string.
+
+The `Yiisoft\DataResponse\DataResponse` class is an implementation of the `Psr\Http\Message\ResponseInterface`. For
+more information about this class, see the [yiisoft/data-response](https://github.com/yiisoft/data-response) package.
+You can get an instance of a response with deferred rendering as follows:
 
 ```php
 /**
@@ -55,7 +62,9 @@ $response = $viewRenderer->render('site/page', [
 ]);
 ```
 
-If a layout is set, but you need to render a view without the layout, you can use an immutable setter `withLayout()`:
+The rendering will be performed directly when calling `getBody()` or `getData()` methods of the
+`Yiisoft\DataResponse\DataResponse`. If a layout is set, but you need to render a view
+without the layout, you can use an immutable setter `withLayout()`:
 
 ```php
 $viewRenderer = $viewRenderer->withLayout(null);
@@ -75,6 +84,21 @@ $response = $viewRenderer->renderPartial('site/page', [
 ]);
 ```
 
+To render immediately and return the rendering result as a string,
+use `renderAsString()` and `renderPartialAsString()` methods:
+
+```php
+// Rendering a view with a layout.
+$result = $viewRenderer->renderAsString('site/page', [
+    'parameter-name' => 'parameter-value',
+]);
+
+// Rendering a view without a layout.
+$result = $viewRenderer->renderPartialAsString('site/page', [
+    'parameter-name' => 'parameter-value',
+]);
+```
+
 You can change view templates path in runtime as follows:
 
 ```php
@@ -88,6 +112,14 @@ see description of the [yiisoft/aliases](https://github.com/yiisoft/aliases) pac
 
 If the view renderer is used in a controller, you can either specify controller name explicitly using
 `withControllerName()` or determine name automatically by passing a controller instance to `withController()`.
+In this case the name is determined as follows:
+
+```
+App\Controller\FooBar\BazController -> foo-bar/baz
+App\Controllers\FooBar\BazController -> foo-bar/baz
+Path\To\File\BlogController -> blog
+```
+
 With this approach, you do not need to specify the directory name each time when rendering a view template:
 
 ```php

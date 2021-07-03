@@ -27,7 +27,7 @@ final class ViewRendererTest extends TestCase
 {
     use TestTrait;
 
-    public function testRender(): void
+    public function testRenderAndRenderAsString(): void
     {
         $renderer = $this->getRenderer()
             ->withLayout('@views/with-injection/layout')
@@ -52,6 +52,10 @@ final class ViewRendererTest extends TestCase
 EOD;
 
         $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, $renderer->renderAsString('view', [
+            'name' => 'donatello',
+        ]));
     }
 
     public function testRenderWithFullPathLayout(): void
@@ -63,6 +67,17 @@ EOD;
         ]);
 
         $this->assertSame('<html><body><b>donatello</b></body></html>', (string) $response->getBody());
+    }
+
+    public function testRenderAsStringWithFullPathLayout(): void
+    {
+        $renderer = $this->getRenderer()->withLayout($this->getViewsDir() . '/layout.php');
+
+        $result = $renderer->renderAsString('simple', [
+            'name' => 'donatello',
+        ]);
+
+        $this->assertSame('<html><body><b>donatello</b></body></html>', $result);
     }
 
     public function testRenderWithoutLayout(): void
@@ -80,6 +95,21 @@ EOD;
         $this->assertSame('<b>donatello</b>', (string) $response->getBody());
     }
 
+    public function testRenderAsStringWithoutLayout(): void
+    {
+        $renderer = $this->getRenderer()->withLayout(null)->withInjections(new TestInjection());
+
+        $result = $renderer->renderAsString('simple');
+
+        $this->assertSame('<b>leonardo</b>', $result);
+
+        $result = $renderer->renderAsString('simple', [
+            'name' => 'donatello',
+        ]);
+
+        $this->assertSame('<b>donatello</b>', $result);
+    }
+
     public function testRenderPartial(): void
     {
         $renderer = $this->getRenderer()->withInjections(new TestInjection());
@@ -95,6 +125,23 @@ EOD;
         ]);
 
         $this->assertSame('<b>donatello</b>', (string) $response->getBody());
+    }
+
+    public function testRenderPartialAsString(): void
+    {
+        $renderer = $this->getRenderer()->withInjections(new TestInjection());
+
+        $result = $renderer->renderPartialAsString('simple');
+
+        $this->assertSame('<b>leonardo</b>', $result);
+
+        $renderer = $renderer->withLayout(null);
+
+        $result = $renderer->renderPartialAsString('simple', [
+            'name' => 'donatello',
+        ]);
+
+        $this->assertSame('<b>donatello</b>', $result);
     }
 
     public function testWithController(): void

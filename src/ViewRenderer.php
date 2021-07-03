@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use Throwable;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Link;
 use Yiisoft\Html\Tag\Meta;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
@@ -32,10 +34,14 @@ use function sprintf;
 use function str_replace;
 
 /**
- * ViewRenderer renders the view and places it in the response instance {@see \Psr\Http\Message\ResponseInterface}.
+ * ViewRenderer renders the view.
  *
- * @psalm-import-type MetaTagsConfig from MetaTagsInjectionInterface
- * @psalm-import-type LinkTagsConfig from LinkTagsInjectionInterface
+ * If the {@see ViewRenderer::render()} or {@see ViewRenderer::renderPartial()} methods are called,
+ * an instance of the {@see DataResponse} is returned, with deferred rendering. Rendering will
+ * occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
+ *
+ * If the {@see ViewRenderer::renderAsString()} or {@see ViewRenderer::renderPartialAsString()} methods are called,
+ * the rendering will occur immediately and the string result of the rendering will be returned.
  */
 final class ViewRenderer implements ViewContextInterface
 {
@@ -90,48 +96,71 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view returns a response instance.
+     * Returns a response instance {@see DataResponse} with deferred rendering.
+     *
+     * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
      * @param string $view The view name.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
-     * @return ResponseInterface The response instance.
+     * @return DataResponse The response instance.
      */
-    public function render(string $view, array $parameters = []): ResponseInterface
+    public function render(string $view, array $parameters = []): DataResponse
     {
-        $contentParameters = $this->getContentParameters($parameters);
-        $layoutParameters = $this->getLayoutParameters();
-        $metaTags = $this->getMetaTags();
-        $linkTags = $this->getLinkTags();
-
-        $contentRenderer = fn (): string => $this->renderProxy(
-            $view,
-            $contentParameters,
-            $layoutParameters,
-            $metaTags,
-            $linkTags
-        );
-
-        return $this->responseFactory->createResponse($contentRenderer);
+        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy($view, $parameters));
     }
 
     /**
-     * Renders a view without applying a layout and returns a response instance.
+     * Returns a response instance {@see DataResponse} with deferred rendering without applying a layout.
+     *
+     * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
      * @param string $view The view name.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
-     * @return ResponseInterface The response instance.
+     * @return DataResponse The response instance.
      */
-    public function renderPartial(string $view, array $parameters = []): ResponseInterface
+    public function renderPartial(string $view, array $parameters = []): DataResponse
     {
         if ($this->layout === null) {
             return $this->render($view, $parameters);
         }
 
         return $this->withLayout(null)->render($view, $parameters);
+    }
+
+    /**
+     * Renders a view as string.
+     *
+     * @param string $view The view name.
+     * @param array $parameters The parameters (name-value pairs) that will be extracted
+     * and made available in the view file.
+     *
+     * @return string The rendering result.
+     */
+    public function renderAsString(string $view, array $parameters = []): string
+    {
+        return $this->renderProxy($view, $parameters);
+    }
+
+    /**
+     * Renders a view as string without applying a layout.
+     *
+     * @param string $view The view name.
+     * @param array $parameters The parameters (name-value pairs) that will be extracted
+     * and made available in the view file.
+     *
+     * @return string The rendering result.
+     */
+    public function renderPartialAsString(string $view, array $parameters = []): string
+    {
+        if ($this->layout === null) {
+            return $this->renderAsString($view, $parameters);
+        }
+
+        return $this->withLayout(null)->renderAsString($view, $parameters);
     }
 
     /**
@@ -220,31 +249,46 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * @psalm-param MetaTagsConfig $metaTags
-     * @psalm-param LinkTagsConfig $linkTags
+     * Renders a view with the injection of parameters and tags into it.
+     *
+     * @param string $view The view name.
+     * @param array $parameters The parameters (name-value pairs) that will be extracted
+     * and made available in the view file.
+     *
+     * @return string The rendering result.
+     *
+     * @throws Throwable If the view cannot be resolved.
+     * @throws ViewNotFoundException If the view file does not exist.
      */
-    private function renderProxy(
-        string $view,
-        array $contentParameters,
-        array $layoutParameters,
-        array $metaTags,
-        array $linkTags
-    ): string {
-        $this->injectMetaTags($metaTags);
-        $this->injectLinkTags($linkTags);
+    private function renderProxy(string $view, array $parameters): string
+    {
+        $this->injectMetaTags();
+        $this->injectLinkTags();
 
         $this->view = $this->view->withContext($this);
-        $content = $this->view->render($view, $contentParameters);
-        $layout = $this->findLayoutFile($this->layout);
+        $content = $this->view->render($view, $this->getContentParameters($parameters));
 
-        if ($layout === null) {
+        if ($this->layout === null) {
             return $content;
         }
 
+        $layout = $this->findLayoutFile($this->layout);
+        $layoutParameters = $this->getLayoutParameters();
         $layoutParameters['content'] = $content;
+
         return $this->view->renderFile($layout, $layoutParameters);
     }
 
+    /**
+     * Gets the merged injection content parameters with the parameters specified during rendering.
+     *
+     * The parameters specified during rendering have a more priority and will
+     * overwrite the injected content parameters if their names match.
+     *
+     * @param array $renderParameters Parameters specified during rendering.
+     *
+     * @return array The merged injection content parameters with the parameters specified during rendering.
+     */
     private function getContentParameters(array $renderParameters): array
     {
         $parameters = [];
@@ -256,6 +300,11 @@ final class ViewRenderer implements ViewContextInterface
         return array_merge($parameters, $renderParameters);
     }
 
+    /**
+     * Gets the merged injection layout parameters.
+     *
+     * @return array The merged injection layout parameters.
+     */
     private function getLayoutParameters(): array
     {
         $parameters = [];
@@ -268,7 +317,9 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * @psalm-return MetaTagsConfig
+     * Gets the merged injection meta tags.
+     *
+     * @return array The merged injection meta tags.
      */
     private function getMetaTags(): array
     {
@@ -282,7 +333,9 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * @psalm-return LinkTagsConfig
+     * Gets the merged injection link tags.
+     *
+     * @return array The merged injection link tags.
      */
     private function getLinkTags(): array
     {
@@ -296,12 +349,14 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * @psalm-param MetaTagsConfig $tags
+     * Injects meta tags to the view.
+     *
+     * @see WebView::registerMeta()
+     * @see WebView::registerMetaTag()
      */
-    private function injectMetaTags(array $tags): void
+    private function injectMetaTags(): void
     {
-        /** @var mixed $tag */
-        foreach ($tags as $key => $tag) {
+        foreach ($this->getMetaTags() as $key => $tag) {
             $key = is_string($key) ? $key : null;
 
             if (is_array($tag)) {
@@ -319,17 +374,19 @@ final class ViewRenderer implements ViewContextInterface
                     $tag
                 );
             }
+
             $this->view->registerMetaTag($tag, $key);
         }
     }
 
     /**
-     * @psalm-param LinkTagsConfig $tags
+     * Injects link tags to the view.
+     *
+     * @see WebView::registerLinkTag()
      */
-    private function injectLinkTags(array $tags): void
+    private function injectLinkTags(): void
     {
-        /** @var mixed $tag */
-        foreach ($tags as $key => $tag) {
+        foreach ($this->getLinkTags() as $key => $tag) {
             if (is_array($tag)) {
                 /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;
@@ -367,12 +424,15 @@ final class ViewRenderer implements ViewContextInterface
         }
     }
 
-    private function findLayoutFile(?string $file): ?string
+    /**
+     * Finds the layout file based on the given file path or alias.
+     *
+     * @param string $file The file path or alias.
+     *
+     * @return string The path to the file with the file extension.
+     */
+    private function findLayoutFile(string $file): string
     {
-        if ($file === null) {
-            return null;
-        }
-
         $file = $this->aliases->get($file);
 
         if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
@@ -383,15 +443,14 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns the controller name. Name should be converted to "id" case.
-     * Method returns classname without `controller` on the ending.
-     * If namespace is not contain `controller` or `controllers`
-     * then returns only classname without `controller` on the ending
-     * else returns all subnamespaces from `controller` (or `controllers`) to the end
+     * Returns the controller name. Name should be converted to "id" case without `controller` on the ending.
      *
-     * @param object $controller
+     * If namespace is not contain `controller` or `controllers` then returns only classname without `controller`
+     * on the ending else returns all subnamespaces from `controller` (or `controllers`) to the end.
      *
-     * @return string
+     * @param object $controller The controller instance.
+     *
+     * @return string The controller name.
      *
      * @example App\Controller\FooBar\BazController -> foo-bar/baz
      * @example App\Controllers\FooBar\BazController -> foo-bar/baz
@@ -420,7 +479,11 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * @param mixed $value
+     * Returns the value type.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return string The value type.
      */
     private function getType($value): string
     {

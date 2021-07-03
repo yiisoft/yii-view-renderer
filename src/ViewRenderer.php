@@ -36,11 +36,11 @@ use function str_replace;
 /**
  * ViewRenderer renders the view.
  *
- * If the {@see ViewRenderer::render()} or {@see ViewRenderer::renderPartial()} methods are called,
- * an instance of the {@see DataResponse} is returned, with deferred rendering. Rendering will
- * occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
+ * If {@see ViewRenderer::render()} or {@see ViewRenderer::renderPartial()} methods are called,
+ * an instance of {@see DataResponse} is returned. It supports deferred rendering that
+ * occurs when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
  *
- * If the {@see ViewRenderer::renderAsString()} or {@see ViewRenderer::renderPartialAsString()} methods are called,
+ * If {@see ViewRenderer::renderAsString()} or {@see ViewRenderer::renderPartialAsString()} methods are called,
  * the rendering will occur immediately and the string result of the rendering will be returned.
  */
 final class ViewRenderer implements ViewContextInterface
@@ -97,6 +97,7 @@ final class ViewRenderer implements ViewContextInterface
 
     /**
      * Returns a response instance {@see DataResponse} with deferred rendering {@see renderAsString()}.
+     * Returns a response instance {@see DataResponse} that supports deferred rendering {@see renderAsString()}.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
@@ -112,8 +113,8 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a response instance {@see DataResponse} with deferred rendering
-     * {@see render(), renderAsString()} without applying a layout.
+     * Returns a response instance {@see DataResponse} that supports deferred
+     * rendering {@see render(), renderAsString()} without applying a layout.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
@@ -133,7 +134,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view as string with the injection of parameters and tags into it.
+     * Renders a view as a string injecting parameters and tags into view context.
      *
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
@@ -272,14 +273,14 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Gets the merged injection content parameters with the parameters specified during rendering.
+     * Gets injection content parameters merged with parameters specified during rendering.
      *
-     * The parameters specified during rendering have a more priority and will
+     * The parameters specified during rendering have more priority and will
      * overwrite the injected content parameters if their names match.
      *
      * @param array $renderParameters Parameters specified during rendering.
      *
-     * @return array The merged injection content parameters with the parameters specified during rendering.
+     * @return array The injection content parameters merged with the parameters specified during rendering.
      */
     private function getContentParameters(array $renderParameters): array
     {
@@ -417,7 +418,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Finds the layout file based on the given file path or alias.
+     * Finds a layout file based on the given file path or alias.
      *
      * @param string $file The file path or alias.
      *
@@ -436,9 +437,12 @@ final class ViewRenderer implements ViewContextInterface
 
     /**
      * Returns the controller name. Name should be converted to "id" case without `controller` on the ending.
+     * Returns a controller name based on controller instance.
      *
-     * If namespace is not contain `controller` or `controllers` then returns only classname without `controller`
-     * on the ending else returns all subnamespaces from `controller` (or `controllers`) to the end.
+     * Name should be converted to "id" case without `controller` on the ending.
+     *
+     * If namespace does not contain `controller` or `controllers` then the method returns only classname without
+     * `controller` at the end else it returns all sub-namespaces with `controller` (or `controllers`) at the end.
      *
      * @param object $controller The controller instance.
      *

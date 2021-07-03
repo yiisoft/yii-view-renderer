@@ -62,8 +62,8 @@ $response = $viewRenderer->render('site/page', [
 ]);
 ```
 
-The rendering will be performed directly when calling the `getBody()` or `getData()` methods of the
-`Yiisoft\DataResponse\DataResponse` class. If a layout is set, but you need to render a view
+The rendering will be performed directly when calling `getBody()` or `getData()` methods of the
+`Yiisoft\DataResponse\DataResponse`. If a layout is set, but you need to render a view
 without the layout, you can use an immutable setter `withLayout()`:
 
 ```php
@@ -85,7 +85,7 @@ $response = $viewRenderer->renderPartial('site/page', [
 ```
 
 To render immediately and return the rendering result as a string,
-use the `renderAsString()` and `renderPartialAsString()` methods:
+use `renderAsString()` and `renderPartialAsString()` methods:
 
 ```php
 // Rendering a view with a layout.
@@ -112,7 +112,7 @@ see description of the [yiisoft/aliases](https://github.com/yiisoft/aliases) pac
 
 If the view renderer is used in a controller, you can either specify controller name explicitly using
 `withControllerName()` or determine name automatically by passing a controller instance to `withController()`.
-Automatically, the name of the controller is determined as follows:
+In this case the name is determined as follows:
 
 ```
 App\Controller\FooBar\BazController -> foo-bar/baz

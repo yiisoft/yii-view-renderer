@@ -58,7 +58,7 @@ EOD;
         ]));
     }
 
-    public function testRenderWithFullPathLayout(): void
+    public function testRenderWithAbsoluteLayoutPath(): void
     {
         $renderer = $this->getRenderer()->withLayout($this->getViewsDir() . '/layout.php');
 
@@ -69,7 +69,7 @@ EOD;
         $this->assertSame('<html><body><b>donatello</b></body></html>', (string) $response->getBody());
     }
 
-    public function testRenderAsStringWithFullPathLayout(): void
+    public function testRenderAsStringWithAbsoluteLayoutPath(): void
     {
         $renderer = $this->getRenderer()->withLayout($this->getViewsDir() . '/layout.php');
 

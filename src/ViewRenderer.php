@@ -96,11 +96,11 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a response instance {@see DataResponse} with deferred rendering.
+     * Returns a response instance {@see DataResponse} with deferred rendering {@see renderAsString()}.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
-     * @param string $view The view name.
+     * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
@@ -108,15 +108,16 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy($view, $parameters));
+        return $this->responseFactory->createResponse(fn (): string => $this->renderAsString($view, $parameters));
     }
 
     /**
-     * Returns a response instance {@see DataResponse} with deferred rendering without applying a layout.
+     * Returns a response instance {@see DataResponse} with deferred rendering
+     * {@see render(), renderAsString()} without applying a layout.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
-     * @param string $view The view name.
+     * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
@@ -132,25 +133,47 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view as string.
+     * Renders a view as string with the injection of parameters and tags into it.
      *
-     * @param string $view The view name.
+     * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
+     *
+     * @throws RuntimeException If the view cannot be resolved.
+     * @throws Throwable If an error occurred during rendering.
+     * @throws ViewNotFoundException If the view file does not exist.
      *
      * @return string The rendering result.
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
-        return $this->renderProxy($view, $parameters);
+        $this->injectMetaTags();
+        $this->injectLinkTags();
+
+        $this->view = $this->view->withContext($this);
+        $content = $this->view->render($view, $this->getContentParameters($parameters));
+
+        if ($this->layout === null) {
+            return $content;
+        }
+
+        $layout = $this->findLayoutFile($this->layout);
+        $layoutParameters = $this->getLayoutParameters();
+        $layoutParameters['content'] = $content;
+
+        return $this->view->renderFile($layout, $layoutParameters);
     }
 
     /**
-     * Renders a view as string without applying a layout.
+     * Renders a view as string {@see renderAsString()} without applying a layout.
      *
-     * @param string $view The view name.
+     * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
+     *
+     * @throws RuntimeException If the view cannot be resolved.
+     * @throws Throwable If an error occurred during rendering.
+     * @throws ViewNotFoundException If the view file does not exist.
      *
      * @return string The rendering result.
      */
@@ -246,37 +269,6 @@ final class ViewRenderer implements ViewContextInterface
         $new = clone $this;
         $new->injections = $injections;
         return $new;
-    }
-
-    /**
-     * Renders a view with the injection of parameters and tags into it.
-     *
-     * @param string $view The view name.
-     * @param array $parameters The parameters (name-value pairs) that will be extracted
-     * and made available in the view file.
-     *
-     * @throws Throwable If the view cannot be resolved.
-     * @throws ViewNotFoundException If the view file does not exist.
-     *
-     * @return string The rendering result.
-     */
-    private function renderProxy(string $view, array $parameters): string
-    {
-        $this->injectMetaTags();
-        $this->injectLinkTags();
-
-        $this->view = $this->view->withContext($this);
-        $content = $this->view->render($view, $this->getContentParameters($parameters));
-
-        if ($this->layout === null) {
-            return $content;
-        }
-
-        $layout = $this->findLayoutFile($this->layout);
-        $layoutParameters = $this->getLayoutParameters();
-        $layoutParameters['content'] = $content;
-
-        return $this->view->renderFile($layout, $layoutParameters);
     }
 
     /**

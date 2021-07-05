@@ -158,12 +158,13 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
-        $contentParameters = $this->getContentParameters($parameters);
-        $layoutParameters = $this->getLayoutParameters();
-        $metaTags = $this->getMetaTags();
-        $linkTags = $this->getLinkTags();
-
-        return $this->renderProxy($view, $contentParameters, $layoutParameters, $metaTags, $linkTags);
+        return $this->renderProxy(
+            $view,
+            $this->getContentParameters($parameters),
+            $this->getLayoutParameters(),
+            $this->getMetaTags(),
+            $this->getLinkTags(),
+        );
     }
 
     /**

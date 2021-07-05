@@ -17,7 +17,7 @@
     },
     "require": {
         "php": "^7.4|^8.0",
-        "yiisoft/aliases": "^1.1|^2.0",
+        "yiisoft/aliases": "^2.0",
         "yiisoft/csrf": "^1.0",
         "yiisoft/data-response": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
@@ -45,9 +45,6 @@
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "3.0.x-dev"
-        },
         "config-plugin-options": {
             "source-directory": "config"
         },

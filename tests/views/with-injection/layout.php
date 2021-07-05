@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @var $this \Yiisoft\View\WebView
- * @var $content string
- * @var $footer string
+ * @var Yiisoft\View\WebView $this
+ * @var string $content
+ * @var string $footer
  */
 
 $this->beginPage();

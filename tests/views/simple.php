@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var $name string
+ * @var string $name
  */
 
 echo '<b>' . $name . '</b>';

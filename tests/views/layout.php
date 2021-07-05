@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var $content string
+ * @var string $content
  */
 
 echo '<html><body>' . $content . '</body></html>';

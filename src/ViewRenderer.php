@@ -96,7 +96,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a response instance {@see DataResponse} that supports deferred rendering {@see renderAsString()}.
+     * Returns a response instance {@see DataResponse} that supports deferred rendering.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
@@ -108,12 +108,23 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        return $this->responseFactory->createResponse(fn (): string => $this->renderAsString($view, $parameters));
+        $contentParameters = $this->getContentParameters($parameters);
+        $layoutParameters = $this->getLayoutParameters();
+        $metaTags = $this->getMetaTags();
+        $linkTags = $this->getLinkTags();
+
+        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
+            $view,
+            $contentParameters,
+            $layoutParameters,
+            $metaTags,
+            $linkTags,
+        ));
     }
 
     /**
      * Returns a response instance {@see DataResponse} that supports deferred
-     * rendering {@see render(), renderAsString()} without applying a layout.
+     * rendering {@see render()} without applying a layout.
      *
      * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
@@ -133,7 +144,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Renders a view as a string injecting parameters and tags into view context.
+     * Renders a view as a string.
      *
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
@@ -147,21 +158,13 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
-        $this->injectMetaTags();
-        $this->injectLinkTags();
-
-        $this->view = $this->view->withContext($this);
-        $content = $this->view->render($view, $this->getContentParameters($parameters));
-
-        if ($this->layout === null) {
-            return $content;
-        }
-
-        $layout = $this->findLayoutFile($this->layout);
-        $layoutParameters = $this->getLayoutParameters();
-        $layoutParameters['content'] = $content;
-
-        return $this->view->renderFile($layout, $layoutParameters);
+        return $this->renderProxy(
+            $view,
+            $this->getContentParameters($parameters),
+            $this->getLayoutParameters(),
+            $this->getMetaTags(),
+            $this->getLinkTags(),
+        );
     }
 
     /**
@@ -272,6 +275,44 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
+     * Renders a view as a string injecting parameters and tags into view context.
+     *
+     * @param string $view The view name {@see WebView::render()}.
+     * @param array $contentParameters The content parameters to inject.
+     * @param array $layoutParameters The layout parameters to inject.
+     * @param array $metaTags The meta tags to inject.
+     * @param array $linkTags The link tags to inject.
+     *
+     * @throws RuntimeException If the view cannot be resolved.
+     * @throws Throwable If an error occurred during rendering.
+     * @throws ViewNotFoundException If the view file does not exist.
+     *
+     * @return string The rendering result.
+     */
+    private function renderProxy(
+        string $view,
+        array $contentParameters,
+        array $layoutParameters,
+        array $metaTags,
+        array $linkTags
+    ): string {
+        $this->injectMetaTags($metaTags);
+        $this->injectLinkTags($linkTags);
+
+        $this->view = $this->view->withContext($this);
+        $content = $this->view->render($view, $contentParameters);
+
+        if ($this->layout === null) {
+            return $content;
+        }
+
+        $layoutParameters['content'] = $content;
+        $layout = $this->findLayoutFile($this->layout);
+
+        return $this->view->renderFile($layout, $layoutParameters);
+    }
+
+    /**
      * Gets injection content parameters merged with parameters specified during rendering.
      *
      * The parameters specified during rendering have more priority and will
@@ -343,12 +384,14 @@ final class ViewRenderer implements ViewContextInterface
     /**
      * Injects meta tags to the view.
      *
+     * @param array $tags The meta tags to inject.
+     *
      * @see WebView::registerMeta()
      * @see WebView::registerMetaTag()
      */
-    private function injectMetaTags(): void
+    private function injectMetaTags(array $tags): void
     {
-        foreach ($this->getMetaTags() as $key => $tag) {
+        foreach ($tags as $key => $tag) {
             $key = is_string($key) ? $key : null;
 
             if (is_array($tag)) {
@@ -374,11 +417,13 @@ final class ViewRenderer implements ViewContextInterface
     /**
      * Injects link tags to the view.
      *
+     * @param array $tags The link tags to inject.
+     *
      * @see WebView::registerLinkTag()
      */
-    private function injectLinkTags(): void
+    private function injectLinkTags(array $tags): void
     {
-        foreach ($this->getLinkTags() as $key => $tag) {
+        foreach ($tags as $key => $tag) {
             if (is_array($tag)) {
                 /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;

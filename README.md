@@ -37,6 +37,8 @@ There are two ways to render a view:
 - Return an instance of the `Yiisoft\DataResponse\DataResponse` class with deferred rendering.
 - Render immediately and return the rendered result as a string.
 
+### Rendering result as a PSR-7 response
+
 The `Yiisoft\DataResponse\DataResponse` class is an implementation of the `Psr\Http\Message\ResponseInterface`. For
 more information about this class, see the [yiisoft/data-response](https://github.com/yiisoft/data-response) package.
 You can get an instance of a response with deferred rendering as follows:
@@ -84,6 +86,8 @@ $response = $viewRenderer->renderPartial('site/page', [
 ]);
 ```
 
+### Rendering result as a string
+
 To render immediately and return the rendering result as a string,
 use `renderAsString()` and `renderPartialAsString()` methods:
 
@@ -98,6 +102,8 @@ $result = $viewRenderer->renderPartialAsString('site/page', [
     'parameter-name' => 'parameter-value',
 ]);
 ```
+
+### Change view templates path 
 
 You can change view templates path in runtime as follows:
 

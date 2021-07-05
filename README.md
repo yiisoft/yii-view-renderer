@@ -86,7 +86,7 @@ $response = $viewRenderer->renderPartial('site/page', [
 ]);
 ```
 
-### Rendered result as a string
+### Rendering result as a string
 
 To render immediately and return the rendering result as a string,
 use `renderAsString()` and `renderPartialAsString()` methods:

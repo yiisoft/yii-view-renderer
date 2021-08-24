@@ -1,9 +1,9 @@
 # Yii View Extension Change Log
 
 
-## 1.0.1 under development
+## 2.0.0 under development
 
-- no changes in this release.
+- Chg: Use yiisoft/html ^2.0 and yiisoft/view ^2.0 (samdark)
 
 ## 1.0.0 July 05, 2021
 

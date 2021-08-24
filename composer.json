@@ -21,7 +21,7 @@
         "yiisoft/csrf": "^1.0",
         "yiisoft/data-response": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
-        "yiisoft/html": "^1.2",
+        "yiisoft/html": "^2.0",
         "yiisoft/strings": "^2.0",
         "yiisoft/view": "^1.0"
     },

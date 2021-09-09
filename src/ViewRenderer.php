@@ -104,21 +104,19 @@ final class ViewRenderer implements ViewContextInterface
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
+     * @psalm-param array<string, mixed> $parameters
+     *
      * @return DataResponse The response instance.
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        $contentParameters = $this->getContentParameters($parameters);
-        $layoutParameters = $this->getLayoutParameters();
-        $metaTags = $this->getMetaTags();
-        $linkTags = $this->getLinkTags();
-
         return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
             $view,
-            $contentParameters,
-            $layoutParameters,
-            $metaTags,
-            $linkTags,
+            $parameters,
+            $this->getInjectContentParameters(),
+            $this->getInjectLayoutParameters(),
+            $this->getMetaTags(),
+            $this->getLinkTags(),
         ));
     }
 
@@ -131,6 +129,8 @@ final class ViewRenderer implements ViewContextInterface
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
+     *
+     * @psalm-param array<string, mixed> $parameters
      *
      * @return DataResponse The response instance.
      */
@@ -150,6 +150,8 @@ final class ViewRenderer implements ViewContextInterface
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
      *
+     * @psalm-param array<string, mixed> $parameters
+     *
      * @throws RuntimeException If the view cannot be resolved.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
@@ -160,8 +162,9 @@ final class ViewRenderer implements ViewContextInterface
     {
         return $this->renderProxy(
             $view,
-            $this->getContentParameters($parameters),
-            $this->getLayoutParameters(),
+            $parameters,
+            $this->getInjectContentParameters(),
+            $this->getInjectLayoutParameters(),
             $this->getMetaTags(),
             $this->getLinkTags(),
         );
@@ -173,6 +176,8 @@ final class ViewRenderer implements ViewContextInterface
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
      * and made available in the view file.
+     *
+     * @psalm-param array<string, mixed> $parameters
      *
      * @throws RuntimeException If the view cannot be resolved.
      * @throws Throwable If an error occurred during rendering.
@@ -278,10 +283,15 @@ final class ViewRenderer implements ViewContextInterface
      * Renders a view as a string injecting parameters and tags into view context.
      *
      * @param string $view The view name {@see WebView::render()}.
-     * @param array $contentParameters The content parameters to inject.
-     * @param array $layoutParameters The layout parameters to inject.
+     * @param array $contentParameters The content parameters to render view.
+     * @param array $injectContentParameters The content parameters to inject.
+     * @param array $injectLayoutParameters The layout parameters to inject.
      * @param array $metaTags The meta tags to inject.
      * @param array $linkTags The link tags to inject.
+     *
+     * @psalm-param array<string, mixed> $contentParameters
+     * @psalm-param array<string, mixed> $injectContentParameters
+     * @psalm-param array<string, mixed> $injectLayoutParameters
      *
      * @throws RuntimeException If the view cannot be resolved.
      * @throws Throwable If an error occurred during rendering.
@@ -292,7 +302,8 @@ final class ViewRenderer implements ViewContextInterface
     private function renderProxy(
         string $view,
         array $contentParameters,
-        array $layoutParameters,
+        array $injectContentParameters,
+        array $injectLayoutParameters,
         array $metaTags,
         array $linkTags
     ): string {
@@ -300,13 +311,16 @@ final class ViewRenderer implements ViewContextInterface
         $this->injectLinkTags($linkTags);
 
         $this->view = $this->view->withContext($this);
-        $content = $this->view->render($view, $contentParameters);
+
+        $contentView = clone $this->view;
+        $contentView->setCommonParameters($injectContentParameters);
+        $content = $contentView->render($view, $contentParameters);
 
         if ($this->layout === null) {
             return $content;
         }
 
-        $layoutParameters['content'] = $content;
+        $layoutParameters = ['content' => $content] + $injectLayoutParameters;
         $layout = $this->findLayoutFile($this->layout);
 
         return $this->view->renderFile($layout, $layoutParameters);
@@ -321,8 +335,10 @@ final class ViewRenderer implements ViewContextInterface
      * @param array $renderParameters Parameters specified during rendering.
      *
      * @return array The injection content parameters merged with the parameters specified during rendering.
+     *
+     * @psalm-return array<string, mixed>
      */
-    private function getContentParameters(array $renderParameters): array
+    private function getInjectContentParameters(): array
     {
         $parameters = [];
         foreach ($this->injections as $injection) {
@@ -330,15 +346,17 @@ final class ViewRenderer implements ViewContextInterface
                 $parameters = array_merge($parameters, $injection->getContentParameters());
             }
         }
-        return array_merge($parameters, $renderParameters);
+        return $parameters;
     }
 
     /**
      * Gets the merged injection layout parameters.
      *
      * @return array The merged injection layout parameters.
+     *
+     * @psalm-return array<string, mixed>
      */
-    private function getLayoutParameters(): array
+    private function getInjectLayoutParameters(): array
     {
         $parameters = [];
         foreach ($this->injections as $injection) {

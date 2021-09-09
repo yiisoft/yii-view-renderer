@@ -225,6 +225,17 @@ EOD;
         $response->getBody();
     }
 
+    public function testContentParametersInjectionsToNestedViews(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout(null)
+            ->withInjections(new TestInjection());
+
+        $response = $renderer->render('nested/root', ['label' => 'root']);
+
+        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string)$response->getBody());
+    }
+
     public function testImmutability(): void
     {
         $original = $this->getRenderer();

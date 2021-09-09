@@ -312,9 +312,9 @@ final class ViewRenderer implements ViewContextInterface
 
         $this->view = $this->view->withContext($this);
 
-        $contentView = clone $this->view;
-        $contentView->setCommonParameters($injectContentParameters);
-        $content = $contentView->render($view, $contentParameters);
+        $content = $this->view
+            ->withAddedCommonParameters($injectContentParameters)
+            ->render($view, $contentParameters);
 
         if ($this->layout === null) {
             return $content;

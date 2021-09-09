@@ -21,6 +21,7 @@ use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Tests\Support\TestTrait;
+use Yiisoft\Yii\View\Tests\Support\TitleInjection;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ViewRendererTest extends TestCase
@@ -234,6 +235,20 @@ EOD;
         $response = $renderer->render('nested/root', ['label' => 'root']);
 
         $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string)$response->getBody());
+    }
+
+    public function testLayoutParametersInjectionsToNestedViews(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/nested-layout/layout')
+            ->withInjections(new TitleInjection());
+
+        $response = $renderer->render('empty');
+
+        $this->assertSame(
+            '<html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>',
+            (string)$response->getBody(),
+        );
     }
 
     public function testImmutability(): void

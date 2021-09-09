@@ -307,12 +307,12 @@ final class ViewRenderer implements ViewContextInterface
         array $metaTags,
         array $linkTags
     ): string {
-        $this->injectMetaTags($metaTags);
-        $this->injectLinkTags($linkTags);
+        $currentView = $this->view->withContext($this);
 
-        $this->view = $this->view->withContext($this);
+        $this->injectMetaTags($metaTags, $currentView);
+        $this->injectLinkTags($linkTags, $currentView);
 
-        $content = $this->view
+        $content = $currentView
             ->withAddedCommonParameters($injectContentParameters)
             ->render($view, $contentParameters);
 
@@ -321,9 +321,11 @@ final class ViewRenderer implements ViewContextInterface
         }
 
         $layoutParameters = ['content' => $content] + $injectLayoutParameters;
-        $layout = $this->findLayoutFile($this->layout);
+        $layout = $this->findLayoutFile($this->layout, $currentView);
 
-        return $this->view->renderFile($layout, $layoutParameters);
+        return $currentView
+            ->withAddedCommonParameters($layoutParameters)
+            ->renderFile($layout);
     }
 
     /**
@@ -407,13 +409,13 @@ final class ViewRenderer implements ViewContextInterface
      * @see WebView::registerMeta()
      * @see WebView::registerMetaTag()
      */
-    private function injectMetaTags(array $tags): void
+    private function injectMetaTags(array $tags, WebView $view): void
     {
         foreach ($tags as $key => $tag) {
             $key = is_string($key) ? $key : null;
 
             if (is_array($tag)) {
-                $this->view->registerMeta($tag, $key);
+                $view->registerMeta($tag, $key);
                 continue;
             }
 
@@ -428,7 +430,7 @@ final class ViewRenderer implements ViewContextInterface
                 );
             }
 
-            $this->view->registerMetaTag($tag, $key);
+            $view->registerMetaTag($tag, $key);
         }
     }
 
@@ -439,7 +441,7 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @see WebView::registerLinkTag()
      */
-    private function injectLinkTags(array $tags): void
+    private function injectLinkTags(array $tags, WebView $view): void
     {
         foreach ($tags as $key => $tag) {
             if (is_array($tag)) {
@@ -475,7 +477,7 @@ final class ViewRenderer implements ViewContextInterface
                 }
             }
 
-            $this->view->registerLinkTag($tag, $position, is_string($key) ? $key : null);
+            $view->registerLinkTag($tag, $position, is_string($key) ? $key : null);
         }
     }
 
@@ -486,7 +488,7 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @return string The path to the file with the file extension.
      */
-    private function findLayoutFile(string $file): string
+    private function findLayoutFile(string $file, WebView $view): string
     {
         $file = $this->aliases->get($file);
 
@@ -494,7 +496,7 @@ final class ViewRenderer implements ViewContextInterface
             return $file;
         }
 
-        return $file . '.' . $this->view->getDefaultExtension();
+        return $file . '.' . $view->getDefaultExtension();
     }
 
     /**

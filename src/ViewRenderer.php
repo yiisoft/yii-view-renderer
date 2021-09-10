@@ -110,13 +110,18 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
+        $injectContentParameters = $this->getInjectContentParameters();
+        $injectLayoutParameters = $this->getInjectLayoutParameters();
+        $metaTags = $this->getMetaTags();
+        $linkTags = $this->getLinkTags();
+
         return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
             $view,
             $parameters,
-            $this->getInjectContentParameters(),
-            $this->getInjectLayoutParameters(),
-            $this->getMetaTags(),
-            $this->getLinkTags(),
+            $injectContentParameters,
+            $injectLayoutParameters,
+            $metaTags,
+            $linkTags,
         ));
     }
 

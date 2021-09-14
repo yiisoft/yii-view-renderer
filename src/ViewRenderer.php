@@ -110,16 +110,16 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        $injectContentParameters = $this->getInjectContentParameters();
-        $injectLayoutParameters = $this->getInjectLayoutParameters();
+        $contentParameters = $this->getContentParameters();
+        $layoutParameters = $this->getLayoutParameters();
         $metaTags = $this->getMetaTags();
         $linkTags = $this->getLinkTags();
 
         return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
             $view,
             $parameters,
-            $injectContentParameters,
-            $injectLayoutParameters,
+            $contentParameters,
+            $layoutParameters,
             $metaTags,
             $linkTags,
         ));
@@ -168,8 +168,8 @@ final class ViewRenderer implements ViewContextInterface
         return $this->renderProxy(
             $view,
             $parameters,
-            $this->getInjectContentParameters(),
-            $this->getInjectLayoutParameters(),
+            $this->getContentParameters(),
+            $this->getLayoutParameters(),
             $this->getMetaTags(),
             $this->getLinkTags(),
         );
@@ -345,7 +345,7 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-return array<string, mixed>
      */
-    private function getInjectContentParameters(): array
+    private function getContentParameters(): array
     {
         $parameters = [];
         foreach ($this->injections as $injection) {
@@ -363,7 +363,7 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-return array<string, mixed>
      */
-    private function getInjectLayoutParameters(): array
+    private function getLayoutParameters(): array
     {
         $parameters = [];
         foreach ($this->injections as $injection) {

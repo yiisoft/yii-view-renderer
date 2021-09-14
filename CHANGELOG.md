@@ -1,10 +1,8 @@
 # Yii View Extension Change Log
 
-
 ## 2.0.1 under development
 
-- no changes in this release.
-
+- Bug #40: Fixed not passing content and layout parameters injections to nested view rendering (vjik)
 
 ## 2.0.0 August 24, 2021
 

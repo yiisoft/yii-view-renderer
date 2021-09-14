@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\View\Tests;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
+use ReflectionObject;
 use RuntimeException;
 use stdClass;
 use Yiisoft\Aliases\Aliases;
@@ -21,6 +22,7 @@ use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Tests\Support\TestTrait;
+use Yiisoft\Yii\View\Tests\Support\TitleInjection;
 use Yiisoft\Yii\View\ViewRenderer;
 
 final class ViewRendererTest extends TestCase
@@ -223,6 +225,63 @@ EOD;
             'Link tag position in injection should be integer. Got string.',
         );
         $response->getBody();
+    }
+
+    public function testContentParametersInjectionsToNestedViews(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout(null)
+            ->withInjections(new TestInjection());
+
+        $response = $renderer->render('nested/root', ['label' => 'root']);
+
+        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string)$response->getBody());
+    }
+
+    public function testLayoutParametersInjectionsToNestedViews(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/nested-layout/layout')
+            ->withInjections(new TitleInjection());
+
+        $response = $renderer->render('empty');
+
+        $this->assertSame(
+            '<html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>',
+            (string)$response->getBody(),
+        );
+    }
+
+    public function testChangeInjectionsAfterCreateProxyAndBeforeRender(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/with-injection/layout')
+            ->withControllerName('with-injection')
+            ->withInjections(new TestInjection())
+        ;
+
+        $response = $renderer->render('view', [
+            'name' => 'donatello',
+        ]);
+
+        $injectionsProperty = (new ReflectionObject($renderer))->getProperty('injections');
+        $injectionsProperty->setAccessible(true);
+        $injectionsProperty->setValue($renderer, []);
+
+        $expected = <<<'EOD'
+<html>
+<head><meta charset="utf-8">
+<meta name="description" content="This website is about funny raccoons.">
+<link type="image/png" href="/icon.png" rel="icon">
+<link type="font/woff2" href="myFont.woff2" rel="preload" as="font"></head>
+<body>
+    <p><b>donatello</b></p>
+    <div>copyright</div>
+    <link href="fancy.css" rel="alternate stylesheet"></body>
+</html>
+EOD;
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
     }
 
     public function testImmutability(): void

@@ -23,6 +23,8 @@ interface ContentParametersInjectionInterface
      * ```
      *
      * @return array
+     *
+     * @psalm-return array<string, mixed>
      */
     public function getContentParameters(): array;
 }

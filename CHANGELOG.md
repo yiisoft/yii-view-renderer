@@ -2,7 +2,7 @@
 
 ## 2.0.1 under development
 
-- Bug #40: Passing content and layout parameters injections to nested view rendering (vjik)
+- Bug #40: Fixed not passing content and layout parameters injections to nested view rendering (vjik)
 
 ## 2.0.0 August 24, 2021
 

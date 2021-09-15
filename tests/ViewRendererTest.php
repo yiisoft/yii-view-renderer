@@ -228,7 +228,7 @@ EOD;
         $response->getBody();
     }
 
-    public function testContentParametersInjectionsToNestedViews(): void
+    public function testCommonParametersInjectionsToNestedViews(): void
     {
         $renderer = $this->getRenderer()
             ->withLayout(null)

@@ -10,7 +10,7 @@ use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
 
 final class CsrfViewInjectionTest extends TestCase
 {
-    public function testGetContentParameters(): void
+    public function testGetCommonParameters(): void
     {
         $token = '123';
 
@@ -51,10 +51,10 @@ final class CsrfViewInjectionTest extends TestCase
     {
         $injection = $this->getInjection('123')->withParameterName('kitty');
 
-        $contentParameters = $injection->getCommonParameters();
+        $commonParameters = $injection->getCommonParameters();
         $layoutParameters = $injection->getLayoutParameters();
 
-        $this->assertSame('kitty', key($contentParameters));
+        $this->assertSame('kitty', key($commonParameters));
         $this->assertSame('kitty', key($layoutParameters));
     }
 

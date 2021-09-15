@@ -317,9 +317,8 @@ final class ViewRenderer implements ViewContextInterface
         $this->injectMetaTags($metaTags, $currentView);
         $this->injectLinkTags($linkTags, $currentView);
 
-        $content = $currentView
-            ->withAddedCommonParameters($injectContentParameters)
-            ->render($view, $contentParameters);
+        $currentView->setCommonParameters($injectContentParameters);
+        $content = $currentView->render($view, $contentParameters);
 
         if ($this->layout === null) {
             return $content;
@@ -328,9 +327,8 @@ final class ViewRenderer implements ViewContextInterface
         $layoutParameters = ['content' => $content] + $injectLayoutParameters;
         $layout = $this->findLayoutFile($this->layout, $currentView);
 
-        return $currentView
-            ->withAddedCommonParameters($layoutParameters)
-            ->renderFile($layout);
+        $currentView->setCommonParameters($layoutParameters);
+        return $currentView->renderFile($layout);
     }
 
     /**

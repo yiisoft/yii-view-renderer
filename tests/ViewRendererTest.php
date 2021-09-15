@@ -284,6 +284,21 @@ EOD;
         $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
     }
 
+    public function testPassingCommonParametersFromContentToLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withViewPath('@views/passing-parameters-to-layout')
+            ->withLayout('@views/passing-parameters-to-layout/layout');
+
+        $response = $renderer->render('content', [
+            'h1' => 'HELLO',
+        ]);
+
+        $expected = '<html><head><title>TITLE / HELLO</title></head><body><h1>HELLO</h1></body></html>';
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
     public function testImmutability(): void
     {
         $original = $this->getRenderer();

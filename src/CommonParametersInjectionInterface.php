@@ -6,12 +6,12 @@ namespace Yiisoft\Yii\View;
 
 /**
  * `CommonParametersInjectionInterface` is an interface that must be implemented by classes to inject
- * parameters to content and layout.
+ * parameters both to view template and to layout.
  */
 interface CommonParametersInjectionInterface
 {
     /**
-     * Returns parameters for added to content and layout.
+     * Returns parameters for added both to view template and to layout.
      *
      * For example:
      *

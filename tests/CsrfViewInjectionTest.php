@@ -21,17 +21,6 @@ final class CsrfViewInjectionTest extends TestCase
         $this->assertSame($token, current($parameters));
     }
 
-    public function testGetLayoutParameters(): void
-    {
-        $token = '123';
-
-        $parameters = $this->getInjection($token)->getLayoutParameters();
-
-        $this->assertCount(1, $parameters);
-        $this->assertSame('csrf', key($parameters));
-        $this->assertSame($token, current($parameters));
-    }
-
     public function testGetMetaTags(): void
     {
         $metaTags = $this->getInjection('123')->getMetaTags();
@@ -52,10 +41,8 @@ final class CsrfViewInjectionTest extends TestCase
         $injection = $this->getInjection('123')->withParameterName('kitty');
 
         $commonParameters = $injection->getCommonParameters();
-        $layoutParameters = $injection->getLayoutParameters();
 
         $this->assertSame('kitty', key($commonParameters));
-        $this->assertSame('kitty', key($layoutParameters));
     }
 
     public function testWithMetaAttributeName(): void

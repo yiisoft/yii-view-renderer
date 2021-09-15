@@ -10,10 +10,7 @@ use Yiisoft\Csrf\CsrfTokenInterface;
 /**
  * CsrfViewInjection injects the necessary data into the view to protect against a CSRF attack.
  */
-final class CsrfViewInjection implements
-    CommonParametersInjectionInterface,
-    LayoutParametersInjectionInterface,
-    MetaTagsInjectionInterface
+final class CsrfViewInjection implements CommonParametersInjectionInterface, MetaTagsInjectionInterface
 {
     public const DEFAULT_META_ATTRIBUTE_NAME = 'csrf';
     public const DEFAULT_PARAMETER_NAME = 'csrf';
@@ -61,14 +58,6 @@ final class CsrfViewInjection implements
      * @throws LogicException when CSRF token is not defined
      */
     public function getCommonParameters(): array
-    {
-        return [$this->parameterName => $this->csrfToken->getValue()];
-    }
-
-    /**
-     * @throws LogicException when CSRF token is not defined
-     */
-    public function getLayoutParameters(): array
     {
         return [$this->parameterName => $this->csrfToken->getValue()];
     }

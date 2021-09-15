@@ -167,20 +167,22 @@ In addition to parameters passed directly when rendering the view template, you 
 available in all views. In order to do it you need a class implementing at least one of the injection interfaces:
 
 ```php
-use Yiisoft\Yii\View\ContentParametersInjectionInterface;
+use Yiisoft\Yii\View\CommonParametersInjectionInterface;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 
 final class MyParametersInjection implements
-    ContentParametersInjectionInterface,
+    CommonParametersInjectionInterface,
     LayoutParametersInjectionInterface
 {
-    public function getContentParameters(): array
+    // Pass both to view template and to layout
+    public function getCommonParameters(): array
     {
         return [
-            'content-parameter-name' => 'content-parameter-value',
+            'common-parameter-name' => 'common-parameter-value',
         ];
     }
     
+    // Pass only to layout
     public function getLayoutParameters(): array
     {
         return [

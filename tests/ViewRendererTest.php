@@ -20,7 +20,8 @@ use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
-use Yiisoft\Yii\View\Tests\Support\OverrideLayoutParametersInjection;
+use Yiisoft\Yii\View\Tests\Support\CommonParametersInjection;
+use Yiisoft\Yii\View\Tests\Support\LayoutParametersInjection;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\Tests\Support\TitleInjection;
@@ -304,7 +305,7 @@ EOD;
     {
         $renderer = $this->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new OverrideLayoutParametersInjection())
+            ->withInjections(new CommonParametersInjection())
         ;
 
         $response = $renderer->render('empty');
@@ -319,12 +320,26 @@ EOD;
         $renderer = $this->getRenderer()
             ->withViewPath('@views/override-layout-parameters')
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new OverrideLayoutParametersInjection())
+            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection())
         ;
 
         $response = $renderer->render('content');
 
         $expected = '<html><head><title>RENDER</title></head><body></body></html>';
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
+    public function testRenderParametersNotOverrideLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/override-layout-parameters/layout')
+            ->withInjections(new LayoutParametersInjection())
+        ;
+
+        $response = $renderer->render('empty', ['seoTitle' => 'custom']);
+
+        $expected = '<html><head><title>LAYOUT</title></head><body></body></html>';
 
         $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
     }

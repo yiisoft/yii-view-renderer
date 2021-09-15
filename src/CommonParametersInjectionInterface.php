@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 /**
- * ContentParametersInjectionInterface is an interface that must be implemented by classes to inject content parameters.
+ * `CommonParametersInjectionInterface` is an interface that must be implemented by classes to inject
+ * parameters to content and layout.
  */
-interface ContentParametersInjectionInterface
+interface CommonParametersInjectionInterface
 {
     /**
-     * Returns parameters for added to content.
+     * Returns parameters for added to content and layout.
      *
      * For example:
      *
@@ -26,5 +27,5 @@ interface ContentParametersInjectionInterface
      *
      * @psalm-return array<string, mixed>
      */
-    public function getContentParameters(): array;
+    public function getCommonParameters(): array;
 }

@@ -14,7 +14,7 @@ final class CsrfViewInjectionTest extends TestCase
     {
         $token = '123';
 
-        $parameters = $this->getInjection($token)->getContentParameters();
+        $parameters = $this->getInjection($token)->getCommonParameters();
 
         $this->assertCount(1, $parameters);
         $this->assertSame('csrf', key($parameters));
@@ -51,7 +51,7 @@ final class CsrfViewInjectionTest extends TestCase
     {
         $injection = $this->getInjection('123')->withParameterName('kitty');
 
-        $contentParameters = $injection->getContentParameters();
+        $contentParameters = $injection->getCommonParameters();
         $layoutParameters = $injection->getLayoutParameters();
 
         $this->assertSame('kitty', key($contentParameters));

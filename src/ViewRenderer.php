@@ -110,7 +110,7 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        $contentParameters = $this->getContentParameters();
+        $commonParameters = $this->getCommonParameters();
         $layoutParameters = $this->getLayoutParameters();
         $metaTags = $this->getMetaTags();
         $linkTags = $this->getLinkTags();
@@ -118,7 +118,7 @@ final class ViewRenderer implements ViewContextInterface
         return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
             $view,
             $parameters,
-            $contentParameters,
+            $commonParameters,
             $layoutParameters,
             $metaTags,
             $linkTags,
@@ -168,7 +168,7 @@ final class ViewRenderer implements ViewContextInterface
         return $this->renderProxy(
             $view,
             $parameters,
-            $this->getContentParameters(),
+            $this->getCommonParameters(),
             $this->getLayoutParameters(),
             $this->getMetaTags(),
             $this->getLinkTags(),
@@ -289,13 +289,13 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @param string $view The view name {@see WebView::render()}.
      * @param array $contentParameters The content parameters to render view.
-     * @param array $injectContentParameters The content parameters to inject.
+     * @param array $injectCommonParameters The common parameters to inject.
      * @param array $injectLayoutParameters The layout parameters to inject.
      * @param array $metaTags The meta tags to inject.
      * @param array $linkTags The link tags to inject.
      *
      * @psalm-param array<string, mixed> $contentParameters
-     * @psalm-param array<string, mixed> $injectContentParameters
+     * @psalm-param array<string, mixed> $injectCommonParameters
      * @psalm-param array<string, mixed> $injectLayoutParameters
      *
      * @throws RuntimeException If the view cannot be resolved.
@@ -307,7 +307,7 @@ final class ViewRenderer implements ViewContextInterface
     private function renderProxy(
         string $view,
         array $contentParameters,
-        array $injectContentParameters,
+        array $injectCommonParameters,
         array $injectLayoutParameters,
         array $metaTags,
         array $linkTags
@@ -318,39 +318,45 @@ final class ViewRenderer implements ViewContextInterface
         $this->injectLinkTags($linkTags, $currentView);
 
         $content = $currentView
-            ->setParameters($injectContentParameters)
+            ->setParameters($injectCommonParameters)
             ->render($view, $contentParameters);
 
         if ($this->layout === null) {
             return $content;
         }
 
-        $layoutParameters = ['content' => $content] + $injectLayoutParameters;
         $layout = $this->findLayoutFile($this->layout, $currentView);
+
+        $layoutParameters = array_filter(
+            $injectLayoutParameters,
+            /** @psalm-suppress MissingClosureParamType */
+            static fn ($_value, string $key): bool => !$currentView->hasParameter($key),
+            ARRAY_FILTER_USE_BOTH,
+        );
 
         return $currentView
             ->setParameters($layoutParameters)
-            ->renderFile($layout);
+            ->renderFile($layout, ['content' => $content]);
     }
 
     /**
-     * Gets injection content parameters merged with parameters specified during rendering.
+     * Gets injection common parameters merged with parameters specified during rendering.
      *
      * The parameters specified during rendering have more priority and will
-     * overwrite the injected content parameters if their names match.
+     * overwrite the injected common parameters if their names match.
      *
      * @param array $renderParameters Parameters specified during rendering.
      *
-     * @return array The injection content parameters merged with the parameters specified during rendering.
+     * @return array The injection common parameters merged with the parameters specified during rendering.
      *
      * @psalm-return array<string, mixed>
      */
-    private function getContentParameters(): array
+    private function getCommonParameters(): array
     {
         $parameters = [];
         foreach ($this->injections as $injection) {
-            if ($injection instanceof ContentParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getContentParameters());
+            if ($injection instanceof CommonParametersInjectionInterface) {
+                $parameters = array_merge($parameters, $injection->getCommonParameters());
             }
         }
         return $parameters;

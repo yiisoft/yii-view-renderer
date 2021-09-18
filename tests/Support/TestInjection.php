@@ -6,18 +6,18 @@ namespace Yiisoft\Yii\View\Tests\Support;
 
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\ContentParametersInjectionInterface;
+use Yiisoft\Yii\View\CommonParametersInjectionInterface;
 use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\LinkTagsInjectionInterface;
 use Yiisoft\Yii\View\MetaTagsInjectionInterface;
 
 final class TestInjection implements
-    ContentParametersInjectionInterface,
+    CommonParametersInjectionInterface,
     LayoutParametersInjectionInterface,
     LinkTagsInjectionInterface,
     MetaTagsInjectionInterface
 {
-    public function getContentParameters(): array
+    public function getCommonParameters(): array
     {
         return ['name' => 'leonardo'];
     }

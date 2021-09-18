@@ -20,6 +20,8 @@ use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
+use Yiisoft\Yii\View\Tests\Support\CommonParametersInjection;
+use Yiisoft\Yii\View\Tests\Support\LayoutParametersInjection;
 use Yiisoft\Yii\View\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\Tests\Support\TitleInjection;
@@ -227,7 +229,7 @@ EOD;
         $response->getBody();
     }
 
-    public function testContentParametersInjectionsToNestedViews(): void
+    public function testCommonParametersInjectionsToNestedViews(): void
     {
         $renderer = $this->getRenderer()
             ->withLayout(null)
@@ -280,6 +282,64 @@ EOD;
     <link href="fancy.css" rel="alternate stylesheet"></body>
 </html>
 EOD;
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
+    public function testPassingCommonParametersFromContentToLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withViewPath('@views/passing-parameters-to-layout')
+            ->withLayout('@views/passing-parameters-to-layout/layout');
+
+        $response = $renderer->render('content', [
+            'h1' => 'HELLO',
+        ]);
+
+        $expected = '<html><head><title>TITLE / HELLO</title></head><body><h1>HELLO</h1></body></html>';
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
+    public function testCommonParametersOverrideLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/override-layout-parameters/layout')
+            ->withInjections(new CommonParametersInjection())
+        ;
+
+        $response = $renderer->render('empty');
+
+        $expected = '<html><head><title>COMMON</title></head><body></body></html>';
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
+    public function testInRenderSetParametersOverrideLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withViewPath('@views/override-layout-parameters')
+            ->withLayout('@views/override-layout-parameters/layout')
+            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection())
+        ;
+
+        $response = $renderer->render('content');
+
+        $expected = '<html><head><title>RENDER</title></head><body></body></html>';
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+    }
+
+    public function testRenderParametersNotOverrideLayout(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/override-layout-parameters/layout')
+            ->withInjections(new LayoutParametersInjection())
+        ;
+
+        $response = $renderer->render('empty', ['seoTitle' => 'custom']);
+
+        $expected = '<html><head><title>LAYOUT</title></head><body></body></html>';
 
         $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
     }

@@ -1,10 +1,10 @@
 # Yii View Extension Change Log
 
-## 3.0.0 under development
+## 3.0.0 September 18, 2021
 
 - Chg: Replace interface `ContentParametersInjectionInterface` to `CommonParametersInjectionInterface` that inject
-  parameters both to content and to layout (vjik)  
-- Bug #42: Fixed not passing common parameters setted in process content rendering to layout (vjik) 
+  parameters both to content and to layout (vjik)
+- Bug #42: Fixed not passing common parameters setted in process content rendering to layout (vjik)
 
 ## 2.0.1 September 14, 2021
 

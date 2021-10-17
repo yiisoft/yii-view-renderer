@@ -93,8 +93,7 @@ final class CsrfViewInjectionTest extends TestCase
         ?string $token = null,
         ?string $middlewareParameterName = null,
         ?string $middlewareHeaderName = null,
-    ): CsrfViewInjection
-    {
+    ): CsrfViewInjection {
         $token = new FakeCsrfToken($token);
 
         $middleware = new CsrfMiddleware(

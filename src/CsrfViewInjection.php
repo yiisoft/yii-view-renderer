@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use LogicException;
+use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\Csrf\CsrfTokenInterface;
 
 /**
- * CsrfViewInjection injects the necessary data into the view to protect against a CSRF attack.
+ * `CsrfViewInjection` injects the necessary data into the view to protect against a CSRF attack.
  */
 final class CsrfViewInjection implements CommonParametersInjectionInterface, MetaTagsInjectionInterface
 {
@@ -19,11 +20,13 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
-    private CsrfTokenInterface $csrfToken;
+    private CsrfTokenInterface $token;
+    private CsrfMiddleware $middleware;
 
-    public function __construct(CsrfTokenInterface $csrfToken)
+    public function __construct(CsrfTokenInterface $token, CsrfMiddleware $middleware)
     {
-        $this->csrfToken = $csrfToken;
+        $this->token = $token;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -59,7 +62,12 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
      */
     public function getCommonParameters(): array
     {
-        return [$this->parameterName => $this->csrfToken->getValue()];
+        $csrf = new Csrf(
+            $this->token->getValue(),
+            $this->middleware->getParameterName(),
+            $this->middleware->getHeaderName(),
+        );
+        return [$this->parameterName => $csrf];
     }
 
     /**
@@ -70,7 +78,7 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
         return [
             self::META_TAG_KEY => [
                 'name' => $this->metaAttributeName,
-                'content' => $this->csrfToken->getValue(),
+                'content' => $this->token->getValue(),
             ],
         ];
     }

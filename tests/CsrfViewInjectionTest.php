@@ -4,21 +4,41 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Tests;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Csrf\CsrfMiddleware;
+use Yiisoft\Csrf\Synchronizer\Generator\RandomCsrfTokenGenerator;
+use Yiisoft\Csrf\Synchronizer\SynchronizerCsrfToken;
+use Yiisoft\Yii\View\Csrf;
 use Yiisoft\Yii\View\CsrfViewInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
+use Yiisoft\Yii\View\Tests\Support\MockCsrfTokenStorage;
 
 final class CsrfViewInjectionTest extends TestCase
 {
     public function testGetCommonParameters(): void
     {
-        $token = '123';
-
-        $parameters = $this->getInjection($token)->getCommonParameters();
+        $parameters = $this->getInjection('123', 'p-csrf', 'h-csrf')->getCommonParameters();
 
         $this->assertCount(1, $parameters);
         $this->assertSame('csrf', key($parameters));
-        $this->assertSame($token, current($parameters));
+
+        /** @var Csrf $csrf */
+        $csrf = current($parameters);
+        $this->assertInstanceOf(Csrf::class, $csrf);
+
+        $this->assertSame('123', (string) $csrf);
+        $this->assertSame('123', $csrf->getToken());
+        $this->assertSame('p-csrf', $csrf->getParameterName());
+        $this->assertSame('h-csrf', $csrf->getHeaderName());
+        $this->assertSame(
+            '<input type="hidden" name="p-csrf" value="123">',
+            (string) $csrf->hiddenInput()
+        );
+        $this->assertSame(
+            '<input type="hidden" name="p-csrf" value="123" data-key="42">',
+            (string) $csrf->hiddenInput(['data-key' => 42])
+        );
     }
 
     public function testGetMetaTags(): void
@@ -69,8 +89,27 @@ final class CsrfViewInjectionTest extends TestCase
         $this->assertNotSame($original, $original->withParameterName('kitty'));
     }
 
-    private function getInjection(string $token = null): CsrfViewInjection
-    {
-        return new CsrfViewInjection(new FakeCsrfToken($token));
+    private function getInjection(
+        ?string $token = null,
+        ?string $middlewareParameterName = null,
+        ?string $middlewareHeaderName = null
+    ): CsrfViewInjection {
+        $token = new FakeCsrfToken($token);
+
+        $middleware = new CsrfMiddleware(
+            new Psr17Factory(),
+            new SynchronizerCsrfToken(
+                new RandomCsrfTokenGenerator(),
+                new MockCsrfTokenStorage()
+            )
+        );
+        if ($middlewareParameterName !== null) {
+            $middleware = $middleware->withParameterName($middlewareParameterName);
+        }
+        if ($middlewareHeaderName !== null) {
+            $middleware = $middleware->withHeaderName($middlewareHeaderName);
+        }
+
+        return new CsrfViewInjection($token, $middleware);
     }
 }

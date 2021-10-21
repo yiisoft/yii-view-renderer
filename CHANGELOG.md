@@ -1,6 +1,6 @@
 # Yii View Extension Change Log
 
-## 4.0.0 under development
+## 4.0.0 October 21, 2021
 
 - Chg #45: `CsrfInjection` now injects a stringable CSRF object with methods `getToken()`,
   `getParameterName()`, `getHeaderName()` and `hiddenInput()` instead of string token to common parameters (vjik)

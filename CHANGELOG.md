@@ -2,8 +2,8 @@
 
 ## 4.0.0 under development
 
-- Chg #45: `CsrfInjection` inject to common parameters stringable CSRF object with methods `getToken()`,
-  `getParameterName()`, `getHeaderName()` and `hiddenInput()` instead of string CSRF token (vjik)
+- Chg #45: `CsrfInjection` now injects a stringable CSRF object with methods `getToken()`,
+  `getParameterName()`, `getHeaderName()` and `hiddenInput()` instead of string token to common parameters (vjik)
 
 ## 3.0.0 September 18, 2021
 

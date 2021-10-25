@@ -1,9 +1,8 @@
 # Yii View Extension Change Log
 
-
 ## 4.0.1 under development
 
-- no changes in this release.
+- Chg #47: Update the `yiisoft/view` dependency to `^4.0` (vjik)
 
 ## 4.0.0 October 21, 2021
 

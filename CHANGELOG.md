@@ -1,6 +1,6 @@
 # Yii View Extension Change Log
 
-## 4.0.2 under development
+## 4.0.2 November 22, 2021
 
 - Chg #48: Update the `yiisoft/csrf` dependency to `^1.2` (devanych)
 

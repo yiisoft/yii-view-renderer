@@ -1,8 +1,12 @@
 # Yii View Extension Change Log
 
-## 4.0.3 under development
+## 5.0.1 under development
 
 - no changes in this release.
+
+## 5.0.0 February 04, 2022
+
+- Chg #49: Update the `yiisoft/view` dependency to `^5.0` (thenotsoft)
 
 ## 4.0.2 November 22, 2021
 

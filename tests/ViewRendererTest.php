@@ -148,6 +148,18 @@ EOD;
         $this->assertSame('<b>donatello</b>', $result);
     }
 
+    public function testRenderWithLocalize(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withLayout('@views/localize/layout')
+            ->withLanguage('es')
+            ->withInjections(new TestInjection());
+
+        $response = $renderer->render('localize/index');
+
+        $this->assertSame('Layout localize es View localize content es', (string) $response->getBody());
+    }
+
     public function testWithController(): void
     {
         $controller = new FakeController();

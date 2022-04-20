@@ -52,6 +52,7 @@ final class ViewRenderer implements ViewContextInterface
     private string $viewPath;
     private ?string $layout;
     private ?string $name = null;
+    private ?string $language = null;
 
     /**
      * @var object[]
@@ -285,6 +286,20 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
+     * Returns a new instance with specified language code.
+     *
+     * @param string|null $language The language code.
+     *
+     * @return self
+     */
+    public function withLanguage(?string $language): self
+    {
+        $new = clone $this;
+        $new->language = $language;
+        return $new;
+    }
+
+    /**
      * Renders a view as a string injecting parameters and tags into view context.
      *
      * @param string $view The view name {@see WebView::render()}.
@@ -313,6 +328,10 @@ final class ViewRenderer implements ViewContextInterface
         array $linkTags
     ): string {
         $currentView = $this->view->withContext($this);
+
+        if ($this->language) {
+            $currentView = $currentView->withLanguage($this->language);
+        }
 
         $this->injectMetaTags($metaTags, $currentView);
         $this->injectLinkTags($linkTags, $currentView);

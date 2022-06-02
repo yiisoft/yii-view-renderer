@@ -18,7 +18,9 @@ final class CsrfViewInjectionTest extends TestCase
 {
     public function testGetCommonParameters(): void
     {
-        $parameters = $this->getInjection('123', 'p-csrf', 'h-csrf')->getCommonParameters();
+        $parameters = $this
+            ->getInjection('123', 'p-csrf', 'h-csrf')
+            ->getCommonParameters();
 
         $this->assertCount(1, $parameters);
         $this->assertSame('csrf', key($parameters));
@@ -43,7 +45,9 @@ final class CsrfViewInjectionTest extends TestCase
 
     public function testGetMetaTags(): void
     {
-        $metaTags = $this->getInjection('123')->getMetaTags();
+        $metaTags = $this
+            ->getInjection('123')
+            ->getMetaTags();
 
         $this->assertSame(
             [
@@ -58,7 +62,9 @@ final class CsrfViewInjectionTest extends TestCase
 
     public function testWithParameterName(): void
     {
-        $injection = $this->getInjection('123')->withParameterName('kitty');
+        $injection = $this
+            ->getInjection('123')
+            ->withParameterName('kitty');
 
         $commonParameters = $injection->getCommonParameters();
 
@@ -67,7 +73,8 @@ final class CsrfViewInjectionTest extends TestCase
 
     public function testWithMetaAttributeName(): void
     {
-        $metaTags = $this->getInjection('123')
+        $metaTags = $this
+            ->getInjection('123')
             ->withMetaAttributeName('kitty')
             ->getMetaTags();
 

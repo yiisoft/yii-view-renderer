@@ -227,8 +227,12 @@ final class MyTagsInjection implements
     public function getMetaTags(): array
     {
         return [
-            Html::meta()->name('http-equiv')->content('public'),
-            'noindex' => Html::meta()->name('robots')->content('noindex'),
+            Html::meta()
+                ->name('http-equiv')
+                ->content('public'),
+            'noindex' => Html::meta()
+                ->name('robots')
+                ->content('noindex'),
             [
                 'name' => 'description',
                 'content' => 'This website is about funny raccoons.',

@@ -42,8 +42,13 @@ In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defin
 The meta tag can be define in the following ways:
 
 - as array of attributes: `['name' => 'keywords', 'content' => 'yii,framework']`,
-- as instance of `Yiisoft\Html\Tag\Meta`: `Html::meta()->name('keywords')->content('yii,framework')`.
+- as instance of `Yiisoft\Html\Tag\Meta`: 
 
+```php
+Html::meta()
+    ->name('keywords')
+    ->content('yii,framework');
+```
 Optionally, you may use string keys of array as identifies the meta tag.
 
 Example:
@@ -56,7 +61,9 @@ public function getMetaTags(): array
             'name' => 'keywords',
             'content' => 'yii,framework',
         ],
-        Html::meta()->name('description')->content('Yii is a fast, secure, and efficient PHP framework.'),
+        Html::meta()
+            ->name('description')
+            ->content('Yii is a fast, secure, and efficient PHP framework.'),
     ];
 }
 ```

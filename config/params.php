@@ -11,7 +11,9 @@ return [
             // Reference::to(CsrfViewInjection::class),
             // or
             // DynamicReference::to(function (ContainerInterface $container) {
-            //     return $container->get(CsrfViewInjection::class)->withParameter('mycsrf');
+            //     return $container
+            //         ->get(CsrfViewInjection::class)
+            //         ->withParameter('mycsrf');
             // }),
         ],
     ],

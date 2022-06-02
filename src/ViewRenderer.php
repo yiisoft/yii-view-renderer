@@ -145,7 +145,9 @@ final class ViewRenderer implements ViewContextInterface
             return $this->render($view, $parameters);
         }
 
-        return $this->withLayout(null)->render($view, $parameters);
+        return $this
+            ->withLayout(null)
+            ->render($view, $parameters);
     }
 
     /**
@@ -196,7 +198,9 @@ final class ViewRenderer implements ViewContextInterface
             return $this->renderAsString($view, $parameters);
         }
 
-        return $this->withLayout(null)->renderAsString($view, $parameters);
+        return $this
+            ->withLayout(null)
+            ->renderAsString($view, $parameters);
     }
 
     /**

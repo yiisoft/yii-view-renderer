@@ -42,7 +42,7 @@ In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defin
 The meta tag can be define in the following ways:
 
 - as array of attributes: `['name' => 'keywords', 'content' => 'yii,framework']`,
-- as instance of `Yiisoft\Html\Tag\Meta`: 
+- as instance of `Yiisoft\Html\Tag\Meta`:
 
 ```php
 Html::meta()

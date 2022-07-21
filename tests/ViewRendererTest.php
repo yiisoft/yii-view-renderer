@@ -33,7 +33,8 @@ final class ViewRendererTest extends TestCase
 
     public function testRenderAndRenderAsString(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
             ->withInjections(new TestInjection());
@@ -64,7 +65,9 @@ EOD;
 
     public function testRenderWithAbsoluteLayoutPath(): void
     {
-        $renderer = $this->getRenderer()->withLayout($this->getViewsDir() . '/layout.php');
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout($this->getViewsDir() . '/layout.php');
 
         $response = $renderer->render('simple', [
             'name' => 'donatello',
@@ -75,7 +78,9 @@ EOD;
 
     public function testRenderAsStringWithAbsoluteLayoutPath(): void
     {
-        $renderer = $this->getRenderer()->withLayout($this->getViewsDir() . '/layout.php');
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout($this->getViewsDir() . '/layout.php');
 
         $result = $renderer->renderAsString('simple', [
             'name' => 'donatello',
@@ -86,7 +91,10 @@ EOD;
 
     public function testRenderWithoutLayout(): void
     {
-        $renderer = $this->getRenderer()->withLayout(null)->withInjections(new TestInjection());
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout(null)
+            ->withInjections(new TestInjection());
 
         $response = $renderer->render('simple');
 
@@ -101,7 +109,10 @@ EOD;
 
     public function testRenderAsStringWithoutLayout(): void
     {
-        $renderer = $this->getRenderer()->withLayout(null)->withInjections(new TestInjection());
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout(null)
+            ->withInjections(new TestInjection());
 
         $result = $renderer->renderAsString('simple');
 
@@ -116,7 +127,9 @@ EOD;
 
     public function testRenderPartial(): void
     {
-        $renderer = $this->getRenderer()->withInjections(new TestInjection());
+        $renderer = $this
+            ->getRenderer()
+            ->withInjections(new TestInjection());
 
         $response = $renderer->renderPartial('simple');
 
@@ -133,7 +146,9 @@ EOD;
 
     public function testRenderPartialAsString(): void
     {
-        $renderer = $this->getRenderer()->withInjections(new TestInjection());
+        $renderer = $this
+            ->getRenderer()
+            ->withInjections(new TestInjection());
 
         $result = $renderer->renderPartialAsString('simple');
 
@@ -164,7 +179,8 @@ EOD;
     {
         $controller = new FakeController();
 
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withController($controller)
             ->withController($controller); // twice for test of cache
 
@@ -175,33 +191,43 @@ EOD;
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot detect controller name.');
-        $this->getRenderer()->withController(new stdClass());
+        $this
+            ->getRenderer()
+            ->withController(new stdClass());
     }
 
     public function testWithViewPath(): void
     {
-        $renderer = $this->getRenderer()->withViewPath('/dir/');
+        $renderer = $this
+            ->getRenderer()
+            ->withViewPath('/dir/');
 
         $this->assertSame('/dir', $renderer->getViewPath());
     }
 
     public function testWithViewPathWithAlias(): void
     {
-        $renderer = $this->getRenderer()->withViewPath('@views/dir');
+        $renderer = $this
+            ->getRenderer()
+            ->withViewPath('@views/dir');
 
         $this->assertSame($this->getViewsDir() . '/dir', $renderer->getViewPath());
     }
 
     public function testWithViewPathWithController(): void
     {
-        $renderer = $this->getRenderer()->withViewPath('/dir//')->withController(new FakeController());
+        $renderer = $this
+            ->getRenderer()
+            ->withViewPath('/dir//')
+            ->withController(new FakeController());
 
         $this->assertSame('/dir/support/fake', $renderer->getViewPath());
     }
 
     public function testInvalidMetaTag(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withInjections(new InvalidMetaTagInjection());
 
         $response = $renderer->render('empty');
@@ -215,7 +241,8 @@ EOD;
 
     public function testInvalidLinkTag(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withInjections(new InvalidLinkTagInjection());
 
         $response = $renderer->render('empty');
@@ -229,7 +256,8 @@ EOD;
 
     public function testInvalidPositionInLinkTag(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withInjections(new InvalidPositionInLinkTagInjection());
 
         $response = $renderer->render('empty');
@@ -243,7 +271,8 @@ EOD;
 
     public function testCommonParametersInjectionsToNestedViews(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout(null)
             ->withInjections(new TestInjection());
 
@@ -254,7 +283,8 @@ EOD;
 
     public function testLayoutParametersInjectionsToNestedViews(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout('@views/nested-layout/layout')
             ->withInjections(new TitleInjection());
 
@@ -268,7 +298,8 @@ EOD;
 
     public function testChangeInjectionsAfterCreateProxyAndBeforeRender(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
             ->withInjections(new TestInjection())
@@ -300,7 +331,8 @@ EOD;
 
     public function testPassingCommonParametersFromContentToLayout(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withViewPath('@views/passing-parameters-to-layout')
             ->withLayout('@views/passing-parameters-to-layout/layout');
 
@@ -315,7 +347,8 @@ EOD;
 
     public function testCommonParametersOverrideLayout(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
             ->withInjections(new CommonParametersInjection())
         ;
@@ -329,7 +362,8 @@ EOD;
 
     public function testInRenderSetParametersOverrideLayout(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withViewPath('@views/override-layout-parameters')
             ->withLayout('@views/override-layout-parameters/layout')
             ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection())
@@ -344,7 +378,8 @@ EOD;
 
     public function testRenderParametersNotOverrideLayout(): void
     {
-        $renderer = $this->getRenderer()
+        $renderer = $this
+            ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
             ->withInjections(new LayoutParametersInjection())
         ;

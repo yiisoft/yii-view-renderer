@@ -52,7 +52,7 @@ final class ViewRenderer implements ViewContextInterface
     private string $viewPath;
     private ?string $layout;
     private ?string $name = null;
-    private ?string $language = null;
+    private ?string $locale = null;
 
     /**
      * @var object[]
@@ -290,16 +290,16 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a new instance with specified language code.
+     * Returns a new instance with specified locale code.
      *
-     * @param string|null $language The language code.
+     * @param string $locale The locale code.
      *
      * @return self
      */
-    public function withLanguage(?string $language): self
+    public function withLocale(string $locale): self
     {
         $new = clone $this;
-        $new->language = $language;
+        $new->locale = $locale;
         return $new;
     }
 
@@ -333,8 +333,8 @@ final class ViewRenderer implements ViewContextInterface
     ): string {
         $currentView = $this->view->withContext($this);
 
-        if ($this->language) {
-            $currentView = $currentView->withLanguage($this->language);
+        if ($this->locale !== null) {
+            $currentView = $currentView->withLocale($this->locale);
         }
 
         $this->injectMetaTags($metaTags, $currentView);

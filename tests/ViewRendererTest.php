@@ -163,16 +163,16 @@ EOD;
         $this->assertSame('<b>donatello</b>', $result);
     }
 
-    public function testRenderWithLocalize(): void
+    public function testRenderWithLocale(): void
     {
         $renderer = $this->getRenderer()
-            ->withLayout('@views/localize/layout')
-            ->withLanguage('es')
             ->withInjections(new TestInjection());
 
-        $response = $renderer->render('localize/index');
+        $response = $renderer
+            ->withLocale('de_DE')
+            ->render('locale');
 
-        $this->assertSame('Layout localize es View localize content es', (string) $response->getBody());
+        $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
     }
 
     public function testWithController(): void

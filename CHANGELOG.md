@@ -2,7 +2,7 @@
 
 ## 4.0.4 under development
 
-- no changes in this release.
+- New #51: Add immutable method `ViewRenderer::withLocale()` that set locale (@thenotsoft)
 
 ## 4.0.3 February 04, 2022
 

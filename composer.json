@@ -22,7 +22,7 @@
         "yiisoft/csrf": "^1.2",
         "yiisoft/data-response": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
-        "yiisoft/html": "^2.0",
+        "yiisoft/html": "^2.5",
         "yiisoft/strings": "^2.0",
         "yiisoft/view": "^6.0"
     },

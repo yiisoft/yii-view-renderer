@@ -495,7 +495,7 @@ final class ViewRenderer implements ViewContextInterface
                     $tag = $tag[0];
                 } else {
                     unset($tag['__position']);
-                    $tag = Html::link()->attributes($tag);
+                    $tag = Html::link()->addAttributes($tag);
                 }
             } else {
                 $position = WebView::POSITION_HEAD;

@@ -7,9 +7,6 @@ namespace Yiisoft\Yii\View;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 
-/**
- * @psalm-import-type HtmlAttributes from Html
- */
 final class Csrf
 {
     private string $token;
@@ -38,13 +35,10 @@ final class Csrf
         return $this->headerName;
     }
 
-    /**
-     * @psalm-param HtmlAttributes $attributes
-     */
     public function hiddenInput(array $attributes = []): Input
     {
         $tag = Html::hiddenInput($this->parameterName, $this->token);
-        return $attributes === [] ? $tag : $tag->attributes($attributes);
+        return $attributes === [] ? $tag : $tag->addAttributes($attributes);
     }
 
     public function __toString(): string

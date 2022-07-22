@@ -52,6 +52,7 @@ final class ViewRenderer implements ViewContextInterface
     private string $viewPath;
     private ?string $layout;
     private ?string $name = null;
+    private ?string $locale = null;
 
     /**
      * @var object[]
@@ -289,6 +290,20 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
+     * Returns a new instance with specified locale code.
+     *
+     * @param string $locale The locale code.
+     *
+     * @return self
+     */
+    public function withLocale(string $locale): self
+    {
+        $new = clone $this;
+        $new->locale = $locale;
+        return $new;
+    }
+
+    /**
      * Renders a view as a string injecting parameters and tags into view context.
      *
      * @param string $view The view name {@see WebView::render()}.
@@ -317,6 +332,10 @@ final class ViewRenderer implements ViewContextInterface
         array $linkTags
     ): string {
         $currentView = $this->view->withContext($this);
+
+        if ($this->locale !== null) {
+            $currentView = $currentView->withLocale($this->locale);
+        }
 
         $this->injectMetaTags($metaTags, $currentView);
         $this->injectLinkTags($linkTags, $currentView);

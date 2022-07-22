@@ -261,6 +261,16 @@ $viewRenderer = $viewRenderer->withAddedInjections($parameters, $tags);
 The parameters passed to `render()` method have more priority
 and will overwrite the injected content parameters if their names match.
 
+### Localize view file
+
+You can set a specific locale that will be used to localize view files with `withLocale()` method:
+
+```php
+$viewRenderer = $viewRenderer->withLocale('de_DE');
+```
+
+For more information about localization, see at the [localization](https://github.com/yiisoft/view/blob/master/docs/basic-functionality.md#localization) section in [yiisoft/view](https://github.com/yiisoft/view) package.
+
 ## Testing
 
 ### Unit testing

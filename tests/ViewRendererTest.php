@@ -163,6 +163,18 @@ EOD;
         $this->assertSame('<b>donatello</b>', $result);
     }
 
+    public function testRenderWithLocale(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withInjections(new TestInjection());
+
+        $response = $renderer
+            ->withLocale('de_DE')
+            ->render('locale');
+
+        $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
+    }
+
     public function testWithController(): void
     {
         $controller = new FakeController();

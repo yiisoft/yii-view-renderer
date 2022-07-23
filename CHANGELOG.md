@@ -1,5 +1,9 @@
 # Yii View Extension Change Log
 
+## 5.0.1 under development
+
+- no changes in this release.
+
 ## 5.0.0 July 23, 2022
 
 - New #51: Add immutable method `ViewRenderer::withLocale()` that set locale (@thenotsoft)

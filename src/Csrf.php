@@ -7,17 +7,10 @@ namespace Yiisoft\Yii\View;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 
-final class Csrf
+final class Csrf implements \Stringable
 {
-    private string $token;
-    private string $parameterName;
-    private string $headerName;
-
-    public function __construct(string $token, string $parameterName, string $headerName)
+    public function __construct(private string $token, private string $parameterName, private string $headerName)
     {
-        $this->token = $token;
-        $this->parameterName = $parameterName;
-        $this->headerName = $headerName;
     }
 
     public function getToken(): string

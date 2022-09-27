@@ -23,7 +23,6 @@ interface CommonParametersInjectionInterface
      * ]
      * ```
      *
-     *
      * @psalm-return array<string, mixed>
      */
     public function getCommonParameters(): array;

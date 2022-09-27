@@ -22,7 +22,6 @@ interface LayoutParametersInjectionInterface
      * ]
      * ```
      *
-     *
      * @psalm-return array<string, mixed>
      */
     public function getLayoutParameters(): array;

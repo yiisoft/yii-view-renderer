@@ -21,11 +21,8 @@ use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 
 use function array_key_exists;
 use function array_merge;
-use function get_class;
-use function gettype;
 use function is_array;
 use function is_int;
-use function is_object;
 use function is_string;
 use function pathinfo;
 use function preg_match;

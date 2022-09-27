@@ -45,7 +45,6 @@ interface LinkTagsInjectionInterface
      * ]
      * ```
      *
-     * @return array
      *
      * @psalm-return LinkTagsConfig
      */

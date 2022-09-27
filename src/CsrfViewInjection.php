@@ -20,21 +20,14 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
-    private CsrfTokenInterface $token;
-    private CsrfMiddleware $middleware;
-
-    public function __construct(CsrfTokenInterface $token, CsrfMiddleware $middleware)
+    public function __construct(private CsrfTokenInterface $token, private CsrfMiddleware $middleware)
     {
-        $this->token = $token;
-        $this->middleware = $middleware;
     }
 
     /**
      * Returns a new instance with the specified parameter name.
      *
      * @param string $parameterName The parameter name.
-     *
-     * @return self
      */
     public function withParameterName(string $parameterName): self
     {
@@ -47,8 +40,6 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
      * Returns a new instance with the specified meta attribute name.
      *
      * @param string $metaAttributeName The meta attribute name.
-     *
-     * @return self
      */
     public function withMetaAttributeName(string $metaAttributeName): self
     {

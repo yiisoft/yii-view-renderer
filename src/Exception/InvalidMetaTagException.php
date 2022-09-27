@@ -12,18 +12,8 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
  */
 final class InvalidMetaTagException extends RuntimeException implements FriendlyExceptionInterface
 {
-    /**
-     * @var mixed
-     */
-    private $tag;
-
-    /**
-     * @param mixed $tag
-     */
-    public function __construct(string $message, $tag)
+    public function __construct(string $message, private mixed $tag)
     {
-        $this->tag = $tag;
-
         parent::__construct($message);
     }
 

@@ -22,7 +22,6 @@ interface LayoutParametersInjectionInterface
      * ]
      * ```
      *
-     * @return array
      *
      * @psalm-return array<string, mixed>
      */

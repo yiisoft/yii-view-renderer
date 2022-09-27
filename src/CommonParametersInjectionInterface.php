@@ -23,7 +23,6 @@ interface CommonParametersInjectionInterface
      * ]
      * ```
      *
-     * @return array
      *
      * @psalm-return array<string, mixed>
      */

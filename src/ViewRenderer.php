@@ -45,19 +45,9 @@ use function str_replace;
  */
 final class ViewRenderer implements ViewContextInterface
 {
-    private DataResponseFactoryInterface $responseFactory;
-    private Aliases $aliases;
-    private WebView $view;
-
     private string $viewPath;
-    private ?string $layout;
     private ?string $name = null;
     private ?string $locale = null;
-
-    /**
-     * @var object[]
-     */
-    private array $injections;
 
     /**
      * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
@@ -69,19 +59,14 @@ final class ViewRenderer implements ViewContextInterface
      * @param object[] $injections The injection instances.
      */
     public function __construct(
-        DataResponseFactoryInterface $responseFactory,
-        Aliases $aliases,
-        WebView $view,
+        private DataResponseFactoryInterface $responseFactory,
+        private Aliases $aliases,
+        private WebView $view,
         string $viewPath,
-        ?string $layout = null,
-        array $injections = []
+        private ?string $layout = null,
+        private array $injections = []
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->aliases = $aliases;
-        $this->view = $view;
         $this->viewPath = rtrim($viewPath, '/');
-        $this->layout = $layout;
-        $this->injections = $injections;
     }
 
     /**
@@ -208,8 +193,6 @@ final class ViewRenderer implements ViewContextInterface
      * Extracts the controller name and returns a new instance with the controller name.
      *
      * @param object $controller The controller instance.
-     *
-     * @return self
      */
     public function withController(object $controller): self
     {
@@ -222,8 +205,6 @@ final class ViewRenderer implements ViewContextInterface
      * Returns a new instance with the specified controller name.
      *
      * @param string $name The controller name.
-     *
-     * @return self
      */
     public function withControllerName(string $name): self
     {
@@ -236,8 +217,6 @@ final class ViewRenderer implements ViewContextInterface
      * Returns a new instance with the specified view path.
      *
      * @param string $viewPath The full path to the directory of views or its alias.
-     *
-     * @return self
      */
     public function withViewPath(string $viewPath): self
     {
@@ -251,8 +230,6 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
      * If null, the layout will not be applied.
-     *
-     * @return self
      */
     public function withLayout(?string $layout): self
     {
@@ -265,8 +242,6 @@ final class ViewRenderer implements ViewContextInterface
      * Return a new instance with the appended specified injections.
      *
      * @param object ...$injections The injection instances.
-     *
-     * @return self
      */
     public function withAddedInjections(object ...$injections): self
     {
@@ -279,8 +254,6 @@ final class ViewRenderer implements ViewContextInterface
      * Returns a new instance with the specified injections.
      *
      * @param object ...$injections The injection instances.
-     *
-     * @return self
      */
     public function withInjections(object ...$injections): self
     {
@@ -293,8 +266,6 @@ final class ViewRenderer implements ViewContextInterface
      * Returns a new instance with specified locale code.
      *
      * @param string $locale The locale code.
-     *
-     * @return self
      */
     public function withLocale(string $locale): self
     {
@@ -556,7 +527,7 @@ final class ViewRenderer implements ViewContextInterface
         /** @var string[] $cache */
         static $cache = [];
 
-        $class = get_class($controller);
+        $class = $controller::class;
         if (array_key_exists($class, $cache)) {
             return $cache[$class];
         }
@@ -578,8 +549,8 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @return string The value type.
      */
-    private function getType($value): string
+    private function getType(mixed $value): string
     {
-        return is_object($value) ? get_class($value) : gettype($value);
+        return get_debug_type($value);
     }
 }

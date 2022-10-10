@@ -402,6 +402,63 @@ EOD;
         $this->assertNotSame($original, $original->withInjections());
     }
 
+    public function providerExtractControllerName(): array
+    {
+        return [
+            "classWithNoSubName" => [new FakeController(), "/views/fake"],
+            "classWithSubName" => [new Support\Controller\SubNamespace\FakeController(), "/views/sub-namespace/fake"],
+            "classWithSubName2" => [new Support\Controllers\SubNamespace\FakeController(), "/views/sub-namespace/fake"],
+            "classWithMultiSubName" => [
+                new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
+                "/views/sub-namespace/sub-namespace2/fake"
+            ],
+            "classWithMultiSubName2" => [
+                new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
+                "/views/sub-namespace/sub-namespace2/fake"
+            ],
+            "noControllerNamespace" => [
+                new Support\NotC0ntrollers\SubNamespace\FakeController(),
+                '/views/fake',
+            ],
+            "noControllerNoSubName" => [
+                new Support\FakeC0ntroller(),
+                null,
+                \RuntimeException::class,
+                'Cannot detect controller name.'
+            ],
+            "noControllerWithSubName" => [
+                new Support\NotC0ntrollers\SubNamespace\FakeC0ntroller(),
+                null,
+                \RuntimeException::class,
+                'Cannot detect controller name.'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerExtractControllerName
+     */
+    public function testExtractControllerName(
+        $input,
+        ?string $expected,
+        ?string $expectedException = null,
+        ?string $expectedExceptionMessage = null
+    ) {
+        if ($expected === null && $expectedException === null) {
+            throw new \RuntimeException('expected and expectedException cannot be null');
+        }
+        $original = $this->getRenderer();
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+            $this->expectExceptionMessage($expectedExceptionMessage);
+        }
+        $new = $original->withController($input);
+        $viewPath = $new->getViewPath();
+        if ($expected !== null) {
+            $this->assertStringEndsWith($expected, $viewPath);
+        }
+    }
+
     private function getRenderer(): ViewRenderer
     {
         return new ViewRenderer(

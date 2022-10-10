@@ -57,7 +57,7 @@ final class ViewRendererTest extends TestCase
 </html>
 EOD;
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
 
         $this->assertEqualStringsIgnoringLineEndings(
             $expected,
@@ -77,7 +77,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<html><body><b>donatello</b></body></html>', (string)$response->getBody());
+        $this->assertSame('<html><body><b>donatello</b></body></html>', (string) $response->getBody());
     }
 
     public function testRenderAsStringWithAbsoluteLayoutPath(): void
@@ -102,13 +102,13 @@ EOD;
 
         $response = $renderer->render('simple');
 
-        $this->assertSame('<b>leonardo</b>', (string)$response->getBody());
+        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
 
         $response = $renderer->render('simple', [
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<b>donatello</b>', (string)$response->getBody());
+        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
     }
 
     public function testRenderAsStringWithoutLayout(): void
@@ -137,7 +137,7 @@ EOD;
 
         $response = $renderer->renderPartial('simple');
 
-        $this->assertSame('<b>leonardo</b>', (string)$response->getBody());
+        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
 
         $renderer = $renderer->withLayout(null);
 
@@ -145,7 +145,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<b>donatello</b>', (string)$response->getBody());
+        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
     }
 
     public function testRenderPartialAsString(): void
@@ -176,7 +176,7 @@ EOD;
             ->withLocale('de_DE')
             ->render('locale');
 
-        $this->assertSame('<html><body>de_DE locale</body></html>', (string)$response->getBody());
+        $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
     }
 
     public function dataWithController(): array
@@ -330,7 +330,7 @@ EOD;
 
         $response = $renderer->render('nested/root', ['label' => 'root']);
 
-        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string)$response->getBody());
+        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string) $response->getBody());
     }
 
     public function testLayoutParametersInjectionsToNestedViews(): void
@@ -344,7 +344,7 @@ EOD;
 
         $this->assertSame(
             '<html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>',
-            (string)$response->getBody(),
+            (string) $response->getBody(),
         );
     }
 
@@ -377,7 +377,7 @@ EOD;
 </html>
 EOD;
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testPassingCommonParametersFromContentToLayout(): void
@@ -393,7 +393,7 @@ EOD;
 
         $expected = '<html><head><title>TITLE / HELLO</title></head><body><h1>HELLO</h1></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testCommonParametersOverrideLayout(): void
@@ -407,7 +407,7 @@ EOD;
 
         $expected = '<html><head><title>COMMON</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testInRenderSetParametersOverrideLayout(): void
@@ -422,7 +422,7 @@ EOD;
 
         $expected = '<html><head><title>RENDER</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testRenderParametersNotOverrideLayout(): void
@@ -436,7 +436,7 @@ EOD;
 
         $expected = '<html><head><title>LAYOUT</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testImmutability(): void

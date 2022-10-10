@@ -16,6 +16,7 @@ use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
@@ -56,11 +57,14 @@ final class ViewRendererTest extends TestCase
 </html>
 EOD;
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, $renderer->renderAsString('view', [
-            'name' => 'donatello',
-        ]));
+        $this->assertEqualStringsIgnoringLineEndings(
+            $expected,
+            $renderer->renderAsString('view', [
+                'name' => 'donatello',
+            ])
+        );
     }
 
     public function testRenderWithAbsoluteLayoutPath(): void
@@ -73,7 +77,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<html><body><b>donatello</b></body></html>', (string) $response->getBody());
+        $this->assertSame('<html><body><b>donatello</b></body></html>', (string)$response->getBody());
     }
 
     public function testRenderAsStringWithAbsoluteLayoutPath(): void
@@ -98,13 +102,13 @@ EOD;
 
         $response = $renderer->render('simple');
 
-        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
+        $this->assertSame('<b>leonardo</b>', (string)$response->getBody());
 
         $response = $renderer->render('simple', [
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
+        $this->assertSame('<b>donatello</b>', (string)$response->getBody());
     }
 
     public function testRenderAsStringWithoutLayout(): void
@@ -133,7 +137,7 @@ EOD;
 
         $response = $renderer->renderPartial('simple');
 
-        $this->assertSame('<b>leonardo</b>', (string) $response->getBody());
+        $this->assertSame('<b>leonardo</b>', (string)$response->getBody());
 
         $renderer = $renderer->withLayout(null);
 
@@ -141,7 +145,7 @@ EOD;
             'name' => 'donatello',
         ]);
 
-        $this->assertSame('<b>donatello</b>', (string) $response->getBody());
+        $this->assertSame('<b>donatello</b>', (string)$response->getBody());
     }
 
     public function testRenderPartialAsString(): void
@@ -172,10 +176,41 @@ EOD;
             ->withLocale('de_DE')
             ->render('locale');
 
-        $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
+        $this->assertSame('<html><body>de_DE locale</body></html>', (string)$response->getBody());
     }
 
-    public function testWithController(): void
+    public function dataWithController(): array
+    {
+        return [
+            "classWithNoSubName" => [new Support\FakeController(), "/fake"],
+            "classWithSubName" => [new Support\Controller\SubNamespace\FakeController(), "/sub-namespace/fake"],
+            "classWithSubName2" => [new Support\Controllers\SubNamespace\FakeController(), "/sub-namespace/fake"],
+            "classWithMultiSubName" => [
+                new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
+                "/sub-namespace/sub-namespace2/fake"
+            ],
+            "classWithMultiSubName2" => [
+                new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
+                "/sub-namespace/sub-namespace2/fake"
+            ],
+            "noControllerNamespace" => [
+                new Support\NotCntrls\SubNamespace\FakeController(),
+                '/views/fake',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWithController
+     */
+    public function testWithController(object $controller, string $path): void
+    {
+        $renderer = $this->getRenderer()->withController($controller);
+
+        $this->assertSame($this->getViewsDir() . $path, $renderer->getViewPath());
+    }
+
+    public function testTwiceWithController(): void
     {
         $controller = new FakeController();
 
@@ -187,13 +222,24 @@ EOD;
         $this->assertSame($this->getViewsDir() . '/support/fake', $renderer->getViewPath());
     }
 
-    public function testWithIncorrectController(): void
+    public function dataWithIncorrectController(): array
+    {
+        return [
+            'stdClass' => [new stdClass()],
+            'withNamespace' => [new FakeCntrl()],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWithIncorrectController
+     */
+    public function testWithIncorrectController(object $controller): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot detect controller name.');
         $this
             ->getRenderer()
-            ->withController(new stdClass());
+            ->withController($controller);
     }
 
     public function testWithViewPath(): void
@@ -302,8 +348,7 @@ EOD;
             ->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
-            ->withInjections(new TestInjection())
-        ;
+            ->withInjections(new TestInjection());
 
         $response = $renderer->render('view', [
             'name' => 'donatello',
@@ -350,8 +395,7 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new CommonParametersInjection())
-        ;
+            ->withInjections(new CommonParametersInjection());
 
         $response = $renderer->render('empty');
 
@@ -366,8 +410,7 @@ EOD;
             ->getRenderer()
             ->withViewPath('@views/override-layout-parameters')
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection())
-        ;
+            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection());
 
         $response = $renderer->render('content');
 
@@ -381,8 +424,7 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new LayoutParametersInjection())
-        ;
+            ->withInjections(new LayoutParametersInjection());
 
         $response = $renderer->render('empty', ['seoTitle' => 'custom']);
 
@@ -400,63 +442,6 @@ EOD;
         $this->assertNotSame($original, $original->withLayout(''));
         $this->assertNotSame($original, $original->withAddedInjections());
         $this->assertNotSame($original, $original->withInjections());
-    }
-
-    public function providerExtractControllerName(): array
-    {
-        return [
-            "classWithNoSubName" => [new FakeController(), "/views/fake"],
-            "classWithSubName" => [new Support\Controller\SubNamespace\FakeController(), "/views/sub-namespace/fake"],
-            "classWithSubName2" => [new Support\Controllers\SubNamespace\FakeController(), "/views/sub-namespace/fake"],
-            "classWithMultiSubName" => [
-                new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
-                "/views/sub-namespace/sub-namespace2/fake"
-            ],
-            "classWithMultiSubName2" => [
-                new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
-                "/views/sub-namespace/sub-namespace2/fake"
-            ],
-            "noControllerNamespace" => [
-                new Support\NotC0ntrollers\SubNamespace\FakeController(),
-                '/views/fake',
-            ],
-            "noControllerNoSubName" => [
-                new Support\FakeC0ntroller(),
-                null,
-                \RuntimeException::class,
-                'Cannot detect controller name.'
-            ],
-            "noControllerWithSubName" => [
-                new Support\NotC0ntrollers\SubNamespace\FakeC0ntroller(),
-                null,
-                \RuntimeException::class,
-                'Cannot detect controller name.'
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider providerExtractControllerName
-     */
-    public function testExtractControllerName(
-        $input,
-        ?string $expected,
-        ?string $expectedException = null,
-        ?string $expectedExceptionMessage = null
-    ) {
-        if ($expected === null && $expectedException === null) {
-            throw new \RuntimeException('expected and expectedException cannot be null');
-        }
-        $original = $this->getRenderer();
-        if ($expectedException !== null) {
-            $this->expectException($expectedException);
-            $this->expectExceptionMessage($expectedExceptionMessage);
-        }
-        $new = $original->withController($input);
-        $viewPath = $new->getViewPath();
-        if ($expected !== null) {
-            $this->assertStringEndsWith($expected, $viewPath);
-        }
     }
 
     private function getRenderer(): ViewRenderer

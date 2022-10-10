@@ -182,20 +182,26 @@ EOD;
     public function dataWithController(): array
     {
         return [
-            "classWithNoSubName" => [new Support\FakeController(), "/fake"],
-            "classWithSubName" => [new Support\Controller\SubNamespace\FakeController(), "/sub-namespace/fake"],
-            "classWithSubName2" => [new Support\Controllers\SubNamespace\FakeController(), "/sub-namespace/fake"],
-            "classWithMultiSubName" => [
+            "controller-name" => [new Support\FakeController(), "/fake"],
+            "controller-name-and-namespace" => [
+                new Support\Controller\SubNamespace\FakeController(),
+                "/sub-namespace/fake"
+            ],
+            "controller-name-and-controllers-namespace" => [
+                new Support\Controllers\SubNamespace\FakeController(),
+                "/sub-namespace/fake"
+            ],
+            "controller-name-and-namespace-with-two-subnamespaces" => [
                 new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
                 "/sub-namespace/sub-namespace2/fake"
             ],
-            "classWithMultiSubName2" => [
+            "controller-name-and-controllers-namespace-with-two-subnamespaces" => [
                 new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
                 "/sub-namespace/sub-namespace2/fake"
             ],
-            "noControllerNamespace" => [
+            "controller-name-with-multiple-subnamespaces" => [
                 new Support\NotCntrls\SubNamespace\FakeController(),
-                '/views/fake',
+                '/fake',
             ],
         ];
     }
@@ -219,7 +225,7 @@ EOD;
             ->withController($controller)
             ->withController($controller); // twice for test of cache
 
-        $this->assertSame($this->getViewsDir() . '/support/fake', $renderer->getViewPath());
+        $this->assertSame($this->getViewsDir() . '/fake', $renderer->getViewPath());
     }
 
     public function dataWithIncorrectController(): array
@@ -267,7 +273,7 @@ EOD;
             ->withViewPath('/dir//')
             ->withController(new FakeController());
 
-        $this->assertSame('/dir/support/fake', $renderer->getViewPath());
+        $this->assertSame('/dir/fake', $renderer->getViewPath());
     }
 
     public function testInvalidMetaTag(): void

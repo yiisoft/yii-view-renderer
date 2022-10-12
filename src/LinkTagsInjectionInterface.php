@@ -45,8 +45,6 @@ interface LinkTagsInjectionInterface
      * ]
      * ```
      *
-     * @return array
-     *
      * @psalm-return LinkTagsConfig
      */
     public function getLinkTags(): array;

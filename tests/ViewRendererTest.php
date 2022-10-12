@@ -195,7 +195,7 @@ EOD;
                 new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
                 '/sub-namespace/sub-namespace2/fake',
             ],
-            ''controller name, "controllers" namespace, 2 subnamespaces' => [
+            'controller name, "controllers" namespace, 2 subnamespaces' => [
                 new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
                 '/sub-namespace/sub-namespace2/fake',
             ],

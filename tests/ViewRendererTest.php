@@ -16,6 +16,7 @@ use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
 use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
@@ -58,9 +59,12 @@ EOD;
 
         $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, $renderer->renderAsString('view', [
-            'name' => 'donatello',
-        ]));
+        $this->assertEqualStringsIgnoringLineEndings(
+            $expected,
+            $renderer->renderAsString('view', [
+                'name' => 'donatello',
+            ])
+        );
     }
 
     public function testRenderWithAbsoluteLayoutPath(): void
@@ -175,7 +179,44 @@ EOD;
         $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
     }
 
-    public function testWithController(): void
+    public function dataWithController(): array
+    {
+        return [
+            'controller name, no "controller" / "controllers" namespaces, no subnamespaces' => [new Support\FakeController(), '/fake'],
+            'controller name, "controller" namespace, 1 subnamespace' => [
+                new Support\Controller\SubNamespace\FakeController(),
+                '/sub-namespace/fake',
+            ],
+            'controller name, "controllers" namespace, 1 subnamespace' => [
+                new Support\Controllers\SubNamespace\FakeController(),
+                '/sub-namespace/fake',
+            ],
+            'controller name, "controller" namespace, 2 subnamespaces' => [
+                new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
+                '/sub-namespace/sub-namespace2/fake',
+            ],
+            'controller name, "controllers" namespace, 2 subnamespaces' => [
+                new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
+                '/sub-namespace/sub-namespace2/fake',
+            ],
+            'controller name, without "controller" / "controllers" namespaces, subnamespaces' => [
+                new Support\NotCntrls\SubNamespace\FakeController(),
+                '/fake',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWithController
+     */
+    public function testWithController(object $controller, string $path): void
+    {
+        $renderer = $this->getRenderer()->withController($controller);
+
+        $this->assertSame($this->getViewsDir() . $path, $renderer->getViewPath());
+    }
+
+    public function testTwiceWithController(): void
     {
         $controller = new FakeController();
 
@@ -184,16 +225,27 @@ EOD;
             ->withController($controller)
             ->withController($controller); // twice for test of cache
 
-        $this->assertSame($this->getViewsDir() . '/support/fake', $renderer->getViewPath());
+        $this->assertSame($this->getViewsDir() . '/fake', $renderer->getViewPath());
     }
 
-    public function testWithIncorrectController(): void
+    public function dataWithIncorrectController(): array
+    {
+        return [
+            'stdClass' => [new stdClass()],
+            'withNamespace' => [new FakeCntrl()],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWithIncorrectController
+     */
+    public function testWithIncorrectController(object $controller): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot detect controller name.');
         $this
             ->getRenderer()
-            ->withController(new stdClass());
+            ->withController($controller);
     }
 
     public function testWithViewPath(): void
@@ -221,7 +273,7 @@ EOD;
             ->withViewPath('/dir//')
             ->withController(new FakeController());
 
-        $this->assertSame('/dir/support/fake', $renderer->getViewPath());
+        $this->assertSame('/dir/fake', $renderer->getViewPath());
     }
 
     public function testInvalidMetaTag(): void
@@ -278,7 +330,7 @@ EOD;
 
         $response = $renderer->render('nested/root', ['label' => 'root']);
 
-        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string)$response->getBody());
+        $this->assertSame('root: leonardo. nested-1: leonardo. nested-2: leonardo.', (string) $response->getBody());
     }
 
     public function testLayoutParametersInjectionsToNestedViews(): void
@@ -292,7 +344,7 @@ EOD;
 
         $this->assertSame(
             '<html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>',
-            (string)$response->getBody(),
+            (string) $response->getBody(),
         );
     }
 
@@ -302,8 +354,7 @@ EOD;
             ->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
-            ->withInjections(new TestInjection())
-        ;
+            ->withInjections(new TestInjection());
 
         $response = $renderer->render('view', [
             'name' => 'donatello',
@@ -326,7 +377,7 @@ EOD;
 </html>
 EOD;
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testPassingCommonParametersFromContentToLayout(): void
@@ -342,7 +393,7 @@ EOD;
 
         $expected = '<html><head><title>TITLE / HELLO</title></head><body><h1>HELLO</h1></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testCommonParametersOverrideLayout(): void
@@ -350,14 +401,13 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new CommonParametersInjection())
-        ;
+            ->withInjections(new CommonParametersInjection());
 
         $response = $renderer->render('empty');
 
         $expected = '<html><head><title>COMMON</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testInRenderSetParametersOverrideLayout(): void
@@ -366,14 +416,13 @@ EOD;
             ->getRenderer()
             ->withViewPath('@views/override-layout-parameters')
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection())
-        ;
+            ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection());
 
         $response = $renderer->render('content');
 
         $expected = '<html><head><title>RENDER</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testRenderParametersNotOverrideLayout(): void
@@ -381,14 +430,13 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withLayout('@views/override-layout-parameters/layout')
-            ->withInjections(new LayoutParametersInjection())
-        ;
+            ->withInjections(new LayoutParametersInjection());
 
         $response = $renderer->render('empty', ['seoTitle' => 'custom']);
 
         $expected = '<html><head><title>LAYOUT</title></head><body></body></html>';
 
-        $this->assertEqualStringsIgnoringLineEndings($expected, (string)$response->getBody());
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
     public function testImmutability(): void

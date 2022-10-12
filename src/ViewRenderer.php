@@ -561,7 +561,7 @@ final class ViewRenderer implements ViewContextInterface
             return $cache[$class];
         }
 
-        $regexp = '/((?<=controller\\\|s\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
+        $regexp = '/((?<=controller\\\|controllers\\\)(?:[\w\\\]+)|(?:[a-z]+))controller/iuU';
         if (!preg_match($regexp, $class, $m) || empty($m[1])) {
             throw new RuntimeException('Cannot detect controller name.');
         }

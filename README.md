@@ -20,7 +20,7 @@ WEB-specific functionality and compatibility with [PSR-7](https://www.php-fig.or
 
 ## Requirements
 
-- PHP 7.4 or higher.
+- PHP 8.0 or higher.
 
 ## Installation
 

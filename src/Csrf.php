@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 
-final class Csrf implements \Stringable
+final class Csrf implements Stringable
 {
     public function __construct(private string $token, private string $parameterName, private string $headerName)
     {

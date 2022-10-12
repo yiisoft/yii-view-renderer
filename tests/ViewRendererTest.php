@@ -182,24 +182,24 @@ EOD;
     public function dataWithController(): array
     {
         return [
-            "controller-name" => [new Support\FakeController(), '/fake'],
-            "controller-name-and-namespace" => [
+            'controller-name' => [new Support\FakeController(), '/fake'],
+            'controller-name-and-namespace' => [
                 new Support\Controller\SubNamespace\FakeController(),
                 '/sub-namespace/fake',
             ],
-            "controller-name-and-controllers-namespace" => [
+            'controller-name-and-controllers-namespace' => [
                 new Support\Controllers\SubNamespace\FakeController(),
                 '/sub-namespace/fake',
             ],
-            "controller-name-and-namespace-with-two-subnamespaces" => [
+            'controller-name-and-namespace-with-two-subnamespaces' => [
                 new Support\Controller\SubNamespace\SubNamespace2\FakeController(),
                 '/sub-namespace/sub-namespace2/fake',
             ],
-            "controller-name-and-controllers-namespace-with-two-subnamespaces" => [
+            'controller-name-and-controllers-namespace-with-two-subnamespaces' => [
                 new Support\Controllers\SubNamespace\SubNamespace2\FakeController(),
                 '/sub-namespace/sub-namespace2/fake',
             ],
-            "controller-name-with-multiple-subnamespaces" => [
+            'controller-name-with-multiple-subnamespaces' => [
                 new Support\NotCntrls\SubNamespace\FakeController(),
                 '/fake',
             ],

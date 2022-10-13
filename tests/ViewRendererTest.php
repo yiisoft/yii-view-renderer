@@ -203,6 +203,18 @@ EOD;
                 new Support\NotCntrls\SubNamespace\FakeController(),
                 '/fake',
             ],
+            'controller name with root namespace' => [
+                $this->getMockBuilder('\stdClass')->setMockClassName('FakeController')->getMock(),
+                '/fake',
+            ],
+            'controller class contains number' => [
+                $this->getMockBuilder('\stdClass')->setMockClassName('Fake8Controller')->getMock(),
+                '/fake8',
+            ],
+            'namespace contains number' => [
+                new Support\Controller\Sub8Namespace\FakeController(),
+                '/sub8namespace/fake',
+            ],
         ];
     }
 
@@ -231,8 +243,12 @@ EOD;
     public function dataWithIncorrectController(): array
     {
         return [
-            'stdClass' => [new stdClass()],
-            'withNamespace' => [new FakeCntrl()],
+            'root namespace' => [new stdClass()],
+            'with namespace' => [new FakeCntrl()],
+            'with controllers namespace' => [new Support\Controllers\FakeCntrl()],
+            'with controller namespace and subnamespace, classname not ends with "Controller"' => [
+                new Support\Controller\SubNamespace\SubController\FakeCntrl(),
+            ],
         ];
     }
 

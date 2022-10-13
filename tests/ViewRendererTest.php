@@ -247,7 +247,7 @@ EOD;
             'with namespace' => [new FakeCntrl()],
             'with controllers namespace' => [new Support\Controllers\FakeCntrl()],
             'with controller namespace and subnamespace, classname not ends with "Controller"' => [
-                new Support\Controller\SubNamespace\SubController\FakeCntrl()
+                new Support\Controller\SubNamespace\SubController\FakeCntrl(),
             ],
         ];
     }

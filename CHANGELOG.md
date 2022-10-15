@@ -2,6 +2,7 @@
 
 ## 5.0.1 under development
 
+- Enh: Add composer require checker into CI
 - Bug #61: Fixed getting incorrect controller name based on controller instance (@vjik, @kamarton)
 
 ## 5.0.0 July 23, 2022

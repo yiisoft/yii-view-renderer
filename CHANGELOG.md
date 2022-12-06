@@ -2,6 +2,7 @@
 
 ## 5.0.1 under development
 
+- Enh #70: Add support `yiisoft/view` of version `^7.0` (@vjik)
 - Bug #61: Fixed getting incorrect controller name based on controller instance (@vjik, @kamarton)
 
 ## 5.0.0 July 23, 2022

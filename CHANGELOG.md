@@ -1,5 +1,9 @@
 # Yii View Extension Change Log
 
+## 5.0.2 under development
+
+- no changes in this release.
+
 ## 5.0.1 December 07, 2022
 
 - Enh #70: Add support `yiisoft/view` of version `^7.0` and `yiisoft/html` of version `^3.0` (@vjik)

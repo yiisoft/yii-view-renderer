@@ -1,6 +1,6 @@
 # Yii View Extension Change Log
 
-## 5.0.1 under development
+## 5.0.1 December 07, 2022
 
 - Enh #70: Add support `yiisoft/view` of version `^7.0` and `yiisoft/html` of version `^3.0` (@vjik)
 - Bug #61: Fixed getting incorrect controller name based on controller instance (@vjik, @kamarton)

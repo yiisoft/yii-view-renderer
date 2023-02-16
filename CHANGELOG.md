@@ -1,5 +1,9 @@
 # Yii View Extension Change Log
 
+## 6.0.1 under development
+
+- no changes in this release.
+
 ## 6.0.0 February 16, 2023
 
 - Chg #72: Adapt configuration group names to Yii conventions (@vjik)

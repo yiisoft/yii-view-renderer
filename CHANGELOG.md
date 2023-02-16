@@ -1,8 +1,10 @@
 # Yii View Extension Change Log
 
-## 5.0.2 under development
+## 6.0.0 under development
 
-- no changes in this release.
+- Chg #72: Adapt configuration group names to Yii conventions (@vjik)
+- Enh #73: Add support for `yiisoft/aliases` version `^3.0` (@vjik)
+- Enh #74: Add support for `yiisoft/csrf` version `^2.0` (@vjik)
 
 ## 5.0.1 December 07, 2022
 

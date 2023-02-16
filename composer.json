@@ -18,7 +18,7 @@
     },
     "require": {
         "php": "^8.0",
-        "yiisoft/aliases": "^3.0",
+        "yiisoft/aliases": "^2.0|^3.0",
         "yiisoft/csrf": "^1.2",
         "yiisoft/data-response": "^1.0",
         "yiisoft/friendly-exception": "^1.0",

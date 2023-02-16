@@ -3,6 +3,7 @@
 ## 6.0.0 under development
 
 - Chg #72: Adapt configuration group names to Yii conventions (@vjik)
+- Enh #73: Add support for `yiisoft/aliases` version `^3.0` (@vjik)
 
 ## 5.0.1 December 07, 2022
 

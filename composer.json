@@ -24,7 +24,7 @@
         "yiisoft/friendly-exception": "^1.0",
         "yiisoft/html": "^2.5|^3.0",
         "yiisoft/strings": "^2.0",
-        "yiisoft/view": "^8.0.0"
+        "yiisoft/view": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "httpsoft/http-message": "^1.0",

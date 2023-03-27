@@ -8,7 +8,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Yiisoft\View\Event\WebView\AfterRender;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;
-use Yiisoft\Yii\Debug\Tests\Collector\AbstractCollectorTestCase;
+use Yiisoft\Yii\Debug\Tests\Shared\AbstractCollectorTestCase;
 use Yiisoft\Yii\View\Debug\WebViewCollector;
 
 final class WebViewCollectorTest extends AbstractCollectorTestCase

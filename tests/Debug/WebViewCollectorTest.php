@@ -16,7 +16,7 @@ final class WebViewCollectorTest extends AbstractCollectorTestCase
     /**
      * @param CollectorInterface|WebViewCollector $collector
      */
-    protected function collectTestData(CollectorInterface $collector): void
+    protected function collectTestData(\Yiisoft\Yii\Debug\Collector\CollectorInterface|\Yiisoft\Yii\View\Debug\WebViewCollector $collector): void
     {
         $collector->collect(new AfterRender(new WebView(__DIR__, $this->createMock(EventDispatcherInterface::class)), __FILE__, ['foo' => 'bar'], 'test content'));
     }

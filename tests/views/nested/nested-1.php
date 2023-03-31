@@ -7,4 +7,4 @@ declare(strict_types=1);
  * @var string $name
  */
 
-echo ($label ?? 'nested-1') . ': ' . $name . '. ' . $this->render('nested-2');
+echo($label ?? 'nested-1') . ': ' . $name . '. ' . $this->render('nested-2');

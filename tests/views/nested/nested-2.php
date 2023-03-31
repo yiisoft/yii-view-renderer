@@ -7,4 +7,4 @@ declare(strict_types=1);
  * @var string $name
  */
 
-echo ($label ?? 'nested-2') . ': ' . $name . '.';
+echo($label ?? 'nested-2') . ': ' . $name . '.';

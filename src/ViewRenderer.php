@@ -75,7 +75,7 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function getViewPath(): string
     {
-        return $this->aliases->get($this->viewPath) . ($this->name ? '/' . $this->name : '');
+        return $this->aliases->get($this->viewPath);
     }
 
     /**
@@ -301,6 +301,10 @@ final class ViewRenderer implements ViewContextInterface
     ): string {
         $currentView = $this->view->withContext($this);
 
+        if ($this->name !== null && !str_starts_with($view, $this->name)) {
+            $view = $this->name . '/' . $view;
+        }
+
         if ($this->locale !== null) {
             $currentView = $currentView->withLocale($this->locale);
         }
@@ -335,8 +339,6 @@ final class ViewRenderer implements ViewContextInterface
      *
      * The parameters specified during rendering have more priority and will
      * overwrite the injected common parameters if their names match.
-     *
-     * @param array $renderParameters Parameters specified during rendering.
      *
      * @return array The injection common parameters merged with the parameters specified during rendering.
      *
@@ -498,7 +500,13 @@ final class ViewRenderer implements ViewContextInterface
             return $file;
         }
 
-        return $file . '.' . $view->getDefaultExtension();
+        $layoutFile = $file . '.' . $view->getDefaultExtension();
+
+        if ($view->getDefaultExtension() !== 'php' && !is_file($layoutFile)) {
+            $layoutFile = $file . '.php';
+        }
+
+        return $layoutFile;
     }
 
     /**

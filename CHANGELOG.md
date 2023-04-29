@@ -1,8 +1,8 @@
 # Yii View Extension Change Log
 
-## 6.0.1 under development
+## 6.1.0 under development
 
-- no changes in this release.
+- Enh #79: Add debug collector for yiisoft/yii-debug (@xepozz)
 
 ## 6.0.0 February 16, 2023
 

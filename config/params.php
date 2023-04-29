@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Yii\View\Debug\WebViewCollector;
+
 return [
     'yiisoft/yii-view' => [
         'viewPath' => '@views',
@@ -15,6 +17,11 @@ return [
             //         ->get(CsrfViewInjection::class)
             //         ->withParameter('mycsrf');
             // }),
+        ],
+    ],
+    'yiisoft/yii-debug' => [
+        'collectors.web' => [
+            WebViewCollector::class,
         ],
     ],
 ];

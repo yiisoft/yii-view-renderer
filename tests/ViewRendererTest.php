@@ -74,7 +74,7 @@ EOD;
     {
         return [
             ['php'],
-            ['tpl']
+            ['tpl'],
         ];
     }
 

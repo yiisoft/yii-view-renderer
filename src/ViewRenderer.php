@@ -336,8 +336,6 @@ final class ViewRenderer implements ViewContextInterface
      * The parameters specified during rendering have more priority and will
      * overwrite the injected common parameters if their names match.
      *
-     * @param array $renderParameters Parameters specified during rendering.
-     *
      * @return array The injection common parameters merged with the parameters specified during rendering.
      *
      * @psalm-return array<string, mixed>
@@ -498,7 +496,13 @@ final class ViewRenderer implements ViewContextInterface
             return $file;
         }
 
-        return $file . '.' . $view->getDefaultExtension();
+        $layoutFile = $file . '.' . $view->getDefaultExtension();
+
+        if ($view->getDefaultExtension() !== 'php' && !is_file($layoutFile)) {
+            $layoutFile = $file . '.php';
+        }
+
+        return $layoutFile;
     }
 
     /**

@@ -1,7 +1,8 @@
 # Yii View Extension Change Log
 
-## 6.0.1 under development
+## 6.1.0 under development
 
+- Enh #79: Add debug collector for yiisoft/yii-debug (@xepozz)
 - Bug #82: Fixed find for layout file due to compatibility with `yiisoft/view` (@rustamwin)
 
 ## 6.0.0 February 16, 2023

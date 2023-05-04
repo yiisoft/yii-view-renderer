@@ -75,7 +75,7 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function getViewPath(): string
     {
-        return $this->aliases->get($this->viewPath);
+        return $this->aliases->get($this->viewPath) . ($this->name ? '/' . $this->name : '');
     }
 
     /**
@@ -300,10 +300,6 @@ final class ViewRenderer implements ViewContextInterface
         array $linkTags
     ): string {
         $currentView = $this->view->withContext($this);
-
-        if ($this->name !== null && !str_starts_with($view, $this->name)) {
-            $view = $this->name . '/' . $view;
-        }
 
         if ($this->locale !== null) {
             $currentView = $currentView->withLocale($this->locale);

@@ -445,7 +445,6 @@ final class ViewRenderer implements ViewContextInterface
     {
         foreach ($tags as $key => $tag) {
             if (is_array($tag)) {
-                /** @var mixed */
                 $position = $tag['__position'] ?? WebView::POSITION_HEAD;
                 if (!is_int($position)) {
                     throw new InvalidLinkTagException(

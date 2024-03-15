@@ -60,7 +60,7 @@ final class ViewRenderer implements ViewContextInterface
         private DataResponseFactoryInterface $responseFactory,
         private Aliases $aliases,
         private WebView $view,
-        ?string $viewPath,
+        ?string $viewPath = null,
         private ?string $layout = null,
         private array $injections = []
     ) {

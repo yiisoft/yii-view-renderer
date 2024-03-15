@@ -4,6 +4,7 @@
 
 - Enh #79: Add debug collector for yiisoft/yii-debug (@xepozz)
 - Bug #82: Fixed find for layout file due to compatibility with `yiisoft/view` (@rustamwin)
+- Enh #99: Make `viewPath` in `ViewRenderer` constructor optional (@vjik)
 
 ## 6.0.0 February 16, 2023
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View;
 
+use LogicException;
 use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
@@ -42,7 +43,7 @@ use function str_replace;
  */
 final class ViewRenderer implements ViewContextInterface
 {
-    private string $viewPath;
+    private ?string $viewPath = null;
     private ?string $name = null;
     private ?string $locale = null;
 
@@ -50,7 +51,7 @@ final class ViewRenderer implements ViewContextInterface
      * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
-     * @param string $viewPath The full path to the directory of views or its alias.
+     * @param string|null $viewPath The full path to the directory of views or its alias.
      * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
      * If null, the layout will not be applied.
      * @param object[] $injections The injection instances.
@@ -59,11 +60,11 @@ final class ViewRenderer implements ViewContextInterface
         private DataResponseFactoryInterface $responseFactory,
         private Aliases $aliases,
         private WebView $view,
-        string $viewPath,
+        ?string $viewPath = null,
         private ?string $layout = null,
         private array $injections = []
     ) {
-        $this->viewPath = rtrim($viewPath, '/');
+        $this->setViewPath($viewPath);
     }
 
     /**
@@ -75,6 +76,10 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function getViewPath(): string
     {
+        if ($this->viewPath === null) {
+            throw new LogicException('The view path is not set.');
+        }
+
         return $this->aliases->get($this->viewPath) . ($this->name ? '/' . $this->name : '');
     }
 
@@ -218,7 +223,7 @@ final class ViewRenderer implements ViewContextInterface
     public function withViewPath(string $viewPath): self
     {
         $new = clone $this;
-        $new->viewPath = rtrim($viewPath, '/');
+        $new->setViewPath($viewPath);
         return $new;
     }
 
@@ -552,5 +557,10 @@ final class ViewRenderer implements ViewContextInterface
     private function getType(mixed $value): string
     {
         return get_debug_type($value);
+    }
+
+    private function setViewPath(?string $path): void
+    {
+        $this->viewPath = $path === null ? null : rtrim($path, '/');
     }
 }

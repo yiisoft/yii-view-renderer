@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\View\Tests;
 
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use RuntimeException;
@@ -464,6 +465,19 @@ EOD;
         $expected = '<html><head><title>LAYOUT</title></head><body></body></html>';
 
         $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
+    }
+
+    public function testWithoutViewPath(): void
+    {
+        $viewRenderer = new ViewRenderer(
+            new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The view path is not set.');
+        $viewRenderer->getViewPath();
     }
 
     public function testImmutability(): void

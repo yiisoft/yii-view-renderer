@@ -496,11 +496,11 @@ EOD;
                     '@views/layout',
                     new TestInjection(),
                 ),
-                new class() implements MetaTagsInjectionInterface {
+                new class () implements MetaTagsInjectionInterface {
                     public function getMetaTags(): array
                     {
                         return [
-                            ['charset' => 'windows-1251']
+                            ['charset' => 'windows-1251'],
                         ];
                     }
                 }

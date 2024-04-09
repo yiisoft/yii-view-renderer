@@ -147,11 +147,10 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @return string The rendering result.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
-     *
      * @throws RuntimeException If the view cannot be resolved.
+     * @return string The rendering result.
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
@@ -174,11 +173,10 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @return string The rendering result.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
-     *
      * @throws RuntimeException If the view cannot be resolved.
+     * @return string The rendering result.
      */
     public function renderPartialAsString(string $view, array $parameters = []): string
     {
@@ -290,11 +288,10 @@ final class ViewRenderer implements ViewContextInterface
      * @psalm-param array<string, mixed> $injectCommonParameters
      * @psalm-param array<string, mixed> $injectLayoutParameters
      *
-     * @return string The rendering result.
      * @throws RuntimeException If the view cannot be resolved.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
-     *
+     * @return string The rendering result.
      */
     private function renderProxy(
         string $view,

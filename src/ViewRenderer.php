@@ -147,11 +147,11 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @throws RuntimeException If the view cannot be resolved.
+     * @return string The rendering result.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
      *
-     * @return string The rendering result.
+     * @throws RuntimeException If the view cannot be resolved.
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
@@ -174,11 +174,11 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @throws RuntimeException If the view cannot be resolved.
+     * @return string The rendering result.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
      *
-     * @return string The rendering result.
+     * @throws RuntimeException If the view cannot be resolved.
      */
     public function renderPartialAsString(string $view, array $parameters = []): string
     {
@@ -290,11 +290,11 @@ final class ViewRenderer implements ViewContextInterface
      * @psalm-param array<string, mixed> $injectCommonParameters
      * @psalm-param array<string, mixed> $injectLayoutParameters
      *
+     * @return string The rendering result.
      * @throws RuntimeException If the view cannot be resolved.
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
      *
-     * @return string The rendering result.
      */
     private function renderProxy(
         string $view,
@@ -348,10 +348,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getCommonParameters(): array
     {
         $parameters = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof CommonParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getCommonParameters());
-            }
+        foreach ($this->getInjections($this->layout, CommonParametersInjectionInterface::class) as $injection) {
+            $parameters = array_merge($parameters, $injection->getCommonParameters());
         }
         return $parameters;
     }
@@ -366,10 +364,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getLayoutParameters(): array
     {
         $parameters = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LayoutParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParameters());
-            }
+        foreach ($this->getInjections($this->layout, LayoutParametersInjectionInterface::class) as $injection) {
+            $parameters = array_merge($parameters, $injection->getLayoutParameters());
         }
         return $parameters;
     }
@@ -382,10 +378,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getMetaTags(): array
     {
         $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof MetaTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getMetaTags());
-            }
+        foreach ($this->getInjections($this->layout, MetaTagsInjectionInterface::class) as $injection) {
+            $tags = array_merge($tags, $injection->getMetaTags());
         }
         return $tags;
     }
@@ -398,12 +392,34 @@ final class ViewRenderer implements ViewContextInterface
     private function getLinkTags(): array
     {
         $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LinkTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getLinkTags());
-            }
+        foreach ($this->getInjections($this->layout, LinkTagsInjectionInterface::class) as $injection) {
+            $tags = array_merge($tags, $injection->getLinkTags());
         }
         return $tags;
+    }
+
+    /**
+     * @psalm-template T
+     * @psalm-param class-string<T> $injectionInterface
+     * @psalm-return list<T>
+     */
+    private function getInjections(?string $layout, string $injectionInterface): array
+    {
+        $result = [];
+        foreach ($this->injections as $injection) {
+            if ($injection instanceof $injectionInterface) {
+                $result[] = $injection;
+                continue;
+            }
+            if ($injection instanceof LayoutSpecificInjections && $injection->getLayout() === $layout) {
+                foreach ($injection->getInjections() as $layoutInjection) {
+                    if ($layoutInjection instanceof $injectionInterface) {
+                        $result[] = $layoutInjection;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
     /**

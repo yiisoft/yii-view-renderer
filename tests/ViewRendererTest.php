@@ -17,6 +17,8 @@ use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\LayoutSpecificInjections;
+use Yiisoft\Yii\View\MetaTagsInjectionInterface;
 use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
@@ -478,6 +480,38 @@ EOD;
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The view path is not set.');
         $viewRenderer->getViewPath();
+    }
+
+    public function testLayoutSpecificInjections(): void
+    {
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout('@views/nested-layout/layout')
+            ->withInjections(
+                new LayoutSpecificInjections(
+                    '@views/nested-layout/layout',
+                    new TitleInjection(),
+                ),
+                new LayoutSpecificInjections(
+                    '@views/layout',
+                    new TestInjection(),
+                ),
+                new class() implements MetaTagsInjectionInterface {
+                    public function getMetaTags(): array
+                    {
+                        return [
+                            ['charset' => 'windows-1251']
+                        ];
+                    }
+                }
+            );
+
+        $response = $renderer->render('empty');
+
+        $this->assertSame(
+            '<html><head><title>Hello</title><meta charset="windows-1251"></head><body><h1>Hello</h1></body></html>',
+            (string) $response->getBody(),
+        );
     }
 
     public function testImmutability(): void

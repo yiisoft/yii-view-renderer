@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View;
 
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 
 final class InjectionContainer implements InjectionContainerInterface
 {
@@ -16,9 +15,7 @@ final class InjectionContainer implements InjectionContainerInterface
 
     public function get(string $id): object
     {
-        $result = $this->container->get($id);
-        return is_object($result)
-            ? $result
-            : throw new RuntimeException('Injection should be object, ' . get_debug_type($result) . ' given.');
+        /** @var object */
+        return $this->container->get($id);
     }
 }

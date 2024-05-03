@@ -48,13 +48,22 @@ final class ViewRenderer implements ViewContextInterface
     private ?string $locale = null;
 
     /**
+     * @var object[]|null
+     */
+    private ?array $preparedInjections = null;
+
+    private InjectionContainerInterface $injectionContainer;
+
+    /**
      * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias.
      * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
      * If null, the layout will not be applied.
-     * @param object[] $injections The injection instances.
+     * @param array $injections The injection instances or class names.
+     *
+     * @psalm-param array<object|string> $injections
      */
     public function __construct(
         private DataResponseFactoryInterface $responseFactory,
@@ -62,8 +71,16 @@ final class ViewRenderer implements ViewContextInterface
         private WebView $view,
         ?string $viewPath = null,
         private ?string $layout = null,
-        private array $injections = []
+        private array $injections = [],
+        ?InjectionContainerInterface $injectionContainer = null,
     ) {
+        $this->injectionContainer = $injectionContainer ??
+            new class () implements InjectionContainerInterface {
+                public function get(string $id): object
+                {
+                    throw new RuntimeException('Injections container is not set.');
+                }
+            };
         $this->setViewPath($viewPath);
     }
 
@@ -243,24 +260,24 @@ final class ViewRenderer implements ViewContextInterface
     /**
      * Return a new instance with the appended specified injections.
      *
-     * @param object ...$injections The injection instances.
+     * @param object|string ...$injections The injection instances or class names.
      */
-    public function withAddedInjections(object ...$injections): self
+    public function withAddedInjections(object|string ...$injections): self
     {
         $new = clone $this;
-        $new->injections = array_merge($this->injections, $injections);
+        $new->setInjections(array_merge($this->injections, $injections));
         return $new;
     }
 
     /**
      * Returns a new instance with the specified injections.
      *
-     * @param object ...$injections The injection instances.
+     * @param object|string ...$injections The injection instances or class names.
      */
-    public function withInjections(object ...$injections): self
+    public function withInjections(object|string ...$injections): self
     {
         $new = clone $this;
-        $new->injections = $injections;
+        $new->setInjections($injections);
         return $new;
     }
 
@@ -348,10 +365,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getCommonParameters(): array
     {
         $parameters = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof CommonParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getCommonParameters());
-            }
+        foreach ($this->getInjections(CommonParametersInjectionInterface::class) as $injection) {
+            $parameters = array_merge($parameters, $injection->getCommonParameters());
         }
         return $parameters;
     }
@@ -366,10 +381,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getLayoutParameters(): array
     {
         $parameters = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LayoutParametersInjectionInterface) {
-                $parameters = array_merge($parameters, $injection->getLayoutParameters());
-            }
+        foreach ($this->getInjections(LayoutParametersInjectionInterface::class) as $injection) {
+            $parameters = array_merge($parameters, $injection->getLayoutParameters());
         }
         return $parameters;
     }
@@ -382,10 +395,8 @@ final class ViewRenderer implements ViewContextInterface
     private function getMetaTags(): array
     {
         $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof MetaTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getMetaTags());
-            }
+        foreach ($this->getInjections(MetaTagsInjectionInterface::class) as $injection) {
+            $tags = array_merge($tags, $injection->getMetaTags());
         }
         return $tags;
     }
@@ -398,12 +409,26 @@ final class ViewRenderer implements ViewContextInterface
     private function getLinkTags(): array
     {
         $tags = [];
-        foreach ($this->injections as $injection) {
-            if ($injection instanceof LinkTagsInjectionInterface) {
-                $tags = array_merge($tags, $injection->getLinkTags());
-            }
+        foreach ($this->getInjections(LinkTagsInjectionInterface::class) as $injection) {
+            $tags = array_merge($tags, $injection->getLinkTags());
         }
         return $tags;
+    }
+
+    /**
+     * @psalm-template T
+     * @psalm-param class-string<T> $injectionInterface
+     * @psalm-return list<T>
+     */
+    private function getInjections(string $injectionInterface): array
+    {
+        $result = [];
+        foreach ($this->getPreparedInjections() as $injection) {
+            if ($injection instanceof $injectionInterface) {
+                $result[] = $injection;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -562,5 +587,30 @@ final class ViewRenderer implements ViewContextInterface
     private function setViewPath(?string $path): void
     {
         $this->viewPath = $path === null ? null : rtrim($path, '/');
+    }
+
+    private function getPreparedInjections(): array
+    {
+        if ($this->preparedInjections !== null) {
+            return $this->preparedInjections;
+        }
+
+        $this->preparedInjections = [];
+        foreach ($this->injections as $injection) {
+            $this->preparedInjections[] = is_object($injection)
+                ? $injection
+                : $this->injectionContainer->get($injection);
+        }
+
+        return $this->preparedInjections;
+    }
+
+    /**
+     * @psalm-param array<object|string> $injections
+     */
+    private function setInjections(array $injections): void
+    {
+        $this->injections = $injections;
+        $this->preparedInjections = null;
     }
 }

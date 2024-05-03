@@ -102,7 +102,7 @@ $result = $viewRenderer->renderPartialAsString('site/page', [
 ]);
 ```
 
-### Change view templates path 
+### Change view templates path
 
 You can change view templates path in runtime as follows:
 
@@ -119,7 +119,7 @@ If the view renderer is used in a controller, you can either specify controller 
 `withControllerName()` or determine name automatically by passing a controller instance to `withController()`.
 In this case the name is determined as follows:
 
-```
+```text
 App\Controller\FooBar\BazController -> foo-bar/baz
 App\Controllers\FooBar\BazController -> foo-bar/baz
 Path\To\File\BlogController -> blog
@@ -270,32 +270,12 @@ $viewRenderer = $viewRenderer->withLocale('de_DE');
 
 For more information about localization, see at the [localization](https://github.com/yiisoft/view/blob/master/docs/basic-functionality.md#localization) section in [yiisoft/view](https://github.com/yiisoft/view) package.
 
-## Testing
+## Documentation
 
-### Unit testing
+- [Internals](docs/internals.md)
 
-The package is tested with [PHPUnit](https://phpunit.de/). To run tests:
-
-```shell
-./vendor/bin/phpunit
-```
-
-### Mutation testing
-
-The package tests are checked with [Infection](https://infection.github.io/) mutation framework with
-[Infection Static Analysis Plugin](https://github.com/Roave/infection-static-analysis-plugin). To run it:
-
-```shell
-./vendor/bin/roave-infection-static-analysis-plugin
-```
-
-### Static analysis
-
-The code is statically analyzed with [Psalm](https://psalm.dev/). To run static analysis:
-
-```shell
-./vendor/bin/psalm
-```
+If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for
+that. You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
 ## License
 

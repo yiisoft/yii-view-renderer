@@ -12,7 +12,7 @@
         "issues": "https://github.com/yiisoft/yii-view/issues?state=open",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
+        "irc": "ircs://irc.libera.chat:6697/yii",
         "chat": "https://t.me/yii3en",
         "source": "https://github.com/yiisoft/yii-view"
     },
@@ -34,7 +34,7 @@
         "rector/rector": "^1.0.0",
         "roave/infection-static-analysis-plugin": "^1.25",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.30|^5.21",
+        "vimeo/psalm": "^4.30|^5.24",
         "yiisoft/di": "^1.2",
         "yiisoft/psr-dummy-provider": "^1.0",
         "yiisoft/test-support": "^3.0",

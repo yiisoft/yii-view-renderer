@@ -536,8 +536,7 @@ EOD;
     private function getRenderer(
         string $defaultExtension = 'php',
         ?InjectionContainerInterface $injectionContainer = null,
-    ): ViewRenderer
-    {
+    ): ViewRenderer {
         return new ViewRenderer(
             new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
             new Aliases(['@views' => $this->getViewsDir()]),

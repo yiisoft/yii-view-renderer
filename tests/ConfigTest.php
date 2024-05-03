@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;

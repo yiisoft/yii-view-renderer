@@ -260,6 +260,30 @@ $viewRenderer = $viewRenderer->withAddedInjections($parameters, $tags);
 The parameters passed to `render()` method have more priority
 and will overwrite the injected content parameters if their names match.
 
+#### Injections lazy loading
+
+You can use lazy loading for injections. Injections will be created by container that implement 
+`Yiisoft\Yii\View\InjectionContainerInterface`. Out of box available `InjectionContainer` based on PSR-11 compatible 
+container.
+
+1. Add injection container to `ViewRenderer` constructor:
+
+```php
+/**
+ * @var Psr\Container\ContainerInterface $container
+ */
+
+$viewRenderer = new Yiisoft\Yii\View\ViewRenderer(
+    injectionContainer: new Yiisoft\Yii\View\InjectionContainer($container)
+)
+```
+
+2. Use injection class names instead of instances.
+
+```php
+$viewRenderer->withInjections(MyParametersInjection::class, MyTagsInjection::class);
+```
+
 ### Localize view file
 
 You can set a specific locale that will be used to localize view files with `withLocale()` method:

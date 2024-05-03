@@ -19,6 +19,8 @@ use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\InjectionContainer\StubInjectionContainer;
 
 use function array_key_exists;
 use function array_merge;
@@ -74,13 +76,7 @@ final class ViewRenderer implements ViewContextInterface
         private array $injections = [],
         ?InjectionContainerInterface $injectionContainer = null,
     ) {
-        $this->injectionContainer = $injectionContainer ??
-            new class () implements InjectionContainerInterface {
-                public function get(string $id): object
-                {
-                    throw new RuntimeException('Injections container is not set.');
-                }
-            };
+        $this->injectionContainer = $injectionContainer ?? new StubInjectionContainer();
         $this->setViewPath($viewPath);
     }
 

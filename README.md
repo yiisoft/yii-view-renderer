@@ -269,12 +269,15 @@ container.
 1. Add injection container to `ViewRenderer` constructor:
 
 ```php
+use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
+
 /**
  * @var Psr\Container\ContainerInterface $container
  */
 
-$viewRenderer = new Yiisoft\Yii\View\ViewRenderer(
-    injectionContainer: new Yiisoft\Yii\View\InjectionContainer($container)
+$viewRenderer = new ViewRenderer(
+    injectionContainer: new InjectionContainer($container)
 )
 ```
 

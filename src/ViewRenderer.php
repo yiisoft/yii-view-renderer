@@ -346,9 +346,9 @@ final class ViewRenderer implements ViewContextInterface
     {
         $parameters = [];
         foreach ($this->getInjections($this->layout, CommonParametersInjectionInterface::class) as $injection) {
-            $parameters = array_merge($parameters, $injection->getCommonParameters());
+            $parameters[] = $injection->getCommonParameters();
         }
-        return $parameters;
+        return array_merge(...$parameters);
     }
 
     /**
@@ -362,9 +362,9 @@ final class ViewRenderer implements ViewContextInterface
     {
         $parameters = [];
         foreach ($this->getInjections($this->layout, LayoutParametersInjectionInterface::class) as $injection) {
-            $parameters = array_merge($parameters, $injection->getLayoutParameters());
+            $parameters[] = $injection->getLayoutParameters();
         }
-        return $parameters;
+        return array_merge(...$parameters);
     }
 
     /**
@@ -376,9 +376,9 @@ final class ViewRenderer implements ViewContextInterface
     {
         $tags = [];
         foreach ($this->getInjections($this->layout, MetaTagsInjectionInterface::class) as $injection) {
-            $tags = array_merge($tags, $injection->getMetaTags());
+            $tags[] = $injection->getMetaTags();
         }
-        return $tags;
+        return array_merge(...$tags);
     }
 
     /**
@@ -390,9 +390,9 @@ final class ViewRenderer implements ViewContextInterface
     {
         $tags = [];
         foreach ($this->getInjections($this->layout, LinkTagsInjectionInterface::class) as $injection) {
-            $tags = array_merge($tags, $injection->getLinkTags());
+            $tags[] = $injection->getLinkTags();
         }
-        return $tags;
+        return array_merge(...$tags);
     }
 
     /**

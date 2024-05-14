@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 echo '<head>';
 echo '<title>' . $title . '</title>';
+$this->head();
 echo '</head>';

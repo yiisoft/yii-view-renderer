@@ -13,12 +13,16 @@ use RuntimeException;
 use stdClass;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\DataResponse\DataResponseFactory;
+use Yiisoft\Test\Support\Container\SimpleContainer;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
+use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
 use Yiisoft\Yii\View\LayoutSpecificInjections;
 use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Tests\Support\CharsetInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
 use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
@@ -482,6 +486,44 @@ EOD;
         $viewRenderer->getViewPath();
     }
 
+    public function testLazyLoadingInjection(): void
+    {
+        $container = new SimpleContainer([
+            CharsetInjection::class => new CharsetInjection(),
+        ]);
+
+        $renderer = $this
+            ->getRenderer(injectionContainer: new InjectionContainer($container))
+            ->withLayout('@views/simple/layout')
+            ->withControllerName('simple')
+            ->withInjections(CharsetInjection::class);
+
+        $response = $renderer->render('view');
+
+        $expected = <<<'EOD'
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+content</body>
+</html>
+EOD;
+
+        $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
+    }
+
+    public function testLazyLoadingInjectionWithoutContainer(): void
+    {
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout('@views/simple/layout')
+            ->withControllerName('simple')
+            ->withInjections(CharsetInjection::class);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Injections container is not set.');
+        $renderer->render('view');
+    }
+
     public function testLayoutSpecificInjections(): void
     {
         $renderer = $this
@@ -525,14 +567,17 @@ EOD;
         $this->assertNotSame($original, $original->withInjections());
     }
 
-    private function getRenderer(string $defaultExtension = 'php'): ViewRenderer
-    {
+    private function getRenderer(
+        string $defaultExtension = 'php',
+        ?InjectionContainerInterface $injectionContainer = null,
+    ): ViewRenderer {
         return new ViewRenderer(
             new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
             new Aliases(['@views' => $this->getViewsDir()]),
             (new WebView('@views', new SimpleEventDispatcher()))->withDefaultExtension($defaultExtension),
             '@views',
-            '@views/layout'
+            '@views/layout',
+            injectionContainer: $injectionContainer
         );
     }
 

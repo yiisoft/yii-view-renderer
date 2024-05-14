@@ -262,8 +262,8 @@ and will overwrite the injected content parameters if their names match.
 
 #### Injections lazy loading
 
-You can use lazy loading for injections. Injections will be created by container that implement 
-`Yiisoft\Yii\View\InjectionContainerInterface`. Out of box available `InjectionContainer` based on PSR-11 compatible 
+You can use lazy loading for injections. Injections will be created by container that implements 
+`Yiisoft\Yii\View\InjectionContainerInterface`. Out of the box, it is available in `InjectionContainer` that is based on PSR-11 compatible 
 container.
 
 1. Add injection container to `ViewRenderer` constructor:

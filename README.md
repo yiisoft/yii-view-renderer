@@ -23,10 +23,10 @@ WEB-specific functionality and compatibility with [PSR-7](https://www.php-fig.or
 
 ## Installation
 
-The package could be installed with composer:
+The package could be installed with [Composer](https://getcomposer.org):
 
 ```shell
-composer require yiisoft/yii-view --prefer-dist
+composer require yiisoft/yii-view
 ```
 
 ## General usage

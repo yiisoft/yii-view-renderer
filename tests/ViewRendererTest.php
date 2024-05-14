@@ -20,6 +20,8 @@ use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
 use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
 use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\LayoutSpecificInjections;
+use Yiisoft\Yii\View\MetaTagsInjectionInterface;
 use Yiisoft\Yii\View\Tests\Support\CharsetInjection;
 use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Tests\Support\FakeController;
@@ -520,6 +522,38 @@ EOD;
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Injections container is not set.');
         $renderer->render('view');
+    }
+
+    public function testLayoutSpecificInjections(): void
+    {
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout('@views/nested-layout/layout')
+            ->withInjections(
+                new LayoutSpecificInjections(
+                    '@views/nested-layout/layout',
+                    new TitleInjection(),
+                ),
+                new LayoutSpecificInjections(
+                    '@views/layout',
+                    new TestInjection(),
+                ),
+                new class () implements MetaTagsInjectionInterface {
+                    public function getMetaTags(): array
+                    {
+                        return [
+                            ['charset' => 'windows-1251'],
+                        ];
+                    }
+                }
+            );
+
+        $response = $renderer->render('empty');
+
+        $this->assertSame(
+            '<html><head><title>Hello</title><meta charset="windows-1251"></head><body><h1>Hello</h1></body></html>',
+            (string) $response->getBody(),
+        );
     }
 
     public function testImmutability(): void

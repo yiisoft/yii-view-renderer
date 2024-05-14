@@ -6,6 +6,7 @@
 - Bug #82: Fixed find for layout file due to compatibility with `yiisoft/view` (@rustamwin)
 - Enh #99: Make `viewPath` in `ViewRenderer` constructor optional (@vjik)
 - Enh #107: Implement lazy loading for injections (@vjik)
+- New #102: Add layout specific injections (@vjik) 
 
 ## 6.0.0 February 16, 2023
 

@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\Yii\View;
+
+final class LayoutSpecificInjections
+{
+    /**
+     * @var object[]
+     */
+    private array $injections;
+
+    public function __construct(
+        private string $layout,
+        object ...$injections
+    ) {
+        $this->injections = $injections;
+    }
+
+    /**
+     * @return object[]
+     */
+    public function getInjections(): array
+    {
+        return $this->injections;
+    }
+
+    public function getLayout(): string
+    {
+        return $this->layout;
+    }
+}

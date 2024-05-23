@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
     <h1 align="center">Yii View Extension</h1>
     <br>
@@ -295,7 +295,7 @@ You can set a specific locale that will be used to localize view files with `wit
 $viewRenderer = $viewRenderer->withLocale('de_DE');
 ```
 
-For more information about localization, see at the [localization](https://github.com/yiisoft/view/blob/master/docs/basic-functionality.md#localization) section in [yiisoft/view](https://github.com/yiisoft/view) package.
+For more information about localization, see at the [localization](https://github.com/yiisoft/view/blob/master/docs/guide/en/basic-functionality.md#localization) section in [yiisoft/view](https://github.com/yiisoft/view) package.
 
 ## Documentation
 

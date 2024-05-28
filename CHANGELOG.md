@@ -1,12 +1,12 @@
 # Yii View Extension Change Log
 
-## 6.1.0 under development
+## 6.1.0 May 28, 2024
 
-- Enh #79: Add debug collector for yiisoft/yii-debug (@xepozz)
-- Bug #82: Fixed find for layout file due to compatibility with `yiisoft/view` (@rustamwin)
-- Enh #99: Make `viewPath` in `ViewRenderer` constructor optional (@vjik)
+- New #102: Add layout specific injections (@vjik)
 - Enh #107: Implement lazy loading for injections (@vjik)
-- New #102: Add layout specific injections (@vjik) 
+- Enh #79: Add debug collector for yiisoft/yii-debug (@xepozz)
+- Enh #99: Make `viewPath` in `ViewRenderer` constructor optional (@vjik)
+- Bug #82: Fixed find for layout file due to compatibility with `yiisoft/view` (@rustamwin)
 
 ## 6.0.0 February 16, 2023
 

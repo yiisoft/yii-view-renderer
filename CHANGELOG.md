@@ -1,5 +1,9 @@
 # Yii View Extension Change Log
 
+## 6.1.1 under development
+
+- no changes in this release.
+
 ## 6.1.0 May 28, 2024
 
 - New #102: Add layout specific injections (@vjik)

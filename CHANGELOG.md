@@ -1,6 +1,6 @@
 # Yii View Extension Change Log
 
-## 6.1.1 under development
+## 6.1.1 June 06, 2024
 
 - Bug #112: Fix events configuration for Yii Debug (@vjik)
 

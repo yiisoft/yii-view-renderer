@@ -23,6 +23,18 @@ final class ConfigTest extends TestCase
         $this->assertInstanceOf(ViewRenderer::class, $viewRenderer);
     }
 
+    public function testEventsWebWithDebug(): void
+    {
+        $eventsConfig = $this->getEventsWeb(['yiisoft/yii-debug' => ['enabled' => true]]);
+        $this->assertCount(1, $eventsConfig);
+    }
+
+    public function testEventsWebWithoutDebug(): void
+    {
+        $eventsConfig = $this->getEventsWeb(['yiisoft/yii-debug' => ['enabled' => false]]);
+        $this->assertCount(0, $eventsConfig);
+    }
+
     private function createContainer(?string $postfix = null): Container
     {
         return new Container(
@@ -41,6 +53,12 @@ final class ConfigTest extends TestCase
     {
         $params = $this->getParams();
         return require dirname(__DIR__) . '/config/di' . ($postfix !== null ? '-' . $postfix : '') . '.php';
+    }
+
+    private function getEventsWeb(?array $params = null)
+    {
+        $params ??= $this->getParams();
+        return require dirname(__DIR__) . '/config/events-web.php';
     }
 
     private function getParams(): array

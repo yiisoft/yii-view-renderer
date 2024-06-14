@@ -39,13 +39,10 @@ final class ViewRendererTest extends TestCase
 {
     use TestTrait;
 
-    /**
-     * @dataProvider extensionsProvider
-     */
-    public function testRenderAndRenderAsString(string $extension): void
+    public function testRenderAndRenderAsString(): void
     {
         $renderer = $this
-            ->getRenderer($extension)
+            ->getRenderer()
             ->withLayout('@views/with-injection/layout')
             ->withControllerName('with-injection')
             ->withInjections(new TestInjection());
@@ -75,14 +72,6 @@ EOD;
                 'name' => 'donatello',
             ])
         );
-    }
-
-    public function extensionsProvider(): array
-    {
-        return [
-            ['php'],
-            ['tpl'],
-        ];
     }
 
     public function testRenderWithAbsoluteLayoutPath(): void
@@ -568,13 +557,12 @@ EOD;
     }
 
     private function getRenderer(
-        string $defaultExtension = 'php',
         ?InjectionContainerInterface $injectionContainer = null,
     ): ViewRenderer {
         return new ViewRenderer(
             new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
             new Aliases(['@views' => $this->getViewsDir()]),
-            (new WebView('@views', new SimpleEventDispatcher()))->withDefaultExtension($defaultExtension),
+            new WebView('@views', new SimpleEventDispatcher()),
             '@views',
             '@views/layout',
             injectionContainer: $injectionContainer

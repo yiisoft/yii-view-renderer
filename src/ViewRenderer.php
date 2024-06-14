@@ -27,7 +27,6 @@ use function array_merge;
 use function is_array;
 use function is_int;
 use function is_string;
-use function pathinfo;
 use function preg_match;
 use function rtrim;
 use function sprintf;
@@ -61,8 +60,8 @@ final class ViewRenderer implements ViewContextInterface
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias.
-     * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
-     * If null, the layout will not be applied.
+     * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
+     * not be applied.
      * @param array $injections The injection instances or class names.
      *
      * @psalm-param array<object|string> $injections
@@ -241,8 +240,8 @@ final class ViewRenderer implements ViewContextInterface
     /**
      * Returns a new instance with the specified layout.
      *
-     * @param string|null $layout The layout name (e.g. "layout/main") to be applied to views.
-     * If null, the layout will not be applied.
+     * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
+     * not be applied.
      */
     public function withLayout(?string $layout): self
     {
@@ -331,7 +330,7 @@ final class ViewRenderer implements ViewContextInterface
             return $content;
         }
 
-        $layout = $this->findLayoutFile($this->layout, $currentView);
+        $layout = $this->aliases->get($this->layout);
 
         $layoutParameters = array_filter(
             $injectLayoutParameters,
@@ -509,30 +508,6 @@ final class ViewRenderer implements ViewContextInterface
 
             $view->registerLinkTag($tag, $position, is_string($key) ? $key : null);
         }
-    }
-
-    /**
-     * Finds a layout file based on the given file path or alias.
-     *
-     * @param string $file The file path or alias.
-     *
-     * @return string The path to the file with the file extension.
-     */
-    private function findLayoutFile(string $file, WebView $view): string
-    {
-        $file = $this->aliases->get($file);
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-
-        $layoutFile = $file . '.' . $view->getDefaultExtension();
-
-        if ($view->getDefaultExtension() !== 'php' && !is_file($layoutFile)) {
-            $layoutFile = $file . '.php';
-        }
-
-        return $layoutFile;
     }
 
     /**

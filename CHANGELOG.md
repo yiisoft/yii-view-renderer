@@ -1,8 +1,8 @@
 # Yii View Extension Change Log
 
-## 6.1.2 under development
+## 7.0.0 under development
 
-- no changes in this release.
+- Chg #115: Only a full path can now be used as a layout (@vjik)
 
 ## 6.1.1 June 06, 2024
 

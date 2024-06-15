@@ -2,19 +2,19 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
-    <h1 align="center">Yii View Extension</h1>
+    <h1 align="center">Yii View Renderer</h1>
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-view/v/stable.png)](https://packagist.org/packages/yiisoft/yii-view)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii-view/downloads.png)](https://packagist.org/packages/yiisoft/yii-view)
-[![Build status](https://github.com/yiisoft/yii-view/workflows/build/badge.svg)](https://github.com/yiisoft/yii-view/actions?query=workflow%3Abuild)
-[![Code Coverage](https://codecov.io/gh/yiisoft/yii-view/graph/badge.svg?token=WBV13RDIPX)](https://codecov.io/gh/yiisoft/yii-view)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-view%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-view/master)
-[![static analysis](https://github.com/yiisoft/yii-view/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-view/actions?query=workflow%3A%22static+analysis%22)
-[![type-coverage](https://shepherd.dev/github/yiisoft/yii-view/coverage.svg)](https://shepherd.dev/github/yiisoft/yii-view)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-view-renderer/v/stable.png)](https://packagist.org/packages/yiisoft/yii-view-renderer)
+[![Total Downloads](https://poser.pugx.org/yiisoft/yii-view-renderer/downloads.png)](https://packagist.org/packages/yiisoft/yii-view-renderer)
+[![Build status](https://github.com/yiisoft/yii-view-renderer/workflows/build/badge.svg)](https://github.com/yiisoft/yii-view-renderer/actions?query=workflow%3Abuild)
+[![Code Coverage](https://codecov.io/gh/yiisoft/yii-view-renderer/graph/badge.svg?token=WBV13RDIPX)](https://codecov.io/gh/yiisoft/yii-view-renderer)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-view-renderer%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-view-renderer/master)
+[![static analysis](https://github.com/yiisoft/yii-view-renderer/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-view-renderer/actions?query=workflow%3A%22static+analysis%22)
+[![type-coverage](https://shepherd.dev/github/yiisoft/yii-view-renderer/coverage.svg)](https://shepherd.dev/github/yiisoft/yii-view-renderer)
 
-The package is an extension of the [Yii View Rendering Library](https://github.com/yiisoft/view/). It adds
+The package is an extension of the [Yii View](https://github.com/yiisoft/view/) rendering library. It adds
 WEB-specific functionality and compatibility with [PSR-7](https://www.php-fig.org/psr/psr-7/) interfaces.
 
 ## Requirements
@@ -306,7 +306,7 @@ that. You may also check out other [Yii Community Resources](https://www.yiifram
 
 ## License
 
-The Yii View Extension is free software. It is released under the terms of the BSD License.
+The Yii View Renderer is free software. It is released under the terms of the BSD License.
 Please see [`LICENSE`](./LICENSE.md) for more information.
 
 Maintained by [Yii Software](https://www.yiiframework.com/).

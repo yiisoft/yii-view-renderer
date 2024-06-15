@@ -1,4 +1,4 @@
-# Yii View Extension Change Log
+# Yii View Renderer Change Log
 
 ## 7.0.0 under development
 

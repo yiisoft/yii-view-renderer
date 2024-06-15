@@ -1,16 +1,17 @@
 {
-    "name": "yiisoft/yii-view",
+    "name": "yiisoft/yii-view-renderer",
     "type": "library",
-    "description": "Yii View Extension",
+    "description": "PSR-7 compatible view renderer",
     "keywords": [
         "yii",
-        "view"
+        "view",
+        "renderer"
     ],
     "homepage": "https://www.yiiframework.com/",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii-view/issues?state=open",
-        "source": "https://github.com/yiisoft/yii-view",
+        "issues": "https://github.com/yiisoft/yii-view-renderer/issues?state=open",
+        "source": "https://github.com/yiisoft/yii-view-renderer",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
         "irc": "ircs://irc.libera.chat:6697/yii",

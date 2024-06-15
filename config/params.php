@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Yii\View\Debug\WebViewCollector;
 
 return [
-    'yiisoft/yii-view' => [
+    'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',
         'layout' => '@layout/main',
         'injections' => [

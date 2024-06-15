@@ -10,3 +10,4 @@ application when you upgrade the package from one version to another.
 ## Upgrade from 6.x
 
 - Change layout value that passed to `ViewRenderer` constructor and `withLayout()` method to full path.
+- Rename package configuration parameters key from "yiisoft/yii-view" to "yiisoft/yii-view-renderer".

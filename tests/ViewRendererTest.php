@@ -39,14 +39,11 @@ final class ViewRendererTest extends TestCase
 {
     use TestTrait;
 
-    /**
-     * @dataProvider extensionsProvider
-     */
-    public function testRenderAndRenderAsString(string $extension): void
+    public function testRenderAndRenderAsString(): void
     {
         $renderer = $this
-            ->getRenderer($extension)
-            ->withLayout('@views/with-injection/layout')
+            ->getRenderer()
+            ->withLayout('@views/with-injection/layout.php')
             ->withControllerName('with-injection')
             ->withInjections(new TestInjection());
 
@@ -75,14 +72,6 @@ EOD;
                 'name' => 'donatello',
             ])
         );
-    }
-
-    public function extensionsProvider(): array
-    {
-        return [
-            ['php'],
-            ['tpl'],
-        ];
     }
 
     public function testRenderWithAbsoluteLayoutPath(): void
@@ -371,7 +360,7 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/nested-layout/layout')
+            ->withLayout('@views/nested-layout/layout.php')
             ->withInjections(new TitleInjection());
 
         $response = $renderer->render('empty');
@@ -386,7 +375,7 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/with-injection/layout')
+            ->withLayout('@views/with-injection/layout.php')
             ->withControllerName('with-injection')
             ->withInjections(new TestInjection());
 
@@ -419,7 +408,7 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withViewPath('@views/passing-parameters-to-layout')
-            ->withLayout('@views/passing-parameters-to-layout/layout');
+            ->withLayout('@views/passing-parameters-to-layout/layout.php');
 
         $response = $renderer->render('content', [
             'h1' => 'HELLO',
@@ -434,7 +423,7 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/override-layout-parameters/layout')
+            ->withLayout('@views/override-layout-parameters/layout.php')
             ->withInjections(new CommonParametersInjection());
 
         $response = $renderer->render('empty');
@@ -449,7 +438,7 @@ EOD;
         $renderer = $this
             ->getRenderer()
             ->withViewPath('@views/override-layout-parameters')
-            ->withLayout('@views/override-layout-parameters/layout')
+            ->withLayout('@views/override-layout-parameters/layout.php')
             ->withInjections(new CommonParametersInjection(), new LayoutParametersInjection());
 
         $response = $renderer->render('content');
@@ -463,7 +452,7 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/override-layout-parameters/layout')
+            ->withLayout('@views/override-layout-parameters/layout.php')
             ->withInjections(new LayoutParametersInjection());
 
         $response = $renderer->render('empty', ['seoTitle' => 'custom']);
@@ -494,7 +483,7 @@ EOD;
 
         $renderer = $this
             ->getRenderer(injectionContainer: new InjectionContainer($container))
-            ->withLayout('@views/simple/layout')
+            ->withLayout('@views/simple/layout.php')
             ->withControllerName('simple')
             ->withInjections(CharsetInjection::class);
 
@@ -515,7 +504,7 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/simple/layout')
+            ->withLayout('@views/simple/layout.php')
             ->withControllerName('simple')
             ->withInjections(CharsetInjection::class);
 
@@ -528,14 +517,14 @@ EOD;
     {
         $renderer = $this
             ->getRenderer()
-            ->withLayout('@views/nested-layout/layout')
+            ->withLayout('@views/nested-layout/layout.php')
             ->withInjections(
                 new LayoutSpecificInjections(
-                    '@views/nested-layout/layout',
+                    '@views/nested-layout/layout.php',
                     new TitleInjection(),
                 ),
                 new LayoutSpecificInjections(
-                    '@views/layout',
+                    '@views/layout.php',
                     new TestInjection(),
                 ),
                 new class () implements MetaTagsInjectionInterface {
@@ -568,15 +557,14 @@ EOD;
     }
 
     private function getRenderer(
-        string $defaultExtension = 'php',
         ?InjectionContainerInterface $injectionContainer = null,
     ): ViewRenderer {
         return new ViewRenderer(
             new DataResponseFactory(new ResponseFactory(), new StreamFactory()),
             new Aliases(['@views' => $this->getViewsDir()]),
-            (new WebView('@views', new SimpleEventDispatcher()))->withDefaultExtension($defaultExtension),
+            new WebView('@views', new SimpleEventDispatcher()),
             '@views',
-            '@views/layout',
+            '@views/layout.php',
             injectionContainer: $injectionContainer
         );
     }

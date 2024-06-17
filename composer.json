@@ -54,12 +54,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Yiisoft\\Yii\\View\\": "src"
+            "Yiisoft\\Yii\\View\\Renderer\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Yiisoft\\Yii\\View\\Tests\\": "tests"
+            "Yiisoft\\Yii\\View\\Renderer\\Tests\\": "tests"
         }
     },
     "extra": {

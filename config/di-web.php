@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 /** @var array $params */
 

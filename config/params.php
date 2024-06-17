@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\View\Debug\WebViewCollector;
+use Yiisoft\Yii\View\Renderer\Debug\WebViewCollector;
 
 return [
     'yiisoft/yii-view-renderer' => [

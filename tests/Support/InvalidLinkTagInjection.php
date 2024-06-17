@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests\Support;
+namespace Yiisoft\Yii\View\Renderer\Tests\Support;
 
-use Yiisoft\Yii\View\LinkTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LinkTagsInjectionInterface;
 
 final class InvalidLinkTagInjection implements LinkTagsInjectionInterface
 {

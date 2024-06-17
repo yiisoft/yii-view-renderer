@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests;
+namespace Yiisoft\Yii\View\Renderer\Tests;
 
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
@@ -16,24 +16,24 @@ use Yiisoft\DataResponse\DataResponseFactory;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
-use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
-use Yiisoft\Yii\View\LayoutSpecificInjections;
-use Yiisoft\Yii\View\MetaTagsInjectionInterface;
-use Yiisoft\Yii\View\Tests\Support\CharsetInjection;
-use Yiisoft\Yii\View\Tests\Support\FakeCntrl;
-use Yiisoft\Yii\View\Tests\Support\FakeController;
-use Yiisoft\Yii\View\Tests\Support\InvalidLinkTagInjection;
-use Yiisoft\Yii\View\Tests\Support\InvalidPositionInLinkTagInjection;
-use Yiisoft\Yii\View\Tests\Support\InvalidMetaTagInjection;
-use Yiisoft\Yii\View\Tests\Support\CommonParametersInjection;
-use Yiisoft\Yii\View\Tests\Support\LayoutParametersInjection;
-use Yiisoft\Yii\View\Tests\Support\TestInjection;
-use Yiisoft\Yii\View\Tests\Support\TestTrait;
-use Yiisoft\Yii\View\Tests\Support\TitleInjection;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Renderer\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\Renderer\LayoutSpecificInjections;
+use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\Tests\Support\CharsetInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\FakeCntrl;
+use Yiisoft\Yii\View\Renderer\Tests\Support\FakeController;
+use Yiisoft\Yii\View\Renderer\Tests\Support\InvalidLinkTagInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\InvalidPositionInLinkTagInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\InvalidMetaTagInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\CommonParametersInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\LayoutParametersInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\TestInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\TestTrait;
+use Yiisoft\Yii\View\Renderer\Tests\Support\TitleInjection;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ViewRendererTest extends TestCase
 {

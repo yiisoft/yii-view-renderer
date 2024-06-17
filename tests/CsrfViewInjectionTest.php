@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests;
+namespace Yiisoft\Yii\View\Renderer\Tests;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\Csrf\Synchronizer\Generator\RandomCsrfTokenGenerator;
 use Yiisoft\Csrf\Synchronizer\SynchronizerCsrfToken;
-use Yiisoft\Yii\View\Csrf;
-use Yiisoft\Yii\View\CsrfViewInjection;
-use Yiisoft\Yii\View\Tests\Support\FakeCsrfToken;
-use Yiisoft\Yii\View\Tests\Support\MockCsrfTokenStorage;
+use Yiisoft\Yii\View\Renderer\Csrf;
+use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
+use Yiisoft\Yii\View\Renderer\Tests\Support\FakeCsrfToken;
+use Yiisoft\Yii\View\Renderer\Tests\Support\MockCsrfTokenStorage;
 
 final class CsrfViewInjectionTest extends TestCase
 {

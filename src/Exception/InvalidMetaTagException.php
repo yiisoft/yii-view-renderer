@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Exception;
+namespace Yiisoft\Yii\View\Renderer\Exception;
 
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
@@ -27,7 +27,7 @@ final class InvalidMetaTagException extends RuntimeException implements Friendly
         return 'Got meta tag:' . "\n" . var_export($this->tag, true) . <<<SOLUTION
 
 
-In injection that implements `Yiisoft\Yii\View\MetaTagsInjectionInterface` defined meta tags in the method `getMetaTags()`.
+In injection that implements `Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface` defined meta tags in the method `getMetaTags()`.
 
 The meta tag can be define in the following ways:
 

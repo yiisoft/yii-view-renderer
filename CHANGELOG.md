@@ -3,7 +3,7 @@
 ## 7.0.0 under development
 
 - Chg #115: Only a full path can now be used as a layout (@vjik)
-- Chg #116: Rename package to `yiisoft/yii-view-renderer` (@vjik) 
+- Chg #116, #117, #118: Rename package to `yiisoft/yii-view-renderer` (@vjik) 
 
 ## 6.1.1 June 06, 2024
 

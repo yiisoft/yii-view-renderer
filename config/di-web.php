@@ -12,9 +12,9 @@ return [
     InjectionContainerInterface::class => InjectionContainer::class,
     ViewRenderer::class => [
         '__construct()' => [
-            'viewPath' => $params['yiisoft/yii-view']['viewPath'],
-            'layout' => $params['yiisoft/yii-view']['layout'],
-            'injections' => $params['yiisoft/yii-view']['injections'],
+            'viewPath' => $params['yiisoft/yii-view-renderer']['viewPath'],
+            'layout' => $params['yiisoft/yii-view-renderer']['layout'],
+            'injections' => $params['yiisoft/yii-view-renderer']['injections'],
         ],
     ],
 ];

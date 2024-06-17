@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View;
+namespace Yiisoft\Yii\View\Renderer;
 
 use LogicException;
 use RuntimeException;
@@ -17,10 +17,10 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
-use Yiisoft\Yii\View\Exception\InvalidMetaTagException;
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainerInterface;
-use Yiisoft\Yii\View\InjectionContainer\StubInjectionContainer;
+use Yiisoft\Yii\View\Renderer\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Renderer\Exception\InvalidMetaTagException;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\StubInjectionContainer;
 
 use function array_key_exists;
 use function array_merge;

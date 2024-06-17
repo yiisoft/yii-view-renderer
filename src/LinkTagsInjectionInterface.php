@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View;
+namespace Yiisoft\Yii\View\Renderer;
 
 /**
  * LinkTagsInjectionInterface is an interface that must be implemented by classes to inject link tags.

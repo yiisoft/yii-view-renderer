@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests\Exception;
+namespace Yiisoft\Yii\View\Renderer\Tests\Exception;
 
-use Yiisoft\Yii\View\Exception\InvalidLinkTagException;
+use Yiisoft\Yii\View\Renderer\Exception\InvalidLinkTagException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\View\Tests\Support\TestTrait;
+use Yiisoft\Yii\View\Renderer\Tests\Support\TestTrait;
 
 final class InvalidLinkTagExceptionTest extends TestCase
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests\Debug;
+namespace Yiisoft\Yii\View\Renderer\Tests\Debug;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Yiisoft\View\Event\WebView\AfterRender;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 use Yiisoft\Yii\Debug\Tests\Shared\AbstractCollectorTestCase;
-use Yiisoft\Yii\View\Debug\WebViewCollector;
+use Yiisoft\Yii\View\Renderer\Debug\WebViewCollector;
 
 final class WebViewCollectorTest extends AbstractCollectorTestCase
 {

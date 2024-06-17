@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\InjectionContainer;
+namespace Yiisoft\Yii\View\Renderer\InjectionContainer;
 
 interface InjectionContainerInterface
 {

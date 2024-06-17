@@ -49,7 +49,7 @@ You can get an instance of a response with deferred rendering as follows:
  * @var \Yiisoft\View\WebView $webView
  */
 
-$viewRenderer = new \Yiisoft\Yii\View\ViewRenderer(
+$viewRenderer = new \Yiisoft\Yii\View\Renderer\ViewRenderer(
     $dataResponseFactory,
     $aliases,
     $webView,
@@ -129,7 +129,7 @@ With this approach, you do not need to specify the directory name each time when
 
 ```php
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class SiteController
 {
@@ -166,8 +166,8 @@ In addition to parameters passed directly when rendering the view template, you 
 available in all views. In order to do it you need a class implementing at least one of the injection interfaces:
 
 ```php
-use Yiisoft\Yii\View\CommonParametersInjectionInterface;
-use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
 final class MyParametersInjection implements
     CommonParametersInjectionInterface,
@@ -196,8 +196,8 @@ Link tags and meta tags should be organized in the same way.
 ```php
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\LinkTagsInjectionInterface;
-use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LinkTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
 
 final class MyTagsInjection implements
     LinkTagsInjectionInterface,
@@ -263,14 +263,14 @@ and will overwrite the injected content parameters if their names match.
 #### Injections lazy loading
 
 You can use lazy loading for injections. Injections will be created by container that implements 
-`Yiisoft\Yii\View\InjectionContainerInterface`. Out of the box, it is available in `InjectionContainer` that is based on PSR-11 compatible 
+`Yiisoft\Yii\View\Renderer\InjectionContainerInterface`. Out of the box, it is available in `InjectionContainer` that is based on PSR-11 compatible 
 container.
 
 1. Add injection container to `ViewRenderer` constructor:
 
 ```php
-use Yiisoft\Yii\View\ViewRenderer;
-use Yiisoft\Yii\View\InjectionContainer\InjectionContainer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
 
 /**
  * @var Psr\Container\ContainerInterface $container

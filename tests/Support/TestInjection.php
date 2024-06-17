@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests\Support;
+namespace Yiisoft\Yii\View\Renderer\Tests\Support;
 
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\CommonParametersInjectionInterface;
-use Yiisoft\Yii\View\LayoutParametersInjectionInterface;
-use Yiisoft\Yii\View\LinkTagsInjectionInterface;
-use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\LinkTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
 
 final class TestInjection implements
     CommonParametersInjectionInterface,

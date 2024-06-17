@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View;
+namespace Yiisoft\Yii\View\Renderer;
 
 use LogicException;
 use Yiisoft\Csrf\CsrfMiddleware;

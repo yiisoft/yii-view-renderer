@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests\Support;
+namespace Yiisoft\Yii\View\Renderer\Tests\Support;
 
-use Yiisoft\Yii\View\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
 
 final class CharsetInjection implements MetaTagsInjectionInterface
 {

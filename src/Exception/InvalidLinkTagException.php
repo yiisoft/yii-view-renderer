@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Exception;
+namespace Yiisoft\Yii\View\Renderer\Exception;
 
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
@@ -27,7 +27,7 @@ final class InvalidLinkTagException extends RuntimeException implements Friendly
         return 'Got link tag:' . "\n" . var_export($this->tag, true) . <<<SOLUTION
 
 
-In injection that implements `Yiisoft\Yii\View\LinkTagsInjectionInterface` defined link tags in the method `getLinkTags()`.
+In injection that implements `Yiisoft\Yii\View\Renderer\LinkTagsInjectionInterface` defined link tags in the method `getLinkTags()`.
 
 The link tag can be define in the following ways:
 

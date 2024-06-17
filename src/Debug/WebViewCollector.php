@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Debug;
+namespace Yiisoft\Yii\View\Renderer\Debug;
 
 use Yiisoft\View\Event\WebView\AfterRender;
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;

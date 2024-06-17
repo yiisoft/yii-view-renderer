@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\View\Tests;
+namespace Yiisoft\Yii\View\Renderer\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -10,7 +10,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ConfigTest extends TestCase
 {

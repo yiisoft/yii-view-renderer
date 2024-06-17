@@ -26,7 +26,7 @@ WEB-specific functionality and compatibility with [PSR-7](https://www.php-fig.or
 The package could be installed with [Composer](https://getcomposer.org):
 
 ```shell
-composer require yiisoft/yii-view
+composer require yiisoft/yii-view-renderer
 ```
 
 ## General usage

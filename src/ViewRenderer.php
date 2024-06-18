@@ -59,7 +59,8 @@ final class ViewRenderer implements ViewContextInterface
      * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
-     * @param string|null $viewPath The full path to the directory of views or its alias.
+     * @param string|null $viewPath The full path to the directory of views or its alias. If null, relative view paths
+     * in {@see ViewRenderer::render()} is not available.
      * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
      * not be applied.
      * @param array $injections The injection instances or class names.

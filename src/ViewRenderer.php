@@ -525,6 +525,8 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @example App\Controller\FooBar\BazController -> foo-bar/baz
      * @example App\Controllers\FooBar\BazController -> foo-bar/baz
+     * @example App\AllControllers\MyController\FooBar\BazController -> foo-bar/baz
+     * @example App\AllControllers\MyController\BazController -> baz
      * @example Path\To\File\BlogController -> blog
      *
      * @see Inflector::pascalCaseToId()
@@ -539,14 +541,16 @@ final class ViewRenderer implements ViewContextInterface
             return $cache[$class];
         }
 
-        $regexp = '/((?<=controller\\\|controllers\\\)(?:[\w\\\]+)|(?:[a-z\d]+))controller$/iU';
-        if (!preg_match($regexp, $class, $m) || empty($m[1])) {
+        if (preg_match('/(?:.*controller\\\|.*controllers\\\)([\w\\\]+)controller$/iU', $class, $m) && !empty($m[1])) {
+            $name = $m[1];
+        } elseif (preg_match('/(\w+)controller$/iU', $class, $m) && !empty($m[1])) {
+            $name = $m[1];
+        } else {
             throw new RuntimeException('Cannot detect controller name.');
         }
 
-        $inflector = new Inflector();
-        $name = str_replace('\\', '/', $m[1]);
-        return $cache[$class] = $inflector->pascalCaseToId($name);
+        $name = str_replace('\\', '/', $name);
+        return $cache[$class] = (new Inflector())->pascalCaseToId($name);
     }
 
     /**

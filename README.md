@@ -54,7 +54,7 @@ $viewRenderer = new \Yiisoft\Yii\View\Renderer\ViewRenderer(
     $aliases,
     $webView,
     '/path/to/views', // Full path to the directory of view templates or its alias.
-    'layouts/main', // Default is null, which means not to use a layout.
+    'layouts/main.php', // Default is null, which means not to use a layout.
 );
 
 // Rendering a view with a layout.
@@ -296,6 +296,23 @@ $viewRenderer = $viewRenderer->withLocale('de_DE');
 ```
 
 For more information about localization, see at the [localization](https://github.com/yiisoft/view/blob/master/docs/guide/en/basic-functionality.md#localization) section in [yiisoft/view](https://github.com/yiisoft/view) package.
+
+### [Yii Config](https://github.com/yiisoft/config) parameters
+
+```php
+'yiisoft/yii-view-renderer' => [    
+    // The full path to the directory of views or its alias.
+    // If null, relative view paths in `ViewRenderer::render()` is not available.
+    'viewPath' => null, 
+    
+    // The full path to the layout file to be applied to views.
+    // If null, the layout will not be applied.
+    'layout' => null, 
+    
+     // The injection instances or class names.
+    'injections' => [],
+],
+```
 
 ## Documentation
 

@@ -6,5 +6,4 @@ namespace Yiisoft\Yii\View\Renderer\Tests\Support\AllControllers\MoreController\
 
 final class MyController
 {
-
 }

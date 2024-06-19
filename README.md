@@ -122,6 +122,8 @@ In this case the name is determined as follows:
 ```text
 App\Controller\FooBar\BazController -> foo-bar/baz
 App\Controllers\FooBar\BazController -> foo-bar/baz
+App\AllControllers\MyController\FooBar\BazController -> foo-bar/baz
+App\AllControllers\MyController\BazController -> baz
 Path\To\File\BlogController -> blog
 ```
 

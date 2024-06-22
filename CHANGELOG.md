@@ -5,6 +5,7 @@
 - Chg #115: Only a full path can now be used as a layout (@vjik)
 - Chg #116, #117, #118: Rename package to `yiisoft/yii-view-renderer` (@vjik)
 - Chg #119: Change package configuration parameters `viewPath` and `layout` to null (@vjik)
+- Chg #64: Refactor controller name extractor, use greedy search of namespace items with "controller(s)" postfix (@vjik)
 
 ## 6.1.1 June 06, 2024
 

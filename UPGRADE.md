@@ -22,3 +22,7 @@ application when you upgrade the package from one version to another.
     'layout' => '@layout/main.php',
 ],
 ```
+
+- Controller name extractor now uses greedy search of namespace items with "controller(s)" postfix. For example, for controller namespace `App\AllControllers\MyController\FooBar\BazController` previously,
+  result was "controller/foo-bar/baz", now it is "foo-bar/baz". You can use `ViewRenderer::withControllerName()`
+  instead of `ViewRenderer::withController()` to explicitly define controller name.

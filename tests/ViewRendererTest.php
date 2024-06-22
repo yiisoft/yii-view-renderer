@@ -222,6 +222,14 @@ EOD;
                 new Support\Controller\Sub8Namespace\FakeController(),
                 '/sub8namespace/fake',
             ],
+            'several controller in namespace' => [
+                new Support\AllControllers\MoreController\MyController(),
+                '/my',
+            ],
+            'several controller in namespace, nested' => [
+                new Support\AllControllers\MoreController\Nested\MyController(),
+                '/nested/my',
+            ],
         ];
     }
 

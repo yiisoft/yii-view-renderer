@@ -1,6 +1,6 @@
 # Yii View Renderer Change Log
 
-## 7.0.0 under development
+## 7.0.0 June 22, 2024
 
 - Chg #115: Only a full path can now be used as a layout (@vjik)
 - Chg #116, #117, #118: Rename package to `yiisoft/yii-view-renderer` (@vjik)

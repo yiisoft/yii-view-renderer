@@ -1,5 +1,9 @@
 # Yii View Renderer Change Log
 
+## 7.0.1 under development
+
+- no changes in this release.
+
 ## 7.0.0 June 22, 2024
 
 - Chg #115: Only a full path can now be used as a layout (@vjik)

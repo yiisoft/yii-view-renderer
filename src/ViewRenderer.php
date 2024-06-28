@@ -342,7 +342,7 @@ final class ViewRenderer implements ViewContextInterface
 
         return $currentView
             ->setParameters($layoutParameters)
-            ->renderFile($layout, ['content' => $content]);
+            ->render($layout, ['content' => $content]);
     }
 
     /**

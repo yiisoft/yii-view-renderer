@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 $this->beginPage();
 echo '<html>';
-echo $this->render('head');
+echo $this->render('./head');
 echo '<body>';
 echo '<h1>' . $title . '</h1>';
 echo $content;

@@ -8,4 +8,4 @@ declare(strict_types=1);
  * @var string $label
  */
 
-echo $label . ': ' . $name . '. ' . $this->render('nested-1');
+echo $label . ': ' . $name . '. ' . $this->render('./nested-1');

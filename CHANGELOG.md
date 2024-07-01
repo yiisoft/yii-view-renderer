@@ -1,8 +1,8 @@
 # Yii View Renderer Change Log
 
-## 7.0.1 under development
+## 7.1.0 under development
 
-- no changes in this release.
+- Chg #122: Raise required `yiisoft/view` version to `^10.0` (@vjik)
 
 ## 7.0.0 June 22, 2024
 

@@ -2,7 +2,7 @@
 
 ## 7.1.1 under development
 
-- no changes in this release.
+- Enh #129: Add support for `yiisoft/view` version `^11` (@vjik)
 
 ## 7.1.0 July 01, 2024
 

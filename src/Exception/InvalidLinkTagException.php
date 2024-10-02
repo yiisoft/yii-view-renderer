@@ -8,12 +8,14 @@ use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
 /**
- * InvalidLinkTagException is thrown if the link tag is incorrectly configured during the injection.
+ * `InvalidLinkTagException` is thrown if the link tag is incorrectly configured during the injection.
  */
 final class InvalidLinkTagException extends RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(string $message, private mixed $tag)
-    {
+    public function __construct(
+        string $message,
+        private readonly mixed $tag,
+    ) {
         parent::__construct($message);
     }
 

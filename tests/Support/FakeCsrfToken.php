@@ -9,7 +9,7 @@ use Yiisoft\Security\Random;
 
 final class FakeCsrfToken implements CsrfTokenInterface
 {
-    private string $token;
+    private readonly string $token;
 
     public function __construct(?string $token = null)
     {

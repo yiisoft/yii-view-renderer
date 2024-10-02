@@ -8,12 +8,14 @@ use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
 /**
- * InvalidMetaTagException is thrown if the meta tag is incorrectly configured during the injection.
+ * `InvalidMetaTagException` is thrown if the meta tag is incorrectly configured during the injection.
  */
 final class InvalidMetaTagException extends RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(string $message, private mixed $tag)
-    {
+    public function __construct(
+        string $message,
+        private readonly mixed $tag,
+    ) {
         parent::__construct($message);
     }
 

@@ -50,7 +50,7 @@
         "yiisoft/di": "^1.2",
         "yiisoft/psr-dummy-provider": "^1.0",
         "yiisoft/test-support": "^3.0",
-        "yiisoft/yii-debug": "dev-master|dev-php80"
+        "yiisoft/yii-debug": "dev-master"
     },
     "autoload": {
         "psr-4": {

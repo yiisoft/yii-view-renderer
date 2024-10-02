@@ -6,9 +6,9 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-view-renderer/v/stable.png)](https://packagist.org/packages/yiisoft/yii-view-renderer)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii-view-renderer/downloads.png)](https://packagist.org/packages/yiisoft/yii-view-renderer)
-[![Build status](https://github.com/yiisoft/yii-view-renderer/workflows/build/badge.svg)](https://github.com/yiisoft/yii-view-renderer/actions?query=workflow%3Abuild)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-view-renderer/v)](https://packagist.org/packages/yiisoft/yii-view-renderer)
+[![Total Downloads](https://poser.pugx.org/yiisoft/yii-view-renderer/downloads)](https://packagist.org/packages/yiisoft/yii-view-renderer)
+[![Build status](https://github.com/yiisoft/yii-view-renderer/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-view-renderer/actions/workflows/build.yml)
 [![Code Coverage](https://codecov.io/gh/yiisoft/yii-view-renderer/graph/badge.svg?token=WBV13RDIPX)](https://codecov.io/gh/yiisoft/yii-view-renderer)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-view-renderer%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-view-renderer/master)
 [![static analysis](https://github.com/yiisoft/yii-view-renderer/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-view-renderer/actions?query=workflow%3A%22static+analysis%22)

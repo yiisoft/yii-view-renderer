@@ -3,6 +3,7 @@
 ## 7.1.1 under development
 
 - Enh #129: Add support for `yiisoft/view` version `^11` (@vjik)
+- Enh #130: Bump PHP version to `^8.1` and refactor code (@vjik)
 
 ## 7.1.0 July 01, 2024
 

@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\View\Renderer\Tests;
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use RuntimeException;
@@ -186,10 +187,16 @@ EOD;
         $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
     }
 
-    public function dataWithController(): array
+    public static function dataWithController(): array
     {
+        require_once __DIR__ . '/Support/RootNamespace/FakeController.php';
+        require_once __DIR__ . '/Support/RootNamespace/Fake8Controller.php';
+
         return [
-            'controller name, no "controller" / "controllers" namespaces, no subnamespaces' => [new Support\FakeController(), '/fake'],
+            'controller name, no "controller" / "controllers" namespaces, no subnamespaces' => [
+                new Support\FakeController(),
+                '/fake',
+            ],
             'controller name, "controller" namespace, 1 subnamespace' => [
                 new Support\Controller\SubNamespace\FakeController(),
                 '/sub-namespace/fake',
@@ -211,11 +218,11 @@ EOD;
                 '/fake',
             ],
             'controller name with root namespace' => [
-                $this->getMockBuilder('\stdClass')->setMockClassName('FakeController')->getMock(),
+                new \FakeController(),
                 '/fake',
             ],
             'controller class contains number' => [
-                $this->getMockBuilder('\stdClass')->setMockClassName('Fake8Controller')->getMock(),
+                new \Fake8Controller(),
                 '/fake8',
             ],
             'namespace contains number' => [
@@ -233,9 +240,7 @@ EOD;
         ];
     }
 
-    /**
-     * @dataProvider dataWithController
-     */
+    #[DataProvider('dataWithController')]
     public function testWithController(object $controller, string $path): void
     {
         $renderer = $this->getRenderer()->withController($controller);
@@ -255,7 +260,7 @@ EOD;
         $this->assertSame($this->getViewsDir() . '/fake', $renderer->getViewPath());
     }
 
-    public function dataWithIncorrectController(): array
+    public static function dataWithIncorrectController(): array
     {
         return [
             'root namespace' => [new stdClass()],
@@ -267,9 +272,7 @@ EOD;
         ];
     }
 
-    /**
-     * @dataProvider dataWithIncorrectController
-     */
+    #[DataProvider('dataWithIncorrectController')]
     public function testWithIncorrectController(object $controller): void
     {
         $this->expectException(RuntimeException::class);

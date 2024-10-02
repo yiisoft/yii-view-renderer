@@ -9,10 +9,10 @@ final class LayoutSpecificInjections
     /**
      * @var object[]
      */
-    private array $injections;
+    private readonly array $injections;
 
     public function __construct(
-        private string $layout,
+        private readonly string $layout,
         object ...$injections
     ) {
         $this->injections = $injections;

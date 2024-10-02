@@ -10,8 +10,11 @@ use Yiisoft\Html\Tag\Input;
 
 final class Csrf implements Stringable
 {
-    public function __construct(private string $token, private string $parameterName, private string $headerName)
-    {
+    public function __construct(
+        private readonly string $token,
+        private readonly string $parameterName,
+        private readonly string $headerName,
+    ) {
     }
 
     public function getToken(): string

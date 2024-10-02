@@ -1,5 +1,9 @@
 # Yii View Renderer Change Log
 
+## 7.2.1 under development
+
+- no changes in this release.
+
 ## 7.2.0 October 02, 2024
 
 - Enh #129: Add support for `yiisoft/view` version `^11` (@vjik)

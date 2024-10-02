@@ -6,7 +6,8 @@
 
 ## 7.1.0 July 01, 2024
 
-- Chg #122: Raise required `yiisoft/view` version to `^10.0` (@vjik)
+- Chg #129: Raise required `yiisoft/view` version to `^10.0` (@vjik)
+- Enh #130: Bump PHP version to `^8.1` and refactor code (@vjik)
 
 ## 7.0.0 June 22, 2024
 

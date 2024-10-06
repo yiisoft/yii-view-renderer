@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\Yii\View\Renderer;
+
+/**
+ *  CsrfParametersInjectionInterface is an interface that must be implemented by classes to inject Csrf Parameters.
+ *
+ * @psalm-type csrfParameters = array<array-key, \Yiisoft\Html\Tag\Meta|array<string,mixed>|string>
+ */
+interface CsrfParametersInjectionInterface
+{
+    /**
+     * Returns array of csrf parameters,then merge to common parameters and metaTag parameters.
+     *  
+     *
+     * For example:
+     *
+     * ```php
+     *  [
+     *       [   '_csrf' => $csrf ],
+     *       [
+     *           'csrf' => [
+     *             'name' => 'csrf' ,
+     *              'content' => $tokenValue
+     *            ],
+     *       ],
+     *     ...
+     * ]
+     * ```
+     *
+     * @return array
+     *
+     * @psalm-return csrfParameters
+     */
+    public function getCsrfParameters(): array;
+}

@@ -111,12 +111,13 @@ final class ViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): DataResponse
     {
-        $commonParameters = $this->getCommonParameters();
+        $csrfParameters = $this->getCsrfParameters();
+        $commonParameters = array_merge($this->getCommonParameters(), $csrfParameters[0]);
         $layoutParameters = $this->getLayoutParameters();
-        $metaTags = $this->getMetaTags();
+        $metaTags = array_merge($this->getMetaTags(), $csrfParameters[1]);
         $linkTags = $this->getLinkTags();
 
-        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
+        return $this->responseFactory->createResponse(fn(): string => $this->renderProxy(
             $view,
             $parameters,
             $commonParameters,
@@ -336,13 +337,31 @@ final class ViewRenderer implements ViewContextInterface
         $layoutParameters = array_filter(
             $injectLayoutParameters,
             /** @psalm-suppress MissingClosureParamType */
-            static fn ($_value, string $key): bool => !$currentView->hasParameter($key),
+            static fn($_value, string $key): bool => !$currentView->hasParameter($key),
             ARRAY_FILTER_USE_BOTH,
         );
 
         return $currentView
             ->setParameters($layoutParameters)
             ->render($layout, ['content' => $content]);
+    }
+
+
+    /**
+     * Gets csrf injection parameters merged with parameters specified during rendering. 
+     *  
+     *
+     * @return array The csrf injection parameters ot merged to common parameters and metaTag parameters.
+     *
+     * @psalm-return array<string, mixed>
+     */
+    private function getCsrfParameters(): array
+    {
+        $parameters = [];
+        foreach ($this->getInjections($this->layout, CsrfParametersInjectionInterface::class) as $injection) {
+            $parameters[] = $injection->getCsrfParameters();
+        }
+        return array_merge(...$parameters);
     }
 
     /**

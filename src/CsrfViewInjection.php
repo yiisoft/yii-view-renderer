@@ -7,9 +7,12 @@ namespace Yiisoft\Yii\View\Renderer;
 use LogicException;
 use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\Csrf\CsrfTokenInterface;
+use Yiisoft\Csrf\CsrfTokenMiddleware;
 
 /**
  * `CsrfViewInjection` injects the necessary data into the view to protect against a CSRF attack.
+ *
+ * @psalm-suppress DeprecatedClass `CsrfMiddleware` in `$middleware` property will be removed in next major version.
  */
 final class CsrfViewInjection implements CommonParametersInjectionInterface, MetaTagsInjectionInterface
 {
@@ -20,8 +23,10 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
     private string $metaAttributeName = self::DEFAULT_META_ATTRIBUTE_NAME;
     private string $parameterName = self::DEFAULT_PARAMETER_NAME;
 
-    public function __construct(private CsrfTokenInterface $token, private CsrfMiddleware $middleware)
-    {
+    public function __construct(
+        private readonly CsrfTokenInterface $token,
+        private readonly CsrfTokenMiddleware|CsrfMiddleware $middleware,
+    ) {
     }
 
     /**

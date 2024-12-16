@@ -2,7 +2,7 @@
 
 ## 7.2.1 under development
 
-- no changes in this release.
+- Enh #135: Add `CsrfTokenMiddleware` support in `CsrfViewInjection` (@vjik)
 
 ## 7.2.0 October 02, 2024
 

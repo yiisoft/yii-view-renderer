@@ -58,12 +58,12 @@ final class RenderCombinationsTest extends TestCase
             __DIR__,
             __DIR__ . '/layout.php',
             [
-                new class() implements LinkTagsInjectionInterface {
+                new class () implements LinkTagsInjectionInterface {
                     public function getLinkTags(): array
                     {
                         return [Link::toCssFile('style.css')];
                     }
-                }
+                },
             ]
         );
     }

@@ -3,6 +3,7 @@
 ## 7.2.1 under development
 
 - Enh #135: Add `CsrfTokenMiddleware` support in `CsrfViewInjection` (@vjik)
+- Bug #137: Fix state leak in some combinations of `ViewRenderer` render methods (@vjik)
 
 ## 7.2.0 October 02, 2024
 

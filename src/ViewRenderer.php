@@ -314,7 +314,7 @@ final class ViewRenderer implements ViewContextInterface
         array $metaTags,
         array $linkTags
     ): string {
-        $currentView = $this->view->withContext($this);
+        $currentView = $this->view->deepClone()->withContext($this);
 
         if ($this->locale !== null) {
             $currentView = $currentView->withLocale($this->locale);

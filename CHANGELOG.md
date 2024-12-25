@@ -1,6 +1,6 @@
 # Yii View Renderer Change Log
 
-## 7.2.1 under development
+## 7.3.0 December 25, 2024
 
 - Enh #135: Add `CsrfTokenMiddleware` support in `CsrfViewInjection` (@vjik)
 - Bug #137: Fix state leak in some combinations of `ViewRenderer` render methods (@vjik)

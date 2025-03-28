@@ -2,7 +2,7 @@
 
 ## 7.3.1 under development
 
-- no changes in this release.
+- Chg #139: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
 
 ## 7.3.0 December 25, 2024
 

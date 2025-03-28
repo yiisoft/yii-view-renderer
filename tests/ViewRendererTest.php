@@ -194,7 +194,7 @@ EOD;
 
         return [
             'controller name, no "controller" / "controllers" namespaces, no subnamespaces' => [
-                new Support\FakeController(),
+                new FakeController(),
                 '/fake',
             ],
             'controller name, "controller" namespace, 1 subnamespace' => [

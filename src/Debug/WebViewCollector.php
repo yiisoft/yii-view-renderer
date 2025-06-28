@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Renderer\Debug;
 
 use Yiisoft\View\Event\WebView\AfterRender;
-use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 use Yiisoft\Yii\Debug\Collector\CollectorTrait;
+use Yiisoft\Yii\Debug\Collector\SummaryCollectorInterface;
 
-final class WebViewCollector implements CollectorInterface
+final class WebViewCollector implements SummaryCollectorInterface
 {
     use CollectorTrait;
 
@@ -29,6 +29,16 @@ final class WebViewCollector implements CollectorInterface
             'output' => $event->getResult(),
             'file' => $event->getFile(),
             'parameters' => $event->getParameters(),
+        ];
+    }
+
+    public function getSummary(): array
+    {
+        if (!$this->isActive()) {
+            return [];
+        }
+        return [
+            'total' => count($this->renders),
         ];
     }
 

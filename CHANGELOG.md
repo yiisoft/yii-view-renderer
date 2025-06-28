@@ -3,6 +3,7 @@
 ## 7.3.1 under development
 
 - Chg #139: Change PHP constraint in `composer.json` to `8.1 - 8.4` (@vjik)
+- Enh #140: Adapt summary data in debug collector (@rustamwin)
 
 ## 7.3.0 December 25, 2024
 

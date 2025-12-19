@@ -395,7 +395,6 @@ EOD;
         ]);
 
         $injectionsProperty = (new ReflectionObject($renderer))->getProperty('injections');
-        $injectionsProperty->setAccessible(true);
         $injectionsProperty->setValue($renderer, []);
 
         $expected = <<<'EOD'

@@ -1,6 +1,6 @@
 # Yii View Renderer Change Log
 
-## 7.3.1 under development
+## 7.3.1 December 19, 2025
 
 - Chg #139, #143: Change PHP constraint in `composer.json` to `8.1 - 8.5` (@vjik)
 - Enh #140: Adapt summary data in debug collector (@rustamwin)

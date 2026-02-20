@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Renderer\Tests;
 
+use HttpSoft\Message\ResponseFactory;
+use HttpSoft\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
@@ -46,6 +50,8 @@ final class ConfigTest extends TestCase
                 +
                 [
                     DataResponseFactoryInterface::class => $this->createMock(DataResponseFactoryInterface::class),
+                    ResponseFactoryInterface::class => new ResponseFactory(),
+                    StreamFactoryInterface::class => new StreamFactory(),
                     WebView::class => new WebView(__DIR__, new SimpleEventDispatcher()),
                 ]
             )

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\View\Renderer;
 
 use LogicException;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\DataResponse\DataResponse;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Link;
 use Yiisoft\Html\Tag\Meta;
@@ -23,30 +25,22 @@ use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\StubInjectionContainer;
 
 use function array_key_exists;
-use function array_merge;
 use function is_array;
 use function is_int;
+use function is_object;
 use function is_string;
-use function preg_match;
-use function rtrim;
 use function sprintf;
-use function str_replace;
 
 /**
- * ViewRenderer renders the view.
+ * Factory that creates PSR-7 response instances with rendered view content.
  *
- * If {@see ViewRenderer::render()} or {@see ViewRenderer::renderPartial()} methods are called,
- * an instance of {@see DataResponse} is returned. It supports deferred rendering that
- * occurs when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
+ * If {@see WebViewRenderer::render()} or {@see WebViewRenderer::renderPartial()} methods are called,
+ * an instance of {@see ResponseInterface} with deferred rendering support is returned.
  *
- * If {@see ViewRenderer::renderAsString()} or {@see ViewRenderer::renderPartialAsString()} methods are called,
- * the rendering will occur immediately and the string result of the rendering will be returned.
- *
- * @deprecated Use {@see WebViewRenderer} instead.
- *
- * @psalm-suppress DeprecatedClass, DeprecatedInterface
+ * If {@see WebViewRenderer::renderAsString()} or {@see WebViewRenderer::renderPartialAsString()} methods are
+ * called, the rendering will occur immediately and the string result of the rendering will be returned.
  */
-final class ViewRenderer implements ViewContextInterface
+final class WebViewRenderer implements ViewContextInterface
 {
     private ?string $viewPath = null;
     private ?string $name = null;
@@ -60,7 +54,8 @@ final class ViewRenderer implements ViewContextInterface
     private InjectionContainerInterface $injectionContainer;
 
     /**
-     * @param DataResponseFactoryInterface $responseFactory The data response factory instance.
+     * @param ResponseFactoryInterface $responseFactory The PSR-17 response factory.
+     * @param StreamFactoryInterface $streamFactory The PSR-17 stream factory.
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias. If null, relative view paths
@@ -72,9 +67,10 @@ final class ViewRenderer implements ViewContextInterface
      * @psalm-param array<object|string> $injections
      */
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
-        private Aliases $aliases,
-        private WebView $view,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly StreamFactoryInterface $streamFactory,
+        private readonly Aliases $aliases,
+        private readonly WebView $view,
         ?string $viewPath = null,
         private ?string $layout = null,
         private array $injections = [],
@@ -101,9 +97,7 @@ final class ViewRenderer implements ViewContextInterface
     }
 
     /**
-     * Returns a response instance {@see DataResponse} that supports deferred rendering.
-     *
-     * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
+     * Returns a response instance that supports deferred rendering.
      *
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
@@ -111,30 +105,34 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @return DataResponse The response instance.
+     * @return ResponseInterface The response instance.
      */
-    public function render(string $view, array $parameters = []): DataResponse
+    public function render(string $view, array $parameters = []): ResponseInterface
     {
+
         $commonParameters = $this->getCommonParameters();
         $layoutParameters = $this->getLayoutParameters();
         $metaTags = $this->getMetaTags();
         $linkTags = $this->getLinkTags();
 
-        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
-            $view,
-            $parameters,
-            $commonParameters,
-            $layoutParameters,
-            $metaTags,
-            $linkTags,
-        ));
+        return new ViewResponse(
+            $this->responseFactory->createResponse(),
+            fn (): StreamInterface => $this->streamFactory->createStream(
+                $this->renderProxy(
+                    $view,
+                    $parameters,
+                    $commonParameters,
+                    $layoutParameters,
+                    $metaTags,
+                    $linkTags,
+                ),
+            ),
+        );
     }
 
     /**
-     * Returns a response instance {@see DataResponse} that supports deferred
+     * Returns a response instance that supports deferred
      * rendering {@see render()} without applying a layout.
-     *
-     * Rendering will occur when calling {@see DataResponse::getBody()} or {@see DataResponse::getData()}.
      *
      * @param string $view The view name {@see WebView::render()}.
      * @param array $parameters The parameters (name-value pairs) that will be extracted
@@ -142,9 +140,9 @@ final class ViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
-     * @return DataResponse The response instance.
+     * @return ResponseInterface The response instance.
      */
-    public function renderPartial(string $view, array $parameters = []): DataResponse
+    public function renderPartial(string $view, array $parameters = []): ResponseInterface
     {
         if ($this->layout === null) {
             return $this->render($view, $parameters);

@@ -109,7 +109,6 @@ final class WebViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): ResponseInterface
     {
-
         $commonParameters = $this->getCommonParameters();
         $layoutParameters = $this->getLayoutParameters();
         $metaTags = $this->getMetaTags();

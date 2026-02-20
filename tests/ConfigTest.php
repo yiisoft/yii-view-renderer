@@ -11,6 +11,7 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ConfigTest extends TestCase
 {
@@ -19,8 +20,10 @@ final class ConfigTest extends TestCase
         $container = $this->createContainer('web');
 
         $viewRenderer = $container->get(ViewRenderer::class);
+        $webViewRenderer = $container->get(WebViewRenderer::class);
 
         $this->assertInstanceOf(ViewRenderer::class, $viewRenderer);
+        $this->assertInstanceOf(WebViewRenderer::class, $webViewRenderer);
     }
 
     public function testEventsWebWithDebug(): void

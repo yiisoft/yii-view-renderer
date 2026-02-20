@@ -33,24 +33,24 @@ composer require yiisoft/yii-view-renderer
 
 There are two ways to render a view:
 
-- Return an instance of the `Yiisoft\DataResponse\DataResponse` class with deferred rendering.
+- Return an instance of `Psr\Http\Message\ResponseInterface` with deferred rendering.
 - Render immediately and return the rendered result as a string.
 
 ### Rendering result as a PSR-7 response
 
-The `Yiisoft\DataResponse\DataResponse` class is an implementation of the `Psr\Http\Message\ResponseInterface`. For
-more information about this class, see the [yiisoft/data-response](https://github.com/yiisoft/data-response) package.
 You can get an instance of a response with deferred rendering as follows:
 
 ```php
 /**
+ * @var \Psr\Http\Message\ResponseFactoryInterface $responseFactory
+ * @var \Psr\Http\Message\StreamFactoryInterface $streamFactory
  * @var \Yiisoft\Aliases\Aliases $aliases
- * @var \Yiisoft\DataResponse\DataResponseFactoryInterface $dataResponseFactory
  * @var \Yiisoft\View\WebView $webView
  */
 
-$viewRenderer = new \Yiisoft\Yii\View\Renderer\ViewRenderer(
-    $dataResponseFactory,
+$viewRenderer = new \Yiisoft\Yii\View\Renderer\WebViewRenderer(
+    $responseFactory,
+    $streamFactory,
     $aliases,
     $webView,
     '/path/to/views', // Full path to the directory of view templates or its alias.
@@ -63,9 +63,8 @@ $response = $viewRenderer->render('site/page', [
 ]);
 ```
 
-The rendering will be performed directly when calling `getBody()` or `getData()` methods of the
-`Yiisoft\DataResponse\DataResponse`. If a layout is set, but you need to render a view
-without the layout, you can use an immutable setter `withLayout()`:
+The rendering will be performed directly when calling the `getBody()` method of the response.
+If a layout is set, but you need to render a view without the layout, you can use an immutable setter `withLayout()`:
 
 ```php
 $viewRenderer = $viewRenderer->withLayout(null);
@@ -131,13 +130,13 @@ With this approach, you do not need to specify the directory name each time when
 
 ```php
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 class SiteController
 {
-    private ViewRenderer $viewRenderer;
+    private WebViewRenderer $viewRenderer;
 
-    public function __construct(ViewRenderer $viewRenderer)
+    public function __construct(WebViewRenderer $viewRenderer)
     {
         // Specify the name of the controller:
         $this->viewRenderer = $viewRenderer->withControllerName('site');
@@ -268,17 +267,17 @@ You can use lazy loading for injections. Injections will be created by container
 `Yiisoft\Yii\View\Renderer\InjectionContainerInterface`. Out of the box, it is available in `InjectionContainer` that is based on PSR-11 compatible 
 container.
 
-1. Add injection container to `ViewRenderer` constructor:
+1. Add injection container to `WebViewRenderer` constructor:
 
 ```php
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
 
 /**
  * @var Psr\Container\ContainerInterface $container
  */
 
-$viewRenderer = new ViewRenderer(
+$viewRenderer = new WebViewRenderer(
     injectionContainer: new InjectionContainer($container)
 )
 ```
@@ -304,7 +303,7 @@ For more information about localization, see at the [localization](https://githu
 ```php
 'yiisoft/yii-view-renderer' => [    
     // The full path to the directory of views or its alias.
-    // If null, relative view paths in `ViewRenderer::render()` is not available.
+    // If null, relative view paths in `WebViewRenderer::render()` is not available.
     'viewPath' => null, 
     
     // The full path to the layout file to be applied to views.

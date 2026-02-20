@@ -555,6 +555,62 @@ EOD;
         );
     }
 
+    public function testRenderDefaultContentTypeHeader(): void
+    {
+        $renderer = $this->getRenderer();
+
+        $response = $renderer->render('simple', ['name' => 'test']);
+
+        $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testRenderWithCustomContentType(): void
+    {
+        $renderer = $this->getRenderer()->withContentType('application/json');
+
+        $response = $renderer->render('simple', ['name' => 'test']);
+
+        $this->assertSame('application/json; charset=UTF-8', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testRenderWithCustomEncoding(): void
+    {
+        $renderer = $this->getRenderer()->withEncoding('ISO-8859-1');
+
+        $response = $renderer->render('simple', ['name' => 'test']);
+
+        $this->assertSame('text/html; charset=ISO-8859-1', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testRenderWithCustomContentTypeAndEncoding(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withContentType('application/xml')
+            ->withEncoding('UTF-16');
+
+        $response = $renderer->render('simple', ['name' => 'test']);
+
+        $this->assertSame('application/xml; charset=UTF-16', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testContentTypeViaConstructor(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(['@views' => $this->getViewsDir()]),
+            new WebView('@views'),
+            '@views',
+            '@views/layout.php',
+            contentType: 'application/xhtml+xml',
+            encoding: 'Windows-1251',
+        );
+
+        $response = $renderer->render('simple', ['name' => 'test']);
+
+        $this->assertSame('application/xhtml+xml; charset=Windows-1251', $response->getHeaderLine('Content-Type'));
+    }
+
     public function testImmutability(): void
     {
         $original = $this->getRenderer();
@@ -564,6 +620,8 @@ EOD;
         $this->assertNotSame($original, $original->withLayout(''));
         $this->assertNotSame($original, $original->withAddedInjections());
         $this->assertNotSame($original, $original->withInjections());
+        $this->assertNotSame($original, $original->withContentType('application/json'));
+        $this->assertNotSame($original, $original->withEncoding('ISO-8859-1'));
     }
 
     private function getRenderer(

@@ -75,6 +75,8 @@ final class WebViewRenderer implements ViewContextInterface
         private ?string $layout = null,
         private array $injections = [],
         ?InjectionContainerInterface $injectionContainer = null,
+        private string $contentType = 'text/html',
+        private string $encoding = 'UTF-8',
     ) {
         $this->injectionContainer = $injectionContainer ?? new StubInjectionContainer();
         $this->setViewPath($viewPath);
@@ -114,8 +116,12 @@ final class WebViewRenderer implements ViewContextInterface
         $metaTags = $this->getMetaTags();
         $linkTags = $this->getLinkTags();
 
+        $response = $this->responseFactory
+            ->createResponse()
+            ->withHeader('Content-Type', "$this->contentType; charset=$this->encoding");
+
         return new ViewResponse(
-            $this->responseFactory->createResponse(),
+            $response,
             fn (): StreamInterface => $this->streamFactory->createStream(
                 $this->renderProxy(
                     $view,
@@ -285,6 +291,30 @@ final class WebViewRenderer implements ViewContextInterface
     {
         $new = clone $this;
         $new->locale = $locale;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the specified content type.
+     *
+     * @param string $contentType The content type.
+     */
+    public function withContentType(string $contentType): self
+    {
+        $new = clone $this;
+        $new->contentType = $contentType;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the specified encoding.
+     *
+     * @param string $encoding The encoding.
+     */
+    public function withEncoding(string $encoding): self
+    {
+        $new = clone $this;
+        $new->encoding = $encoding;
         return $new;
     }
 

@@ -2,7 +2,7 @@
 
 ## 7.3.2 under development
 
-- no changes in this release.
+- Enh #146: Explicitly import classes, functions, and constants in "use" section (@vjik)
 
 ## 7.3.1 December 19, 2025
 

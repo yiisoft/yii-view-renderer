@@ -1,7 +1,9 @@
 <?php
 
+use Yiisoft\View\WebView;
+
 /**
- * @var Yiisoft\View\WebView $this
+ * @var WebView $this
  * @var string $content
  * @var string $footer
  */

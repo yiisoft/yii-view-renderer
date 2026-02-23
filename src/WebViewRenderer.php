@@ -31,6 +31,8 @@ use function is_object;
 use function is_string;
 use function sprintf;
 
+use const ARRAY_FILTER_USE_BOTH;
+
 /**
  * Factory that creates PSR-7 response instances with rendered view content.
  *
@@ -122,7 +124,7 @@ final class WebViewRenderer implements ViewContextInterface
 
         return new ViewResponse(
             $response,
-            fn (): StreamInterface => $this->streamFactory->createStream(
+            fn(): StreamInterface => $this->streamFactory->createStream(
                 $this->renderProxy(
                     $view,
                     $parameters,
@@ -343,7 +345,7 @@ final class WebViewRenderer implements ViewContextInterface
         array $injectCommonParameters,
         array $injectLayoutParameters,
         array $metaTags,
-        array $linkTags
+        array $linkTags,
     ): string {
         $currentView = $this->view->deepClone()->withContext($this);
 
@@ -367,7 +369,7 @@ final class WebViewRenderer implements ViewContextInterface
         $layoutParameters = array_filter(
             $injectLayoutParameters,
             /** @psalm-suppress MissingClosureParamType */
-            static fn ($_value, string $key): bool => !$currentView->hasParameter($key),
+            static fn($_value, string $key): bool => !$currentView->hasParameter($key),
             ARRAY_FILTER_USE_BOTH,
         );
 
@@ -488,7 +490,7 @@ final class WebViewRenderer implements ViewContextInterface
                         Meta::class,
                         $this->getType($tag),
                     ),
-                    $tag
+                    $tag,
                 );
             }
 
@@ -514,7 +516,7 @@ final class WebViewRenderer implements ViewContextInterface
                             'Link tag position in injection should be integer. Got %s.',
                             $this->getType($position),
                         ),
-                        $tag
+                        $tag,
                     );
                 }
 
@@ -533,7 +535,7 @@ final class WebViewRenderer implements ViewContextInterface
                             Link::class,
                             $this->getType($tag),
                         ),
-                        $tag
+                        $tag,
                     );
                 }
             }

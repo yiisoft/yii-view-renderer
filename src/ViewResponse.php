@@ -26,8 +26,7 @@ final class ViewResponse implements ResponseInterface
     public function __construct(
         private ResponseInterface $response,
         private readonly Closure $dataCallback,
-    ) {
-    }
+    ) {}
 
     public function getBody(): StreamInterface
     {

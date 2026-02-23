@@ -40,10 +40,10 @@ use const ARRAY_FILTER_USE_BOTH;
 /**
  * Factory that creates PSR-7 response instances with a content rendered by view.
  *
- * Both {@see WebViewRenderer::render()} and {@see WebViewRenderer::renderPartial()} return an instance 
+ * Both {@see WebViewRenderer::render()} and {@see WebViewRenderer::renderPartial()} return an instance
  *  of {@see ResponseInterface} with deferred rendering support.
  *
- * {@see WebViewRenderer::renderAsString()} and {@see WebViewRenderer::renderPartialAsString()} are rendering 
+ * {@see WebViewRenderer::renderAsString()} and {@see WebViewRenderer::renderPartialAsString()} are rendering
  * immediately returning the result of the rendering as a string.
  */
 final class WebViewRenderer implements ViewContextInterface

@@ -35,7 +35,7 @@ final class TestInjection implements
                 [
                     'rel' => 'icon',
                     'type' => 'image/png',
-                ]
+                ],
             ),
             [
                 'rel' => 'preload',

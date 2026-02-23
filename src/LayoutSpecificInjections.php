@@ -13,7 +13,7 @@ final class LayoutSpecificInjections
 
     public function __construct(
         private readonly string $layout,
-        object ...$injections
+        object ...$injections,
     ) {
         $this->injections = $injections;
     }

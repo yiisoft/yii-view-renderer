@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Renderer;
 
+use Yiisoft\View\WebView;
+
 /**
  * MetaTagsInjectionInterface is an interface that must be implemented by classes to inject meta tags.
  *
@@ -12,7 +14,7 @@ namespace Yiisoft\Yii\View\Renderer;
 interface MetaTagsInjectionInterface
 {
     /**
-     * Returns array of meta tags for register via {@see \Yiisoft\View\WebView::registerMetaTag()}.
+     * Returns array of meta tags for register via {@see WebView::registerMetaTag()}.
      * Optionally, you may use string keys of array as identifies the meta tag.
      *
      * For example:

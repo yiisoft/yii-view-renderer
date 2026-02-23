@@ -10,8 +10,7 @@ final class InjectionContainer implements InjectionContainerInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     public function get(string $id): object
     {

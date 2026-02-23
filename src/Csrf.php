@@ -14,7 +14,11 @@ final class Csrf implements Stringable
         private readonly string $token,
         private readonly string $parameterName,
         private readonly string $headerName,
-    ) {
+    ) {}
+
+    public function __toString(): string
+    {
+        return $this->getToken();
     }
 
     public function getToken(): string
@@ -36,10 +40,5 @@ final class Csrf implements Stringable
     {
         $tag = Html::hiddenInput($this->parameterName, $this->token);
         return $attributes === [] ? $tag : $tag->addAttributes($attributes);
-    }
-
-    public function __toString(): string
-    {
-        return $this->getToken();
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Renderer;
 
+use Yiisoft\View\WebView;
+
 /**
  * LinkTagsInjectionInterface is an interface that must be implemented by classes to inject link tags.
  *
@@ -18,7 +20,7 @@ namespace Yiisoft\Yii\View\Renderer;
 interface LinkTagsInjectionInterface
 {
     /**
-     * Returns array of link tags for register via {@see \Yiisoft\View\WebView::registerLinkTag()}.
+     * Returns array of link tags for register via {@see WebView::registerLinkTag()}.
      * Optionally:
      *  - use array format and set the position in a page via `__position`.
      *  - use string keys of array as identifies the link tag.

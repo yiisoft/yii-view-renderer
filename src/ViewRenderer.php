@@ -31,6 +31,9 @@ use function preg_match;
 use function rtrim;
 use function sprintf;
 use function str_replace;
+use function is_object;
+
+use const ARRAY_FILTER_USE_BOTH;
 
 /**
  * ViewRenderer renders the view.
@@ -120,7 +123,7 @@ final class ViewRenderer implements ViewContextInterface
         $metaTags = $this->getMetaTags();
         $linkTags = $this->getLinkTags();
 
-        return $this->responseFactory->createResponse(fn (): string => $this->renderProxy(
+        return $this->responseFactory->createResponse(fn(): string => $this->renderProxy(
             $view,
             $parameters,
             $commonParameters,
@@ -316,7 +319,7 @@ final class ViewRenderer implements ViewContextInterface
         array $injectCommonParameters,
         array $injectLayoutParameters,
         array $metaTags,
-        array $linkTags
+        array $linkTags,
     ): string {
         $currentView = $this->view->deepClone()->withContext($this);
 
@@ -340,7 +343,7 @@ final class ViewRenderer implements ViewContextInterface
         $layoutParameters = array_filter(
             $injectLayoutParameters,
             /** @psalm-suppress MissingClosureParamType */
-            static fn ($_value, string $key): bool => !$currentView->hasParameter($key),
+            static fn($_value, string $key): bool => !$currentView->hasParameter($key),
             ARRAY_FILTER_USE_BOTH,
         );
 
@@ -461,7 +464,7 @@ final class ViewRenderer implements ViewContextInterface
                         Meta::class,
                         $this->getType($tag),
                     ),
-                    $tag
+                    $tag,
                 );
             }
 
@@ -487,7 +490,7 @@ final class ViewRenderer implements ViewContextInterface
                             'Link tag position in injection should be integer. Got %s.',
                             $this->getType($position),
                         ),
-                        $tag
+                        $tag,
                     );
                 }
 
@@ -506,7 +509,7 @@ final class ViewRenderer implements ViewContextInterface
                             Link::class,
                             $this->getType($tag),
                         ),
-                        $tag
+                        $tag,
                     );
                 }
             }

@@ -17,6 +17,8 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
+use function dirname;
+
 final class ConfigTest extends TestCase
 {
     public function testDiWeb(): void
@@ -47,14 +49,13 @@ final class ConfigTest extends TestCase
         return new Container(
             ContainerConfig::create()->withDefinitions(
                 $this->getDiConfig($postfix)
-                +
-                [
+                + [
                     DataResponseFactoryInterface::class => $this->createMock(DataResponseFactoryInterface::class),
                     ResponseFactoryInterface::class => new ResponseFactory(),
                     StreamFactoryInterface::class => new StreamFactory(),
                     WebView::class => new WebView(__DIR__, new SimpleEventDispatcher()),
-                ]
-            )
+                ],
+            ),
         );
     }
 

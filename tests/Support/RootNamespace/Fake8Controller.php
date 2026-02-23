@@ -2,6 +2,4 @@
 
 declare(strict_types=1);
 
-final class Fake8Controller
-{
-}
+final class Fake8Controller {}

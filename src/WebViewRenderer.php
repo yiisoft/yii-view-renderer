@@ -25,11 +25,15 @@ use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\StubInjectionContainer;
 
 use function array_key_exists;
+use function array_merge;
 use function is_array;
 use function is_int;
 use function is_object;
 use function is_string;
+use function preg_match;
+use function rtrim;
 use function sprintf;
+use function str_replace;
 
 use const ARRAY_FILTER_USE_BOTH;
 
@@ -61,7 +65,7 @@ final class WebViewRenderer implements ViewContextInterface
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias. If null, relative view paths
-     * in {@see ViewRenderer::render()} are not available.
+     * in {@see WebViewRenderer::render()} are not available.
      * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
      * not be applied.
      * @param array $injections The injection instances or class names.

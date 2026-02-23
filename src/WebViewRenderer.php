@@ -40,8 +40,8 @@ use const ARRAY_FILTER_USE_BOTH;
 /**
  * Factory that creates PSR-7 response instances with a content rendered by view.
  *
- * If {@see WebViewRenderer::render()} or {@see WebViewRenderer::renderPartial()} methods are called,
- * an instance of {@see ResponseInterface} with deferred rendering support is returned.
+ * Both {@see WebViewRenderer::render()} and {@see WebViewRenderer::renderPartial()} return an instance 
+ *  of {@see ResponseInterface} with deferred rendering support.
  *
  * {@see WebViewRenderer::renderAsString()} and {@see WebViewRenderer::renderPartialAsString()} are rendering 
  * immediately returning the result of the rendering as a string.

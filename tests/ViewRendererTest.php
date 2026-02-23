@@ -35,6 +35,7 @@ use Yiisoft\Yii\View\Renderer\Tests\Support\TestInjection;
 use Yiisoft\Yii\View\Renderer\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\Renderer\Tests\Support\TitleInjection;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Fake8Controller;
 
 final class ViewRendererTest extends TestCase
 {
@@ -71,7 +72,7 @@ EOD;
             $expected,
             $renderer->renderAsString('view', [
                 'name' => 'donatello',
-            ])
+            ]),
         );
     }
 
@@ -222,7 +223,7 @@ EOD;
                 '/fake',
             ],
             'controller class contains number' => [
-                new \Fake8Controller(),
+                new Fake8Controller(),
                 '/fake8',
             ],
             'namespace contains number' => [
@@ -537,14 +538,14 @@ EOD;
                     '@views/layout.php',
                     new TestInjection(),
                 ),
-                new class () implements MetaTagsInjectionInterface {
+                new class implements MetaTagsInjectionInterface {
                     public function getMetaTags(): array
                     {
                         return [
                             ['charset' => 'windows-1251'],
                         ];
                     }
-                }
+                },
             );
 
         $response = $renderer->render('empty');
@@ -575,7 +576,7 @@ EOD;
             new WebView('@views', new SimpleEventDispatcher()),
             '@views',
             '@views/layout.php',
-            injectionContainer: $injectionContainer
+            injectionContainer: $injectionContainer,
         );
     }
 

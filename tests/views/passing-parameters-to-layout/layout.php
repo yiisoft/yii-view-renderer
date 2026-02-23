@@ -7,9 +7,9 @@ declare(strict_types=1);
  * @var string $seoTitle
  */
 
-echo '<html>' .
-    '<head>' .
-    '<title>' . $seoTitle . '</title>' .
-    '</head>' .
-    '<body>' . $content . '</body>' .
-    '</html>';
+echo '<html>'
+    . '<head>'
+    . '<title>' . $seoTitle . '</title>'
+    . '</head>'
+    . '<body>' . $content . '</body>'
+    . '</html>';

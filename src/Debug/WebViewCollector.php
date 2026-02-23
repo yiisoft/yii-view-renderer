@@ -8,6 +8,8 @@ use Yiisoft\View\Event\WebView\AfterRender;
 use Yiisoft\Yii\Debug\Collector\CollectorTrait;
 use Yiisoft\Yii\Debug\Collector\SummaryCollectorInterface;
 
+use function count;
+
 final class WebViewCollector implements SummaryCollectorInterface
 {
     use CollectorTrait;

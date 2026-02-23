@@ -26,8 +26,7 @@ final class CsrfViewInjection implements CommonParametersInjectionInterface, Met
     public function __construct(
         private readonly CsrfTokenInterface $token,
         private readonly CsrfTokenMiddleware|CsrfMiddleware $middleware,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns a new instance with the specified parameter name.

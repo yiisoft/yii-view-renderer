@@ -12,7 +12,7 @@ trait TestTrait
     protected function assertEqualStringsIgnoringLineEndings(
         string $expected,
         string $actual,
-        string $message = ''
+        string $message = '',
     ): void {
         $expected = self::normalizeLineEndings($expected);
         $actual = self::normalizeLineEndings($actual);
@@ -26,7 +26,7 @@ trait TestTrait
     protected function assertStringStartsWithIgnoringLineEndings(
         string $prefix,
         string $string,
-        string $message = ''
+        string $message = '',
     ): void {
         $prefix = self::normalizeLineEndings($prefix);
         $string = self::normalizeLineEndings($string);
@@ -41,7 +41,7 @@ trait TestTrait
             [
                 "\r\n" => "\n",
                 "\r" => "\n",
-            ]
+            ],
         );
     }
 }

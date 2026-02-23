@@ -2,6 +2,4 @@
 
 declare(strict_types=1);
 
-final class FakeController
-{
-}
+final class FakeController {}

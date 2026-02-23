@@ -35,11 +35,11 @@ final class CsrfViewInjectionTest extends TestCase
         $this->assertSame('h-csrf', $csrf->getHeaderName());
         $this->assertSame(
             '<input type="hidden" name="p-csrf" value="123">',
-            (string) $csrf->hiddenInput()
+            (string) $csrf->hiddenInput(),
         );
         $this->assertSame(
             '<input type="hidden" name="p-csrf" value="123" data-key="42">',
-            (string) $csrf->hiddenInput(['data-key' => 42])
+            (string) $csrf->hiddenInput(['data-key' => 42]),
         );
     }
 
@@ -56,7 +56,7 @@ final class CsrfViewInjectionTest extends TestCase
                     'content' => '123',
                 ],
             ],
-            $metaTags
+            $metaTags,
         );
     }
 
@@ -85,7 +85,7 @@ final class CsrfViewInjectionTest extends TestCase
                     'content' => '123',
                 ],
             ],
-            $metaTags
+            $metaTags,
         );
     }
 
@@ -99,7 +99,7 @@ final class CsrfViewInjectionTest extends TestCase
     private function getInjection(
         ?string $token = null,
         ?string $middlewareParameterName = null,
-        ?string $middlewareHeaderName = null
+        ?string $middlewareHeaderName = null,
     ): CsrfViewInjection {
         $token = new FakeCsrfToken($token);
 
@@ -107,8 +107,8 @@ final class CsrfViewInjectionTest extends TestCase
             new Psr17Factory(),
             new SynchronizerCsrfToken(
                 new RandomCsrfTokenGenerator(),
-                new MockCsrfTokenStorage()
-            )
+                new MockCsrfTokenStorage(),
+            ),
         );
         if ($middlewareParameterName !== null) {
             $middleware = $middleware->withParameterName($middlewareParameterName);

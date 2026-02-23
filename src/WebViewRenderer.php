@@ -43,8 +43,8 @@ use const ARRAY_FILTER_USE_BOTH;
  * If {@see WebViewRenderer::render()} or {@see WebViewRenderer::renderPartial()} methods are called,
  * an instance of {@see ResponseInterface} with deferred rendering support is returned.
  *
- * If {@see WebViewRenderer::renderAsString()} or {@see WebViewRenderer::renderPartialAsString()} methods are
- * called, the rendering will occur immediately and the string result of the rendering will be returned.
+ * {@see WebViewRenderer::renderAsString()} and {@see WebViewRenderer::renderPartialAsString()} are rendering 
+ * immediately returning the result of the rendering as a string.
  */
 final class WebViewRenderer implements ViewContextInterface
 {

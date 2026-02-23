@@ -38,7 +38,7 @@ use function str_replace;
 use const ARRAY_FILTER_USE_BOTH;
 
 /**
- * Factory that creates PSR-7 response instances with rendered view content.
+ * Factory that creates PSR-7 response instances with a content rendered by view.
  *
  * If {@see WebViewRenderer::render()} or {@see WebViewRenderer::renderPartial()} methods are called,
  * an instance of {@see ResponseInterface} with deferred rendering support is returned.

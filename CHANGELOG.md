@@ -2,6 +2,7 @@
 
 ## 7.3.2 under development
 
+- New #144: Introduce `WebViewRenderer` instead of `ViewRenderer` which is marked as deprecated (@vjik)
 - Enh #146: Explicitly import classes, functions, and constants in "use" section (@vjik)
 
 ## 7.3.1 December 19, 2025

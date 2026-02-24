@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Renderer\Tests;
 
+use HttpSoft\Message\ResponseFactory;
+use HttpSoft\Message\StreamFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 use function dirname;
 
@@ -21,8 +26,10 @@ final class ConfigTest extends TestCase
         $container = $this->createContainer('web');
 
         $viewRenderer = $container->get(ViewRenderer::class);
+        $webViewRenderer = $container->get(WebViewRenderer::class);
 
         $this->assertInstanceOf(ViewRenderer::class, $viewRenderer);
+        $this->assertInstanceOf(WebViewRenderer::class, $webViewRenderer);
     }
 
     public function testEventsWebWithDebug(): void
@@ -44,6 +51,8 @@ final class ConfigTest extends TestCase
                 $this->getDiConfig($postfix)
                 + [
                     DataResponseFactoryInterface::class => $this->createMock(DataResponseFactoryInterface::class),
+                    ResponseFactoryInterface::class => new ResponseFactory(),
+                    StreamFactoryInterface::class => new StreamFactory(),
                     WebView::class => new WebView(__DIR__, new SimpleEventDispatcher()),
                 ],
             ),

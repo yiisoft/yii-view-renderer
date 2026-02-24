@@ -1,6 +1,6 @@
 # Yii View Renderer Change Log
 
-## 7.3.2 under development
+## 7.4.0 February 24, 2026
 
 - New #144: Introduce `WebViewRenderer` instead of `ViewRenderer` which is marked as deprecated (@vjik)
 - Enh #146: Explicitly import classes, functions, and constants in "use" section (@vjik)

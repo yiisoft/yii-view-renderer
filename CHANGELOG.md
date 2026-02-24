@@ -1,5 +1,9 @@
 # Yii View Renderer Change Log
 
+## 7.4.1 under development
+
+- no changes in this release.
+
 ## 7.4.0 February 24, 2026
 
 - New #144: Introduce `WebViewRenderer` instead of `ViewRenderer` which is marked as deprecated (@vjik)

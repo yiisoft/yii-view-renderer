@@ -56,12 +56,12 @@ final class WebViewRendererTest extends TestCase
 <html>
 <head><meta charset="utf-8">
 <meta name="description" content="This website is about funny raccoons.">
-<link type="image/png" href="/icon.png" rel="icon">
-<link type="font/woff2" href="myFont.woff2" rel="preload" as="font"></head>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="preload" href="myFont.woff2" as="font" type="font/woff2"></head>
 <body>
     <p><b>donatello</b></p>
     <div>copyright</div>
-    <link href="fancy.css" rel="alternate stylesheet"></body>
+    <link rel="alternate stylesheet" href="fancy.css"></body>
 </html>
 EOD;
 
@@ -401,12 +401,12 @@ EOD;
 <html>
 <head><meta charset="utf-8">
 <meta name="description" content="This website is about funny raccoons.">
-<link type="image/png" href="/icon.png" rel="icon">
-<link type="font/woff2" href="myFont.woff2" rel="preload" as="font"></head>
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="preload" href="myFont.woff2" as="font" type="font/woff2"></head>
 <body>
     <p><b>donatello</b></p>
     <div>copyright</div>
-    <link href="fancy.css" rel="alternate stylesheet"></body>
+    <link rel="alternate stylesheet" href="fancy.css"></body>
 </html>
 EOD;
 

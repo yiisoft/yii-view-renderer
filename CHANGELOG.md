@@ -1,5 +1,9 @@
 # Yii View Renderer Change Log
 
+## 7.4.2 under development
+
+- no changes in this release.
+
 ## 7.4.1 March 18, 2026
 
 - Enh #149: Add support for `yiisoft/html` version `^4.0` (@vjik)

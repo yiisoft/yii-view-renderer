@@ -2,7 +2,7 @@
 
 ## 7.4.1 under development
 
-- no changes in this release.
+- Enh #149: Add support for `yiisoft/html` version `^4.0` (@vjik)
 
 ## 7.4.0 February 24, 2026
 

@@ -19,7 +19,7 @@ final class RenderCombinationsTest extends TestCase
     private const EXPECTED_VIEW = 'test';
     private const EXPECTED_CONTENT = <<<HTML
         <html>
-        <head><link href="style.css" rel="stylesheet"></head>
+        <head><link rel="stylesheet" href="style.css"></head>
         <body>
         test</body>
         </html>

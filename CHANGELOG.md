@@ -2,7 +2,7 @@
 
 ## 7.4.2 under development
 
-- no changes in this release.
+- Enh #150: Minor refactor regular expression for controller name extractor (@vjik)
 
 ## 7.4.1 March 18, 2026
 

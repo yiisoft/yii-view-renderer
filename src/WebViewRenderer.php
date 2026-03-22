@@ -578,7 +578,7 @@ final class WebViewRenderer implements ViewContextInterface
             return $cache[$class];
         }
 
-        if (preg_match('/(?:.*controller\\\|.*controllers\\\)([\w\\\]+)controller$/iU', $class, $m) && !empty($m[1])) {
+        if (preg_match('/(?:.*controller\\\\|.*controllers\\\\)([\w\\\\]+)controller$/iU', $class, $m) && !empty($m[1])) {
             $name = $m[1];
         } elseif (preg_match('/(\w+)controller$/iU', $class, $m) && !empty($m[1])) {
             $name = $m[1];

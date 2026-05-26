@@ -25,4 +25,23 @@ final class WebViewCollectorTest extends AbstractCollectorTestCase
     {
         return new WebViewCollector();
     }
+
+    protected function checkCollectedData(array $data): void
+    {
+        $this->assertSame(
+            [
+                [
+                    'output' => 'test content',
+                    'file' => __FILE__,
+                    'parameters' => ['foo' => 'bar'],
+                ],
+            ],
+            $data,
+        );
+    }
+
+    protected function checkSummaryData(array $data): void
+    {
+        $this->assertSame(['total' => 1], $data);
+    }
 }

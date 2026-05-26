@@ -11,6 +11,34 @@
         }
     },
     "mutators": {
-        "@default": true
+        "@default": true,
+        "DecrementInteger": {
+            "ignore": [
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::extractControllerName",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::extractControllerName"
+            ]
+        },
+        "LogicalAnd": {
+            "ignore": [
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::extractControllerName",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::extractControllerName"
+            ]
+        },
+        "PregMatchRemoveFlags": {
+            "ignore": [
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::extractControllerName",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::extractControllerName"
+            ]
+        },
+        "ReturnRemoval": {
+            "ignore": [
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::extractControllerName",
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::renderPartial",
+                "Yiisoft\\Yii\\View\\Renderer\\ViewRenderer::renderPartialAsString",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::extractControllerName",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::renderPartial",
+                "Yiisoft\\Yii\\View\\Renderer\\WebViewRenderer::renderPartialAsString"
+            ]
+        }
     }
 }

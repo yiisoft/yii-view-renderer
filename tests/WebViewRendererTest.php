@@ -17,10 +17,12 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
 use Yiisoft\Yii\View\Renderer\Exception\InvalidLinkTagException;
 use Yiisoft\Yii\View\Renderer\Exception\InvalidMetaTagException;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
+use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 use Yiisoft\Yii\View\Renderer\LayoutSpecificInjections;
 use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
 use Yiisoft\Yii\View\Renderer\Tests\Support\Action\RelativeViewAction;
@@ -37,8 +39,6 @@ use Yiisoft\Yii\View\Renderer\Tests\Support\TestTrait;
 use Yiisoft\Yii\View\Renderer\Tests\Support\TitleInjection;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Fake8Controller;
-
-use function dirname;
 
 final class WebViewRendererTest extends TestCase
 {
@@ -189,6 +189,16 @@ EOD;
             ->render('locale');
 
         $this->assertSame('<html><body>de_DE locale</body></html>', (string) $response->getBody());
+    }
+
+    public function testWithLocaleDoesNotMutateOriginalRenderer(): void
+    {
+        $renderer = $this->getRenderer()
+            ->withInjections(new TestInjection());
+        $localizedRenderer = $renderer->withLocale('de_DE');
+
+        $this->assertSame('<html><body>de_DE locale</body></html>', (string) $localizedRenderer->render('locale')->getBody());
+        $this->assertSame('<html><body>not localized</body></html>', (string) $renderer->render('locale')->getBody());
     }
 
     public static function dataWithController(): array
@@ -526,7 +536,7 @@ EOD;
         $method->invoke($renderer, [
             [],
             ['file' => 42],
-            ['file' => dirname(__DIR__) . '/src/WebViewRenderer.php'],
+            ['file' => (new ReflectionClass(WebViewRenderer::class))->getFileName()],
         ]);
     }
 
@@ -600,6 +610,33 @@ EOD;
         $this->assertEqualStringsIgnoringLineEndings($expected, (string) $response->getBody());
     }
 
+    public function testLazyLoadingInjectionIsPreparedOnce(): void
+    {
+        $container = new class implements InjectionContainerInterface {
+            private int $count = 0;
+
+            public function get(string $id): object
+            {
+                return new class (++$this->count) implements CommonParametersInjectionInterface {
+                    public function __construct(private readonly int $number) {}
+
+                    public function getCommonParameters(): array
+                    {
+                        return ['name' => 'name-' . $this->number];
+                    }
+                };
+            }
+        };
+
+        $renderer = $this
+            ->getRenderer(injectionContainer: $container)
+            ->withLayout(null)
+            ->withInjections('dynamic-name');
+
+        $this->assertSame('<b>name-1</b>', (string) $renderer->render('simple')->getBody());
+        $this->assertSame('<b>name-1</b>', (string) $renderer->render('simple')->getBody());
+    }
+
     public function testLazyLoadingInjectionWithoutContainer(): void
     {
         $renderer = $this
@@ -641,6 +678,49 @@ EOD;
 
         $this->assertSame(
             '<html><head><title>Hello</title><meta charset="windows-1251"></head><body><h1>Hello</h1></body></html>',
+            (string) $response->getBody(),
+        );
+    }
+
+    public function testWithAddedInjectionsKeepsExistingInjections(): void
+    {
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout(null)
+            ->withInjections(new TestInjection())
+            ->withAddedInjections(
+                new class implements CommonParametersInjectionInterface {
+                    public function getCommonParameters(): array
+                    {
+                        return ['species' => 'turtle'];
+                    }
+                },
+            );
+
+        $response = $renderer->render('parameters');
+
+        $this->assertSame('leonardo/turtle', (string) $response->getBody());
+    }
+
+    public function testDirectInjectionDoesNotSkipFollowingLayoutSpecificInjection(): void
+    {
+        $renderer = $this
+            ->getRenderer()
+            ->withLayout('@views/nested-layout/layout.php')
+            ->withInjections(
+                new class implements LayoutParametersInjectionInterface {
+                    public function getLayoutParameters(): array
+                    {
+                        return ['title' => 'Direct'];
+                    }
+                },
+                new LayoutSpecificInjections('@views/nested-layout/layout.php', new TitleInjection()),
+            );
+
+        $response = $renderer->render('empty');
+
+        $this->assertSame(
+            '<html><head><title>Hello</title></head><body><h1>Hello</h1></body></html>',
             (string) $response->getBody(),
         );
     }

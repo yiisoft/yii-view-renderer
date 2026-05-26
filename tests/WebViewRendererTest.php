@@ -9,6 +9,7 @@ use HttpSoft\Message\StreamFactory;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionObject;
 use RuntimeException;
 use stdClass;
@@ -524,8 +525,54 @@ EOD;
         );
         $method->invoke($renderer, [
             [],
+            ['file' => 42],
             ['file' => dirname(__DIR__) . '/src/WebViewRenderer.php'],
         ]);
+    }
+
+    public function testCallLocationViewPathDetectionSkipsInvalidFrames(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        $method = (new ReflectionObject($renderer))->getMethod('resolveCallLocationViewPath');
+        $method->setAccessible(true);
+
+        $this->assertSame(
+            __DIR__ . '/Support/Action',
+            $method->invoke($renderer, [
+                [],
+                ['file' => 42],
+                ['file' => __DIR__ . '/Support/Action/RelativeViewAction.php'],
+            ]),
+        );
+    }
+
+    public function testRenderWithDefaultViewPathDoesNotMutateRenderer(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        (new RelativeViewAction())->renderAsString($renderer);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The view path is not set.');
+        $renderer->getViewPath();
+    }
+
+    public function testCallLocationBacktraceLimit(): void
+    {
+        $reflection = new ReflectionClass(WebViewRenderer::class);
+
+        $this->assertSame(10, $reflection->getConstant('CALL_LOCATION_BACKTRACE_LIMIT'));
     }
 
     public function testLazyLoadingInjection(): void

@@ -51,6 +51,8 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
  */
 final class WebViewRenderer implements ViewContextInterface
 {
+    private const CALL_LOCATION_BACKTRACE_LIMIT = 10;
+
     private ?string $viewPath = null;
     private ?string $name = null;
     private ?string $locale = null;
@@ -626,7 +628,9 @@ final class WebViewRenderer implements ViewContextInterface
 
     private function getCallLocationViewPath(): string
     {
-        return $this->resolveCallLocationViewPath(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10));
+        return $this->resolveCallLocationViewPath(
+            debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::CALL_LOCATION_BACKTRACE_LIMIT),
+        );
     }
 
     /**

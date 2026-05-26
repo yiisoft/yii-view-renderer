@@ -68,7 +68,7 @@ final class WebViewRenderer implements ViewContextInterface
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias. If null, relative view paths
-     * in {@see WebViewRenderer::render()} are resolved from the call location.
+     * in `render*()` methods are resolved from the call location.
      * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
      * not be applied.
      * @param array $injections The injection instances or class names.
@@ -626,7 +626,7 @@ final class WebViewRenderer implements ViewContextInterface
 
     private function getCallLocationViewPath(): string
     {
-        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $frame) {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10) as $frame) {
             $file = $frame['file'] ?? __FILE__;
 
             if ($file === __FILE__) {
@@ -636,7 +636,7 @@ final class WebViewRenderer implements ViewContextInterface
             return dirname($file);
         }
 
-        throw new RuntimeException('Cannot detect view path.');
+        throw new RuntimeException('Cannot detect view path from call stack. Configure view path explicitly.');
     }
 
     private function getPreparedInjections(): array

@@ -28,4 +28,9 @@ final class RelativeViewAction
     {
         return $renderer->renderPartialAsString('template', ['name' => 'renderPartialAsString']);
     }
+
+    public function renderNestedFromView(WebViewRenderer $renderer): string
+    {
+        return $renderer->renderAsString('nested-render', ['renderer' => $renderer]);
+    }
 }

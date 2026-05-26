@@ -515,6 +515,7 @@ EOD;
         $this->assertSame('Action view: renderPartial', (string) $action->renderPartial($renderer)->getBody());
         $this->assertSame('Action view: renderAsString', $action->renderAsString($renderer));
         $this->assertSame('Action view: renderPartialAsString', $action->renderPartialAsString($renderer));
+        $this->assertSame('Outer view. Nested from nested view', $action->renderNestedFromView($renderer));
     }
 
     public function testCallLocationViewPathDetectionFailure(): void

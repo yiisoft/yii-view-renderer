@@ -37,6 +37,8 @@ use Yiisoft\Yii\View\Renderer\Tests\Support\TitleInjection;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Fake8Controller;
 
+use function dirname;
+
 final class WebViewRendererTest extends TestCase
 {
     use TestTrait;
@@ -502,6 +504,28 @@ EOD;
         $this->assertSame('Action view: renderPartial', (string) $action->renderPartial($renderer)->getBody());
         $this->assertSame('Action view: renderAsString', $action->renderAsString($renderer));
         $this->assertSame('Action view: renderPartialAsString', $action->renderPartialAsString($renderer));
+    }
+
+    public function testCallLocationViewPathDetectionFailure(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        $method = (new ReflectionObject($renderer))->getMethod('resolveCallLocationViewPath');
+        $method->setAccessible(true);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Cannot detect view path from call stack. Configure view path explicitly.',
+        );
+        $method->invoke($renderer, [
+            [],
+            ['file' => dirname(__DIR__) . '/src/WebViewRenderer.php'],
+        ]);
     }
 
     public function testLazyLoadingInjection(): void

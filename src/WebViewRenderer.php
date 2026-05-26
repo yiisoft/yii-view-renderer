@@ -626,8 +626,20 @@ final class WebViewRenderer implements ViewContextInterface
 
     private function getCallLocationViewPath(): string
     {
-        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10) as $frame) {
-            $file = $frame['file'] ?? __FILE__;
+        return $this->resolveCallLocationViewPath(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10));
+    }
+
+    /**
+     * @psalm-param list<array{file?: string, ...}> $backtrace
+     */
+    private function resolveCallLocationViewPath(array $backtrace): string
+    {
+        foreach ($backtrace as $frame) {
+            if (!isset($frame['file']) || !is_string($frame['file'])) {
+                continue;
+            }
+
+            $file = $frame['file'];
 
             if ($file === __FILE__) {
                 continue;

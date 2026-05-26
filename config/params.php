@@ -7,7 +7,7 @@ use Yiisoft\Yii\View\Renderer\Debug\WebViewCollector;
 return [
     'yiisoft/yii-view-renderer' => [
         // The full path to the directory of views or its alias.
-        // If null, relative view paths in `ViewRenderer::render()` is not available.
+        // If null, relative view paths in `WebViewRenderer::render*()` are resolved from the call location.
         'viewPath' => null,
 
         // The full path to the layout file to be applied to views.

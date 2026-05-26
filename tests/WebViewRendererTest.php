@@ -22,6 +22,7 @@ use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainer;
 use Yiisoft\Yii\View\Renderer\InjectionContainer\InjectionContainerInterface;
 use Yiisoft\Yii\View\Renderer\LayoutSpecificInjections;
 use Yiisoft\Yii\View\Renderer\MetaTagsInjectionInterface;
+use Yiisoft\Yii\View\Renderer\Tests\Support\Action\RelativeViewAction;
 use Yiisoft\Yii\View\Renderer\Tests\Support\CharsetInjection;
 use Yiisoft\Yii\View\Renderer\Tests\Support\FakeCntrl;
 use Yiisoft\Yii\View\Renderer\Tests\Support\FakeController;
@@ -484,6 +485,23 @@ EOD;
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The view path is not set.');
         $viewRenderer->getViewPath();
+    }
+
+    public function testRenderUsesCallLocationAsViewPathWhenViewPathIsNull(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        $action = new RelativeViewAction();
+
+        $this->assertSame('Action view: render', (string) $action->render($renderer)->getBody());
+        $this->assertSame('Action view: renderPartial', (string) $action->renderPartial($renderer)->getBody());
+        $this->assertSame('Action view: renderAsString', $action->renderAsString($renderer));
+        $this->assertSame('Action view: renderPartialAsString', $action->renderPartialAsString($renderer));
     }
 
     public function testLazyLoadingInjection(): void

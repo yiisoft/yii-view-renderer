@@ -26,6 +26,8 @@ use Yiisoft\Yii\View\Renderer\InjectionContainer\StubInjectionContainer;
 
 use function array_key_exists;
 use function array_merge;
+use function debug_backtrace;
+use function dirname;
 use function is_array;
 use function is_int;
 use function is_object;
@@ -36,6 +38,7 @@ use function sprintf;
 use function str_replace;
 
 use const ARRAY_FILTER_USE_BOTH;
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
  * Factory that creates PSR-7 response instances with a content rendered by view.
@@ -65,7 +68,7 @@ final class WebViewRenderer implements ViewContextInterface
      * @param Aliases $aliases The aliases instance.
      * @param WebView $view The web view instance.
      * @param string|null $viewPath The full path to the directory of views or its alias. If null, relative view paths
-     * in {@see WebViewRenderer::render()} are not available.
+     * in {@see WebViewRenderer::render()} are resolved from the call location.
      * @param string|null $layout The full path to the layout file to be applied to views. If null, the layout will
      * not be applied.
      * @param array $injections The injection instances or class names.
@@ -117,19 +120,20 @@ final class WebViewRenderer implements ViewContextInterface
      */
     public function render(string $view, array $parameters = []): ResponseInterface
     {
-        $commonParameters = $this->getCommonParameters();
-        $layoutParameters = $this->getLayoutParameters();
-        $metaTags = $this->getMetaTags();
-        $linkTags = $this->getLinkTags();
+        $renderer = $this->withDefaultViewPath();
+        $commonParameters = $renderer->getCommonParameters();
+        $layoutParameters = $renderer->getLayoutParameters();
+        $metaTags = $renderer->getMetaTags();
+        $linkTags = $renderer->getLinkTags();
 
-        $response = $this->responseFactory
+        $response = $renderer->responseFactory
             ->createResponse()
-            ->withHeader('Content-Type', "$this->contentType; charset=$this->encoding");
+            ->withHeader('Content-Type', "$renderer->contentType; charset=$renderer->encoding");
 
         return new ViewResponse(
             $response,
-            fn(): StreamInterface => $this->streamFactory->createStream(
-                $this->renderProxy(
+            fn(): StreamInterface => $renderer->streamFactory->createStream(
+                $renderer->renderProxy(
                     $view,
                     $parameters,
                     $commonParameters,
@@ -180,13 +184,15 @@ final class WebViewRenderer implements ViewContextInterface
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
-        return $this->renderProxy(
+        $renderer = $this->withDefaultViewPath();
+
+        return $renderer->renderProxy(
             $view,
             $parameters,
-            $this->getCommonParameters(),
-            $this->getLayoutParameters(),
-            $this->getMetaTags(),
-            $this->getLinkTags(),
+            $renderer->getCommonParameters(),
+            $renderer->getLayoutParameters(),
+            $renderer->getMetaTags(),
+            $renderer->getLinkTags(),
         );
     }
 
@@ -605,6 +611,32 @@ final class WebViewRenderer implements ViewContextInterface
     private function setViewPath(?string $path): void
     {
         $this->viewPath = $path === null ? null : rtrim($path, '/');
+    }
+
+    private function withDefaultViewPath(): self
+    {
+        if ($this->viewPath !== null) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->setViewPath($this->getCallLocationViewPath());
+        return $new;
+    }
+
+    private function getCallLocationViewPath(): string
+    {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $frame) {
+            $file = $frame['file'] ?? __FILE__;
+
+            if ($file === __FILE__) {
+                continue;
+            }
+
+            return dirname($file);
+        }
+
+        throw new RuntimeException('Cannot detect view path.');
     }
 
     private function getPreparedInjections(): array

@@ -41,18 +41,20 @@
         "yiisoft/view": "^12"
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.94",
         "httpsoft/http-message": "^1.1.6",
         "nyholm/psr7": "^1.8.2",
         "phpunit/phpunit": "^10.5.63",
+        "psr/event-dispatcher": "^1.0",
         "rector/rector": "^2.3.8",
         "roave/infection-static-analysis-plugin": "^1.35",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24.4",
         "vimeo/psalm": "^5.26.1 || ^6.15.1",
         "yiisoft/code-style": "^1.0",
         "yiisoft/di": "^1.4.1",
         "yiisoft/psr-dummy-provider": "^1.0.2",
+        "yiisoft/security": "^1.2",
         "yiisoft/test-support": "^3.2.0",
         "yiisoft/yii-debug": "dev-master"
     },
@@ -67,11 +69,6 @@
         }
     },
     "extra": {
-        "bamarni-bin": {
-            "bin-links": true,
-            "forward-command": true,
-            "target-directory": "tools"
-        },
         "config-plugin-options": {
             "source-directory": "config"
         },
@@ -84,13 +81,13 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "bamarni/composer-bin-plugin": true,
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true,
             "yiisoft/config": false
         }
     },
     "scripts": {
+        "dependency-analyser": "composer-dependency-analyser",
         "test": "phpunit --testdox",
         "test-watch": "phpunit-watcher watch"
     }

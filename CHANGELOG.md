@@ -3,6 +3,7 @@
 ## 7.4.2 under development
 
 - Enh #150: Minor refactor regular expression for controller name extractor (@vjik)
+- Enh #161: Throw `InvalidArgumentException` with a clear message when an empty view name is passed to `WebViewRenderer` render methods (@samdark)
 
 ## 7.4.1 March 18, 2026
 

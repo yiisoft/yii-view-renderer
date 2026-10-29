@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\View\Renderer\Tests;
 
 use HttpSoft\Message\ResponseFactory;
 use HttpSoft\Message\StreamFactory;
+use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -484,6 +485,41 @@ EOD;
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The view path is not set.');
         $viewRenderer->getViewPath();
+    }
+
+    public static function dataEmptyViewName(): iterable
+    {
+        yield 'render' => ['render'];
+        yield 'renderPartial' => ['renderPartial'];
+        yield 'renderAsString' => ['renderAsString'];
+        yield 'renderPartialAsString' => ['renderPartialAsString'];
+    }
+
+    #[DataProvider('dataEmptyViewName')]
+    public function testEmptyViewName(string $method): void
+    {
+        $renderer = $this->getRenderer();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The view name must not be empty. To return a response without a view, such as JSON, '
+            . 'create it with a response factory instead.',
+        );
+        $renderer->$method('');
+    }
+
+    public function testEmptyViewNameWithoutViewPath(): void
+    {
+        $renderer = new WebViewRenderer(
+            new ResponseFactory(),
+            new StreamFactory(),
+            new Aliases(),
+            new WebView(__DIR__, new SimpleEventDispatcher()),
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The view name must not be empty.');
+        $renderer->render('');
     }
 
     public function testLazyLoadingInjection(): void

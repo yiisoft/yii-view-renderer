@@ -238,6 +238,10 @@ EOD;
                 new Support\AllControllers\MoreController\Nested\MyController(),
                 '/nested/my',
             ],
+            'several "controller" namespaces' => [
+                new Support\Controller\SubNamespace\Controller\FakeController(),
+                '/sub-namespace/controller/fake',
+            ],
         ];
     }
 

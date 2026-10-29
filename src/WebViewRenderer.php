@@ -399,7 +399,7 @@ final class WebViewRenderer implements ViewContextInterface
         if ($view === '') {
             throw new InvalidArgumentException(
                 'The view name must not be empty. To return a response without a view, such as JSON, '
-                . 'create it with a response factory instead.',
+                . 'use an appropriate response factory instead.',
             );
         }
     }

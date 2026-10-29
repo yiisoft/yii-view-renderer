@@ -30,9 +30,7 @@ final class ViewResponse implements ResponseInterface
 
     public function getBody(): StreamInterface
     {
-        if ($this->resolvedBody === null) {
-            $this->resolvedBody = ($this->dataCallback)();
-        }
+        $this->resolvedBody ??= ($this->dataCallback)();
         return $this->resolvedBody;
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\View\Renderer;
 
+use InvalidArgumentException;
 use LogicException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -113,10 +114,13 @@ final class WebViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
+     * @throws InvalidArgumentException If the view name is empty.
      * @return ResponseInterface The response instance.
      */
     public function render(string $view, array $parameters = []): ResponseInterface
     {
+        $this->assertViewNameIsNotEmpty($view);
+
         $commonParameters = $this->getCommonParameters();
         $layoutParameters = $this->getLayoutParameters();
         $metaTags = $this->getMetaTags();
@@ -151,6 +155,7 @@ final class WebViewRenderer implements ViewContextInterface
      *
      * @psalm-param array<string, mixed> $parameters
      *
+     * @throws InvalidArgumentException If the view name is empty.
      * @return ResponseInterface The response instance.
      */
     public function renderPartial(string $view, array $parameters = []): ResponseInterface
@@ -176,10 +181,13 @@ final class WebViewRenderer implements ViewContextInterface
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
      * @throws RuntimeException If the view cannot be resolved.
+     * @throws InvalidArgumentException If the view name is empty.
      * @return string The rendering result.
      */
     public function renderAsString(string $view, array $parameters = []): string
     {
+        $this->assertViewNameIsNotEmpty($view);
+
         return $this->renderProxy(
             $view,
             $parameters,
@@ -202,6 +210,7 @@ final class WebViewRenderer implements ViewContextInterface
      * @throws Throwable If an error occurred during rendering.
      * @throws ViewNotFoundException If the view file does not exist.
      * @throws RuntimeException If the view cannot be resolved.
+     * @throws InvalidArgumentException If the view name is empty.
      * @return string The rendering result.
      */
     public function renderPartialAsString(string $view, array $parameters = []): string
@@ -380,6 +389,19 @@ final class WebViewRenderer implements ViewContextInterface
         return $currentView
             ->setParameters($layoutParameters)
             ->render($layout, ['content' => $content]);
+    }
+
+    /**
+     * @throws InvalidArgumentException If the view name is empty.
+     */
+    private function assertViewNameIsNotEmpty(string $view): void
+    {
+        if ($view === '') {
+            throw new InvalidArgumentException(
+                'The view name must not be empty. To return a response without a view, such as JSON, '
+                . 'create it with a response factory instead.',
+            );
+        }
     }
 
     /**

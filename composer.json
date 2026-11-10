@@ -50,7 +50,7 @@
         "rector/rector": "^2.8.3",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24.4",
-        "vimeo/psalm": "^5.26.1 || ^6.15.1",
+        "vimeo/psalm": "^5.26.1 || ^6.15.1 || ^7.0.0",
         "yiisoft/code-style": "^1.1.0",
         "yiisoft/di": "^1.4.1",
         "yiisoft/psr-dummy-provider": "^1.0.2",
